@@ -75,7 +75,7 @@ public class PhanQuyensController : Controller
             }
             catch (SqlException ex) when (ex.Number == 50000)
             {
-                ViewBag.LoiTao = ex.Message;
+                ViewData["LoiTao"] = ex.Message;
             }
         }
         ViewBag.MaQuyen = new SelectList(_context.Quyen_DS(), "MaQuyen", "TenQuyen", phanQuyen.MaQuyen);

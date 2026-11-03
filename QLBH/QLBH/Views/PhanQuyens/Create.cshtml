@@ -11,10 +11,15 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-            @if (ViewBag.LoiTao != null)
+            @{
+                var loiTao = ViewData != null && ViewData.ContainsKey("LoiTao")
+                    ? ViewData["LoiTao"] as string
+                    : null;
+            }
+            @if (!string.IsNullOrWhiteSpace(loiTao))
             {
                 <div class="alert alert-danger" role="alert">
-                    @ViewBag.LoiTao
+                    @loiTao
                 </div>
             }
 

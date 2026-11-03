@@ -65,7 +65,7 @@ public class CTBHsController : Controller
             }
             catch (SqlException ex) when (ex.Number == 50000)
             {
-                ViewBag.LoiTao = ex.Message;
+                ViewData["LoiTao"] = ex.Message;
             }
         }
         ViewBag.MaDBH = new SelectList(_context.DonBH_DS(), "MaDBH", "MaDBH", ctbh.MaDBH);
