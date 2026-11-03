@@ -58,14 +58,14 @@ public class CTBHsController : Controller
     {
         if (ModelState.IsValid)
         {
-            try
+            if (_context.CTBH_CT(ctbh.MaDBH, ctbh.MaSP) != null)
+            {
+                ModelState.AddModelError(string.Empty, "Không được tạo trùng khóa chính: mã đơn bán hàng và mã sản phẩm đã tồn tại.");
+            }
+            else
             {
                 _context.CTBH_Them(ctbh);
                 return RedirectToAction(nameof(Index));
-            }
-            catch (SqlException ex) when (ex.Number == 50000)
-            {
-                ViewData["LoiTao"] = ex.Message;
             }
         }
         ViewBag.MaDBH = new SelectList(_context.DonBH_DS(), "MaDBH", "MaDBH", ctbh.MaDBH);

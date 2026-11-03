@@ -68,14 +68,14 @@ public class PhanQuyensController : Controller
     {
         if (ModelState.IsValid)
         {
-            try
+            if (_context.PhanQuyen_CT(phanQuyen.MaQuyen, phanQuyen.MaNV) != null)
+            {
+                ModelState.AddModelError(string.Empty, "Không được tạo trùng khóa chính: cặp mã quyền và mã nhân viên đã tồn tại.");
+            }
+            else
             {
                 _context.PhanQuyen_Them(phanQuyen);
                 return RedirectToAction(nameof(Index));
-            }
-            catch (SqlException ex) when (ex.Number == 50000)
-            {
-                ViewData["LoiTao"] = ex.Message;
             }
         }
         ViewBag.MaQuyen = new SelectList(_context.Quyen_DS(), "MaQuyen", "TenQuyen", phanQuyen.MaQuyen);

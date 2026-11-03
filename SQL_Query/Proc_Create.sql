@@ -214,16 +214,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    BEGIN TRY
-        INSERT INTO PhanQuyen(MaQuyen, MaNV)
-        VALUES(@MaQuyen, @MaNV)
-    END TRY
-    BEGIN CATCH
-        IF ERROR_NUMBER() IN (2627, 2601)
-            THROW 50000, N'Nhân viên này đã được gán quyền này. Không thể tạo trùng cặp quyền và nhân viên.', 1;
-
-        THROW;
-    END CATCH
+    INSERT INTO PhanQuyen(MaQuyen, MaNV)
+    VALUES(@MaQuyen, @MaNV)
 END
 GO
 
@@ -309,16 +301,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    BEGIN TRY
-        INSERT INTO CTMH(MaDMH, MaSP, SLM, DGM)
-        VALUES(@MaDMH, @MaSP, @SLM, @DGM)
-    END TRY
-    BEGIN CATCH
-        IF ERROR_NUMBER() IN (2627, 2601)
-            THROW 50000, N'Chi tiết mua hàng này đã tồn tại. Mỗi mã đơn mua hàng chỉ được có một dòng cho cùng một sản phẩm.', 1;
-
-        THROW;
-    END CATCH
+    INSERT INTO CTMH(MaDMH, MaSP, SLM, DGM)
+    VALUES(@MaDMH, @MaSP, @SLM, @DGM)
 END
 GO
 
@@ -413,15 +397,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    BEGIN TRY
-        INSERT INTO CTBH(MaDBH, MaSP, SLB, DGB)
-        VALUES(@MaDBH, @MaSP, @SLB, @DGB)
-    END TRY
-    BEGIN CATCH
-        IF ERROR_NUMBER() IN (2627, 2601)
-            THROW 50000, N'Chi tiết bán hàng này đã tồn tại. Mỗi mã đơn bán hàng chỉ được có một dòng cho cùng một sản phẩm.', 1;
-
-        THROW;
-    END CATCH
+    INSERT INTO CTBH(MaDBH, MaSP, SLB, DGB)
+    VALUES(@MaDBH, @MaSP, @SLB, @DGB)
 END
 GO
