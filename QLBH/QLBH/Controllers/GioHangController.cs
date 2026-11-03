@@ -86,7 +86,8 @@ namespace QLBH.Controllers
                     TempData["LoiGioHang"] = "Chưa tạo được đơn hàng.";
                     return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(ThanhCong), new { madbh = maDBH.Trim() });
+                TempData["MaDBH"] = maDBH.Trim();
+                return RedirectToAction(nameof(ThanhCong));
             }
             catch (SqlException ex)
             {
@@ -95,10 +96,12 @@ namespace QLBH.Controllers
             }
         }
 
-        public IActionResult ThanhCong(string madbh)
+        public IActionResult ThanhCong()
         {
             if (CurrentCustomerId() == null) return RedirectToCustomerLogin();
-            ViewBag.MaDBH = madbh;
+            ViewBag.MaDBH = TempData["MaDBH"];
+            if (ViewBag.MaDBH == null)
+                return RedirectToAction(nameof(Index));
             return View();
         }
 
