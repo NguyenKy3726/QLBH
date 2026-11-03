@@ -77,7 +77,6 @@ namespace QLBH.Controllers
             HttpContext.Session.Clear();
             HttpContext.Session.SetString("UserType", "KhachHang");
             HttpContext.Session.SetString("MaKH", maKH.ToString());
-            HttpContext.Session.SetString("Username", kh.TenDN);
             HttpContext.Session.SetString("DisplayName", $"{kh.HoKH} {kh.TenKH}");
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))

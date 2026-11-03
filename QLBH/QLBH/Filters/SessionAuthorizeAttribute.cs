@@ -9,7 +9,8 @@
         {
             var http = context.HttpContext;
             var user = http.Session.GetString("Username");
-            if (string.IsNullOrEmpty(user))
+            var userType = http.Session.GetString("UserType");
+            if (string.IsNullOrEmpty(user) || userType != "NhanVien")
             {
                 // build returnUrl (đầy đủ path + query)
                 var request = http.Request;
