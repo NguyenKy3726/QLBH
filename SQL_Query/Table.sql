@@ -160,7 +160,7 @@ GO
 -- 12. Đơn mua hàng
 CREATE TABLE dbo.DonMH
 (
-    MaDMH    char(11)       NOT NULL,
+    MaDMH    char(7)       NOT NULL,
     NgayDat  smalldatetime NOT NULL,
     NgayGiao smalldatetime NULL,
     MaNV     tinyint       NOT NULL,
@@ -180,7 +180,7 @@ GO
 -- 13. Chi tiết mua hàng
 CREATE TABLE dbo.CTMH
 (
-    MaDMH char(11)  NOT NULL,
+    MaDMH char(7)  NOT NULL,
     MaSP  char(9)  NOT NULL,
     SLM   smallint NOT NULL,
     DGM   money    NOT NULL,
@@ -219,7 +219,7 @@ GO
 -- 15. Đơn bán hàng
 CREATE TABLE dbo.DonBH
 (
-    MaDBH    char(11)       NOT NULL,
+    MaDBH    char(9)       NOT NULL,
     NgayDat  smalldatetime NOT NULL,
     NgayGiao smalldatetime NULL,
     DCGH     nvarchar(50)  NOT NULL,
@@ -243,7 +243,7 @@ GO
 -- 16. Chi tiết bán hàng
 CREATE TABLE dbo.CTBH
 (
-    MaDBH char(11) NOT NULL,
+    MaDBH char(9) NOT NULL,
     MaSP  char(9) NOT NULL,
     SLB   tinyint NOT NULL,
     DGB   money   NOT NULL,

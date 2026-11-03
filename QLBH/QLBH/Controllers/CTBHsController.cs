@@ -58,8 +58,16 @@ public class CTBHsController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.CTBH_Them(ctbh);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _context.CTBH_Them(ctbh);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (SqlException ex) when (ex.Number is 2627 or 2601)
+            {
+                ModelState.AddModelError(string.Empty,
+                    "Chi tiết bán hàng này đã tồn tại. Mỗi mã đơn bán hàng chỉ được có một dòng cho cùng một sản phẩm.");
+            }
         }
         ViewBag.MaDBH = new SelectList(_context.DonBH_DS(), "MaDBH", "MaDBH", ctbh.MaDBH);
         ViewBag.MaSP = new SelectList(_context.SanPham_DS(), "MaSP", "TenSP", ctbh.MaSP);

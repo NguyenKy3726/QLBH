@@ -67,8 +67,16 @@ public class CTMHsController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.CTMH_Them(ctmh);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                _context.CTMH_Them(ctmh);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (SqlException ex) when (ex.Number is 2627 or 2601)
+            {
+                ModelState.AddModelError(string.Empty,
+                    "Chi tiết mua hàng này đã tồn tại. Mỗi mã đơn mua hàng chỉ được có một dòng cho cùng một sản phẩm.");
+            }
         }
         ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "TenDMH", ctmh.MaDMH);
         ViewBag.MaSP = new SelectList(

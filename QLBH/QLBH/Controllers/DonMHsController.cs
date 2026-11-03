@@ -107,14 +107,14 @@ public class DonMHsController : Controller
     }
 
     // GET: DONMHS/Edit/5
-    public async Task<IActionResult> Edit(string? madmh)
+    public async Task<IActionResult> Edit(string? id)
     {
-        if (madmh == null)
+        if (id == null)
         {
             return NotFound();
         }
 
-        var donmh = _context.DonMH_CT(madmh);
+        var donmh = _context.DonMH_CT(id);
         if (donmh == null)
         {
             return NotFound();

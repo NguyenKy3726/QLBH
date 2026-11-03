@@ -647,9 +647,14 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@MaQuyen", pq.MaQuyen));
             cmd.Parameters.Add(new SqlParameter("@MaNV", pq.MaNV));
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try
+            {
+                return cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                Database.CloseConnection();
+            }
         }
 
         public int PhanQuyen_Xoa(byte MaQuyen, byte MaNV)
@@ -836,9 +841,14 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@SLM", ctmh.SLM));
             cmd.Parameters.Add(new SqlParameter("@DGM", ctmh.DGM));
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try
+            {
+                return cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                Database.CloseConnection();
+            }
         }
 
         public int CTMH_Sua(CTMH ctmh)
@@ -1052,9 +1062,14 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@SLB", ctbh.SLB));
             cmd.Parameters.Add(new SqlParameter("@DGB", ctbh.DGB));
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try
+            {
+                return cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                Database.CloseConnection();
+            }
         }
 
         public int CTBH_Sua(CTBH ctbh)
