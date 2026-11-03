@@ -11,10 +11,7 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-            @if (!ViewData.ModelState.IsValid)
-            {
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-            }
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
                 <label asp-for="MaDMH" class="control-label">
