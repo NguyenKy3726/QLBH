@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using QLBH.Data;
 using QLBH.Models;
 
+[QLBH.Filters.TablePermissionAuthorize("KhachHang")]
 public class KhachHangsController : Controller
 {
     private readonly AppDbContext _context;

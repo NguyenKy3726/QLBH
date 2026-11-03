@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using QLBH.Data;
 using QLBH.Models;
 
+[QLBH.Filters.TablePermissionAuthorize("CTBH")]
 public class CTBHsController : Controller
 {
     private readonly AppDbContext _context;

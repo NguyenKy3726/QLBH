@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using QLBH.Data;
 using QLBH.Models;
 
+[QLBH.Filters.TablePermissionAuthorize("PhongBan")]
 public class PhongBansController : Controller
 {
     private readonly AppDbContext _context;

@@ -16,7 +16,6 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 var app = builder.Build();
-app.UseSession();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -27,10 +26,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// KẾT: bật session trước khi MapControllerRoute và trước khi xử lý Authorization nếu có
-app.UseSession();
+// Routing trước, Session trước khi các bộ lọc controller kiểm tra danh tính và quyền.
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthorization();
 
 app.MapStaticAssets();

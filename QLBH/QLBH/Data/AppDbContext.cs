@@ -1089,6 +1089,47 @@ namespace QLBH.Data
                 Database.CloseConnection();
             }
         }
+        /// <summary>Kiểm tra quyền C/R/U/D của nhân viên trên một bảng nghiệp vụ.</summary>
+        public bool NhanVien_CoQuyenBang(byte maNV, string tenBang, string thaoTac)
+        {
+            using var cmd = Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = @"
+                SELECT CASE WHEN EXISTS
+                (
+                    SELECT 1
+                    FROM dbo.PhanQuyen AS pq
+                    INNER JOIN dbo.Quyen AS q ON q.MaQuyen = pq.MaQuyen
+                    INNER JOIN dbo.QuyenBang AS qb ON qb.MaQuyen = q.MaQuyen
+                    WHERE pq.MaNV = @MaNV
+                      AND qb.TenBang = @TenBang
+                      AND
+                      (
+                           (@ThaoTac = 'C' AND qb.ChoPhepThem = 1)
+                        OR (@ThaoTac = 'R' AND qb.ChoPhepXem = 1)
+                        OR (@ThaoTac = 'U' AND qb.ChoPhepSua = 1)
+                        OR (@ThaoTac = 'D' AND qb.ChoPhepXoa = 1)
+                      )
+                ) THEN 1 ELSE 0 END;";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new SqlParameter("@MaNV", SqlDbType.TinyInt) { Value = maNV });
+            cmd.Parameters.Add(new SqlParameter("@TenBang", SqlDbType.VarChar, 30) { Value = tenBang });
+            cmd.Parameters.Add(new SqlParameter("@ThaoTac", SqlDbType.Char, 1) { Value = thaoTac });
+
+            var connectionWasClosed = Database.GetDbConnection().State != ConnectionState.Open;
+            if (connectionWasClosed)
+                Database.OpenConnection();
+
+            try
+            {
+                return Convert.ToInt32(cmd.ExecuteScalar()) == 1;
+            }
+            finally
+            {
+                if (connectionWasClosed)
+                    Database.CloseConnection();
+            }
+        }
+
         // Cấu hình khóa chính ghép
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

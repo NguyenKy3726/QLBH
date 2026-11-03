@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using QLBH.Data;
 using QLBH.Models;
 
+[QLBH.Filters.TablePermissionAuthorize("NhaCC")]
 public class NhaCCsController : Controller
 {
     private readonly AppDbContext _context;

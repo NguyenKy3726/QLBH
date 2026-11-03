@@ -4,6 +4,7 @@ using QLBH.Models;
 using QLBH.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+[QLBH.Filters.TablePermissionAuthorize("PhanQuyen")]
 public class PhanQuyensController : Controller
 {
     private readonly AppDbContext _context;

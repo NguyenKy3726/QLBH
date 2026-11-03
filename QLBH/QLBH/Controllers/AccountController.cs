@@ -43,8 +43,11 @@ namespace QLBH.Controllers
                 ViewData["ReturnUrl"] = returnUrl;
                 return View();
             }
+            // Xóa phiên cũ rồi lưu danh tính nhân viên để bộ lọc quyền đối chiếu với CSDL.
+            HttpContext.Session.Clear();
             HttpContext.Session.SetString("Username", nv.TenDN);
             HttpContext.Session.SetString("DisplayName", nv.HoNV + " " + nv.TenNV);
+            HttpContext.Session.SetInt32("MaNV", nv.MaNV);
 
             // Redirect về returnUrl nếu an toàn
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
