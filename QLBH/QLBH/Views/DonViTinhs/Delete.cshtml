@@ -1,0 +1,39 @@
+@model QLBH.Models.DonViTinh
+
+@{
+    ViewData["Title"] = "Xóa đơn vị tính";
+}
+
+<h1>Xóa đơn vị tính</h1>
+
+<h3>Bạn có chắc chắn muốn xóa đơn vị tính này?</h3>
+
+<div>
+    <h4>Đơn vị tính</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            Mã đơn vị tính
+        </dt>
+        <dd class="col-sm-10">
+            Tên đơn vị tính
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-madvt="@Model.MaDVT"
+          method="post">
+        <input type="hidden" asp-for="MaDVT" />
+
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

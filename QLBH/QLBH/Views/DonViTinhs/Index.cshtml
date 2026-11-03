@@ -1,0 +1,46 @@
+    @model IEnumerable<QLBH.Models.DonViTinh>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Mã đơn vị tính
+            </th>
+            <th>
+                Tên đơn vị tính
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.MaDVT)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.TenDVT)
+            </td>
+            <td> 
+                @* CACH THAY *@
+                @* @Html.ActionLink("Edit", "Edit", new {MaDVT = item.MaDVT})  |
+                @Html.ActionLink("Details", "Details", new { MaDVT = item.MaDVT })  |
+                @Html.ActionLink("Delete", "Delete", new { MaDVT = item.MaDVT })  | *@
+
+                <a asp-action="Edit" asp-route-id="@item.MaDVT">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MaDVT">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MaDVT">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

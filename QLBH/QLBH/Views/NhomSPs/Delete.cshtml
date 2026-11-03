@@ -1,0 +1,39 @@
+@model QLBH.Models.NhomSP
+
+@{
+    ViewData["Title"] = "Xóa nhóm sản phẩm";
+}
+
+<h1>Xóa nhóm sản phẩm</h1>
+
+<h3>Bạn có chắc chắn muốn xóa nhóm sản phẩm này?</h3>
+
+<div>
+    <h4>Nhóm sản phẩm</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TenNSP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TenNSP)
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-mansp="@Model.MaNSP"
+          method="post">
+        <input type="hidden" asp-for="MaNSP" />
+
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

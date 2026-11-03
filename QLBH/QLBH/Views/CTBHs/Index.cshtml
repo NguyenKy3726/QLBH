@@ -1,0 +1,53 @@
+@model IEnumerable<QLBH.Models.CTBH>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Mã đơn bán hàng
+            </th>
+            <th>
+                Tên sản phẩm
+            </th>
+            <th>
+                Số lượng bán
+            </th>
+            <th>
+                Số lượng bán
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.MaDBH)
+            </td>
+            <td>
+                @(ViewBag.TenSP[item.MaSP])
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.SLB)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DGB)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-madbh="@item.MaDBH" asp-route-masp="@item.MaSP">Edit</a> |
+                <a asp-action="Details" asp-route-madbh="@item.MaDBH" asp-route-masp="@item.MaSP">Details</a> |
+                <a asp-action="Delete" asp-route-madbh="@item.MaDBH" asp-route-masp="@item.MaSP">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

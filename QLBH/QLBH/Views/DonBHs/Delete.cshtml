@@ -1,0 +1,81 @@
+    @model QLBH.Models.DonBH
+
+@{
+    ViewData["Title"] = "Xóa đơn bán hàng";
+}
+
+<h1>Xóa đơn bán hàng</h1>
+
+<h3>Bạn có chắc chắn muốn xóa đơn bán hàng này?</h3>
+
+<div>
+    <h4>Đơn bán hàng</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaDBH)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaDBH)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NgayDat)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NgayDat)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NgayGiao)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NgayGiao)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DCGH)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DCGH)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaXP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaXP)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaNV)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaNV)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaKH)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaKH)
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-madbh="@Model.MaDBH"
+          method="post">
+        <input type="hidden" asp-for="MaDBH" />
+
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

@@ -1,0 +1,67 @@
+@model QLBH.Models.DonMH
+
+@{
+    ViewData["Title"] = "Xóa đơn mua hàng";
+}
+
+<h1>Xóa đơn mua hàng</h1>
+
+<h3>Bạn có chắc chắn muốn xóa đơn mua hàng này?</h3>
+
+<div>
+    <h4>Đơn mua hàng</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaDMH)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaDMH)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NgayDat)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NgayDat)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NgayGiao)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NgayGiao)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaNV)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaNV)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaNCC)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaNCC)
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.MaDMH"
+          method="post">
+        <input type="hidden" asp-for="MaDMH" />
+
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

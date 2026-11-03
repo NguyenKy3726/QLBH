@@ -1,0 +1,65 @@
+@model IEnumerable<QLBH.Models.NhaCC>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Mã NCC
+            </th>
+            <th>
+                Tên NCC
+            </th>
+            <th>
+                Điện thoại
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                Địa chỉ
+            </th>
+            <th>
+                Xã/ Phường
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.MaNCC)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.TenNCC)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DienThoai)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DiaChi)
+            </td>
+            <td>
+                @(ViewBag.TenXP[item.MaXP])
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.MaNCC">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MaNCC">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MaNCC">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

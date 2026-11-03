@@ -1,0 +1,81 @@
+@model QLBH.Models.SanPham
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+
+<h1>Xóa sản phẩm</h1>
+
+<h3>Bạn có chắc chắn muốn xóa sản phẩm này?</h3>
+
+<div>
+    <h4>Sản phẩm</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaSP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaSP)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TenSP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TenSP)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DonGia)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DonGia)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AnhSP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AnhSP)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MoTaCT)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MoTaCT)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaLSP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaLSP)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaDVT)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaDVT)
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.MaSP"
+          method="post">
+        <input type="hidden" asp-for="MaSP" />
+
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

@@ -1,0 +1,48 @@
+@model QLBH.Models.PhanQuyen
+
+@{
+    ViewData["Title"] = "Xóa phân quyền";
+}
+
+<h1>Xóa phân quyền</h1>
+
+<h3>Bạn có chắc chắn muốn thu hồi quyền này của nhân viên?</h3>
+
+<div>
+    <h4>Phân quyền</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaQuyen)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaQuyen)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaNV)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaNV)
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.MaQuyen"
+          asp-route-manv="@Model.MaNV"
+          method="post">
+        <input type="hidden" asp-for="MaQuyen" />
+        <input type="hidden" asp-for="MaNV" />
+
+        <input type="submit" value="Thu hồi quyền" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

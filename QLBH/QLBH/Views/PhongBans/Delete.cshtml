@@ -1,0 +1,46 @@
+@model QLBH.Models.PhongBan
+
+@{
+    ViewData["Title"] = "Xóa phòng ban";
+}
+
+<h1>Xóa phòng ban</h1>
+
+<h3>Bạn có chắc chắn muốn xóa phòng ban này?</h3>
+
+<div>
+    <h4>Phòng ban</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaPB)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaPB)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TenPB)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TenPB)
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.MaPB"
+          method="post">
+        <input type="hidden" asp-for="MaPB" />
+
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

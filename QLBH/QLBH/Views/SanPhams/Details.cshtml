@@ -1,0 +1,66 @@
+@model QLBH.Models.SanPham
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>SanPham</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Mã sản phẩm
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaSP)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Tên sản phẩm
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TenSP)
+        </dd>
+    
+        <dt class = "col-sm-2">
+            Đơn giá
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DonGia)
+        </dd>
+    
+        <dt class = "col-sm-2">
+            Ảnh minh họa
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AnhSP)
+        </dd>
+    
+        <dt class = "col-sm-2">
+            Mô tả
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MoTaCT)
+        </dd>
+    
+        <dt class = "col-sm-2">
+            Loại sản phẩm
+        </dt>
+        <dd class = "col-sm-10">
+            @(ViewBag.TenLSP[Model.MaLSP])
+        </dd>
+    
+        <dt class = "col-sm-2">
+            Đơn vị tính
+        </dt>
+        <dd class = "col-sm-10">
+            @(ViewBag.TenDVT[Model.MaDVT])
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.MaSP">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

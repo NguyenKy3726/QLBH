@@ -1,0 +1,30 @@
+@model QLBH.Models.DonViTinh
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>DonViTinh</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Mã đơn vị tính
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaDVT)
+        </dd>
+        <dt class = "col-sm-2">
+            Tên đơn vị tính
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TenDVT)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.MaDVT">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

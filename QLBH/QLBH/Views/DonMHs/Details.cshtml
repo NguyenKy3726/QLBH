@@ -1,0 +1,52 @@
+@model QLBH.Models.DonMH
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>DonMH</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Mã đơn mua hàng
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaDMH)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Ngày đặt
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NgayDat)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Ngày giao
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NgayGiao)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Nhân viên
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.MaNV - @(ViewBag.TenNV[Model.MaNV])
+        </dd>
+
+        <dt class = "col-sm-2">
+            Nhà cung cấp
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.MaNCC - @(ViewBag.TenNCC[Model.MaNCC])
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.MaDMH">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

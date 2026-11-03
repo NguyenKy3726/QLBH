@@ -1,0 +1,71 @@
+@model IEnumerable<QLBH.Models.DonBH>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Mã đơn bán hàng
+            </th>
+            <th>
+                Ngày đặt
+            </th>
+            <th>
+                Ngày giao
+            </th>
+            <th>
+                Địa chi giao hàng
+            </th>
+            <th>
+                Xã/ Phương
+            </th>
+            <th>
+                Nhân viên
+            </th>
+            <th>
+                Khách hàng
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+             <td>
+                @Html.DisplayFor(model => item.MaDBH)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.NgayDat)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.NgayGiao)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DCGH)
+            </td>
+            <td>
+                @(ViewBag.TenXP[item.MaXP])
+            </td>
+            <td>
+                @item.MaNV - @(ViewBag.TenNV[item.MaNV])
+            </td>
+            <td>
+                @item.MaKH - @(ViewBag.TenKH[item.MaKH])
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-madbh="@item.MaDBH">Edit</a> |
+                <a asp-action="Details" asp-route-madbh="@item.MaDBH">Details</a> |
+                <a asp-action="Delete" asp-route-madbh="@item.MaDBH">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

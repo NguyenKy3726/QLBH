@@ -1,0 +1,62 @@
+@model QLBH.Models.CTBH
+
+@{
+    ViewData["Title"] = "Xóa chi tiết bán hàng";
+}
+
+<h1>Xóa chi tiết bán hàng</h1>
+
+<h3>Bạn có chắc chắn muốn xóa dòng chi tiết bán hàng này?</h3>
+
+<div>
+    <h4>Chi tiết bán hàng</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaDBH)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaDBH)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaSP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaSP)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SLB)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SLB)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DGB)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DGB)
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.MaDBH"
+          asp-route-masp="@Model.MaSP"
+          method="post">
+        <input type="hidden" asp-for="MaDBH" />
+        <input type="hidden" asp-for="MaSP" />
+
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

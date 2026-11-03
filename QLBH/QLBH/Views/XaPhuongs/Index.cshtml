@@ -1,0 +1,47 @@
+@model IEnumerable<QLBH.Models.XaPhuong>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Mã Xã/ Phường
+            </th>
+            <th>
+                Tên Xã/ Phường
+            </th>
+            <th>
+                Tên tỉnh
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.MaXP)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.TenXP)
+            </td>
+            <td>
+                @(ViewBag.TenTinh[item.MaTinh])
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.MaXP">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MaXP">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MaXP">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,66 @@
+@model QLBH.Models.DonBH
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>DonBH</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Mã đơn bán hàng
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaDBH)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Ngày đặt
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NgayDat)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Ngày giao
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NgayGiao)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Địa chỉ giao hàng
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DCGH)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Xã/ Phường
+        </dt>
+        <dd class = "col-sm-10">
+            @(ViewBag.TenXP[Model.MaXP])
+        </dd>
+
+        <dt class = "col-sm-2">
+            Nhân viên
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.MaNV - @(ViewBag.TenNV[Model.MaNV])
+        </dd>
+
+        <dt class = "col-sm-2">
+            Khách hàng
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.MaKH - @(ViewBag.TenKH[Model.MaKH])
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.MaDBH">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

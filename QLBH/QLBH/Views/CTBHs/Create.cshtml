@@ -1,0 +1,64 @@
+@model QLBH.Models.CTBH
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>CTBH</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="MaDBH" class="control-label">
+                    Mã đơn bán hàng
+                </label>
+
+                <select asp-for="MaDBH"
+                        asp-items="ViewBag.MaDBH"
+                        class="form-control">
+                    <option value="">-- Chọn đơn bán hàng --</option>
+                </select>
+
+                <span asp-validation-for="MaDBH" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MaSP" class="control-label">
+                    Sản phẩm
+                </label>
+
+                <select asp-for="MaSP"
+                        asp-items="ViewBag.MaSP"
+                        class="form-control">
+                    <option value="">-- Chọn sản phẩm --</option>
+                </select>
+
+                <span asp-validation-for="MaSP" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Số lượng bán</label>
+                <input asp-for="SLB" class="form-control" />
+                <span asp-validation-for="SLB" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Đơn giá bán</label>
+                <input asp-for="DGB" class="form-control" />
+                <span asp-validation-for="DGB" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

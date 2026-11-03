@@ -1,0 +1,45 @@
+@model QLBH.Models.CTMH
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>CTMH</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Mã đơn mua hàng
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MaDMH)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Tên sản phẩm
+        </dt>
+        <dd class = "col-sm-10">
+            @(ViewBag.TenSP[Model.MaSP])
+        </dd>
+
+        <dt class = "col-sm-2">
+            Số lượng mua
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.SLM)
+        </dd>
+
+        <dt class = "col-sm-2">
+            Đơn giá mua
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DGM)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-madmh="@Model?.MaDMH" asp-route-masp="@Model?.MaSP">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

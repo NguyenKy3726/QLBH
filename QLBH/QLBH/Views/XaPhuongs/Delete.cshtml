@@ -1,0 +1,53 @@
+@model QLBH.Models.XaPhuong
+
+@{
+    ViewData["Title"] = "Xóa xã/phường";
+}
+
+<h1>Xóa xã/phường</h1>
+
+<h3>Bạn có chắc chắn muốn xóa xã/phường này?</h3>
+
+<div>
+    <h4>Xã/phường</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaXP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaXP)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TenXP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TenXP)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaTinh)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaTinh)
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.MaXP"
+          method="post">
+        <input type="hidden" asp-for="MaXP" />
+
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

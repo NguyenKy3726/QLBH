@@ -1,0 +1,71 @@
+@model IEnumerable<QLBH.Models.SanPham>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Mã sản phẩm
+            </th>
+            <th>
+                Tên sản phẩm
+            </th>
+            <th>
+                Đơn giá
+            </th>
+            <th>
+                Ảnh minh họa
+            </th>
+            <th>
+                Mô tả
+            </th>
+            <th>
+                Loại sản phẩm
+            </th>
+            <th>
+                Đơn vị tính
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.MaSP)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.TenSP)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.DonGia)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.AnhSP)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.MoTaCT)
+            </td>
+            <td>
+                @(ViewBag.TenLSP[item.MaLSP])
+            </td>
+            <td>
+                @(ViewBag.TenDVT[item.MaDVT])
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-masp="@item.MaSP">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MaSP">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MaSP">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

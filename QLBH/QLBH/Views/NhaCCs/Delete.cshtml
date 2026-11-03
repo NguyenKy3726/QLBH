@@ -1,0 +1,74 @@
+@model QLBH.Models.NhaCC
+
+@{
+    ViewData["Title"] = "Xóa nhà cung cấp";
+}
+
+<h1>Xóa nhà cung cấp</h1>
+
+<h3>Bạn có chắc chắn muốn xóa nhà cung cấp này?</h3>
+
+<div>
+    <h4>Nhà cung cấp</h4>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaNCC)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaNCC)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TenNCC)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TenNCC)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DienThoai)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DienThoai)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DiaChi)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DiaChi)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaXP)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaXP)
+        </dd>
+    </dl>
+
+    @if (ViewBag.LoiXoa != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.LoiXoa
+        </div>
+    }
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.MaNCC"
+          method="post">
+        <input type="hidden" asp-for="MaNCC" />
+
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại danh sách</a>
+    </form>
+</div>

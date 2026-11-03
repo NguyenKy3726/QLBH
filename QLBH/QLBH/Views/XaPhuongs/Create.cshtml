@@ -1,0 +1,44 @@
+@model QLBH.Models.XaPhuong
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>XaPhuong</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label>Tên Xã/ Phường</label>
+                <input asp-for="TenXP" class="form-control" />
+                <span asp-validation-for="TenXP" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="MaTinh" class="control-label">
+                    Thuộc tỉnh
+                </label>
+
+                <select asp-for="MaTinh"
+                        asp-items="ViewBag.MaTinh"
+                        class="form-control">
+                    <option value="">-- Chọn tỉnh --</option>
+                </select>
+
+                <span asp-validation-for="MaTinh" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
