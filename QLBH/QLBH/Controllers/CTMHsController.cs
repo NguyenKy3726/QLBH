@@ -77,7 +77,7 @@ public class CTMHsController : Controller
                 return RedirectToAction(nameof(Index));
             }
         }
-        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "TenDMH", ctmh.MaDMH);
+        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "MaDMH", ctmh.MaDMH);
         ViewBag.MaSP = new SelectList(
             _context.SanPham_DS().Select(sp => new
             {
@@ -104,7 +104,7 @@ public class CTMHsController : Controller
         {
             return NotFound();
         }
-        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "TenDMH", ctmh.MaDMH);
+        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "MaDMH", ctmh.MaDMH);
         ViewBag.MaSP = new SelectList(
             _context.SanPham_DS().Select(sp => new
             {
@@ -152,7 +152,7 @@ public class CTMHsController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
-        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "TenDMH", ctmh.MaDMH);
+        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "MaDMH", ctmh.MaDMH);
         ViewBag.MaSP = new SelectList(
             _context.SanPham_DS().Select(sp => new
             {
