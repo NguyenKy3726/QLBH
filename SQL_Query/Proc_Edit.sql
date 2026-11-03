@@ -147,7 +147,7 @@ GO
 
 -- 12. Cập nhật bảng Đơn mua hàng
 CREATE OR ALTER PROC DonMH_Sua
-    @MaDMH char(7),
+    @MaDMH char(11),
     @NgayDat smalldatetime,
     @NgayGiao smalldatetime,
     @MaNV tinyint,
@@ -163,7 +163,7 @@ GO
 
 -- 13. Cập nhật bảng Chi tiết mua hàng
 CREATE OR ALTER PROC CTMH_Sua
-    @MaDMH char(7),
+    @MaDMH char(11),
     @MaSP char(9),
     @SLM smallint,
     @DGM money
@@ -206,12 +206,13 @@ GO
 
 -- 15. Cập nhật bảng Đơn bán hàng
 CREATE OR ALTER PROC DonBH_Sua
-    @MaDBH char(9),
+    @MaDBH char(11),
+
     @NgayDat smalldatetime,
     @NgayGiao smalldatetime,
     @DCGH nvarchar(50),
     @MaXP char(5),
-    @MaNV tinyint,
+    @MaNV tinyint = NULL,
     @MaKH smallint
 AS
     UPDATE DonBH
@@ -226,7 +227,7 @@ GO
 
 -- 16. Cập nhật bảng Chi tiết bán hàng
 CREATE OR ALTER PROC CTBH_Sua
-    @MaDBH char(9),
+    @MaDBH char(11),
     @MaSP char(9),
     @SLB tinyint,
     @DGB money

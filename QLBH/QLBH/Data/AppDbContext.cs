@@ -601,6 +601,26 @@ namespace QLBH.Data
             }
         }
 
+        public short KhachHang_DangNhap(string tenDN, string matKhau)
+        {
+            var cmd = Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = "KhachHang_DangNhap";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@TenDN", tenDN));
+            cmd.Parameters.Add(new SqlParameter("@MatKhau", matKhau));
+
+            Database.OpenConnection();
+            try
+            {
+                using var reader = cmd.ExecuteReader();
+                return reader.Read() ? reader.GetInt16(reader.GetOrdinal("MaKH")) : (short)0;
+            }
+            finally
+            {
+                Database.CloseConnection();
+            }
+        }
+
         public byte NhanVien_DangNhap(string TenDN, string MatKhau) //Trả về Mã nhân viên nếu đăng nhập thành công
         {
             var cmd = Database.GetDbConnection().CreateCommand();
@@ -980,7 +1000,7 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@NgayGiao", (object?)dbh.NgayGiao ?? DBNull.Value));
             cmd.Parameters.Add(new SqlParameter("@DCGH", dbh.DCGH));
             cmd.Parameters.Add(new SqlParameter("@MaXP", dbh.MaXP));
-            cmd.Parameters.Add(new SqlParameter("@MaNV", dbh.MaNV));
+            cmd.Parameters.Add(new SqlParameter("@MaNV", (object?)dbh.MaNV ?? DBNull.Value));
             cmd.Parameters.Add(new SqlParameter("@MaKH", dbh.MaKH));
             Database.OpenConnection();
             var kq = cmd.ExecuteNonQuery();
@@ -998,7 +1018,7 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@NgayGiao", (object?)dbh.NgayGiao ?? DBNull.Value));
             cmd.Parameters.Add(new SqlParameter("@DCGH", dbh.DCGH));
             cmd.Parameters.Add(new SqlParameter("@MaXP", dbh.MaXP));
-            cmd.Parameters.Add(new SqlParameter("@MaNV", dbh.MaNV));
+            cmd.Parameters.Add(new SqlParameter("@MaNV", (object?)dbh.MaNV ?? DBNull.Value));
             cmd.Parameters.Add(new SqlParameter("@MaKH", dbh.MaKH));
             Database.OpenConnection();
             var kq = cmd.ExecuteNonQuery();
@@ -1089,10 +1109,69 @@ namespace QLBH.Data
                 Database.CloseConnection();
             }
         }
+        // Các thao tác giỏ hàng. Giỏ và chi tiết giỏ được lưu riêng với đơn bán hàng.
+        public DbSet<GioHangItemViewModel> GioHangItems { get; set; } = null!;
+
+        public List<GioHangItemViewModel> GioHang_DS(short maKH)
+        {
+            var p = new SqlParameter("@MaKH", maKH);
+            return GioHangItems
+                .FromSqlRaw("EXEC dbo.GioHang_DS @MaKH", p)
+                .AsNoTracking()
+                .ToList();
+        }
+
+        public int GioHang_Them(short maKH, string maSP, short soLuong)
+        {
+            return Database.ExecuteSqlRaw(
+                "EXEC dbo.GioHang_Them @MaKH, @MaSP, @SoLuong",
+                new SqlParameter("@MaKH", maKH),
+                new SqlParameter("@MaSP", SqlDbType.Char, 9) { Value = maSP },
+                new SqlParameter("@SoLuong", soLuong));
+        }
+
+        public int GioHang_CapNhat(short maKH, string maSP, short soLuong)
+        {
+            return Database.ExecuteSqlRaw(
+                "EXEC dbo.GioHang_CapNhat @MaKH, @MaSP, @SoLuong",
+                new SqlParameter("@MaKH", maKH),
+                new SqlParameter("@MaSP", SqlDbType.Char, 9) { Value = maSP },
+                new SqlParameter("@SoLuong", soLuong));
+        }
+
+        public int GioHang_Xoa(short maKH, string maSP)
+        {
+            return Database.ExecuteSqlRaw(
+                "EXEC dbo.GioHang_Xoa @MaKH, @MaSP",
+                new SqlParameter("@MaKH", maKH),
+                new SqlParameter("@MaSP", SqlDbType.Char, 9) { Value = maSP });
+        }
+
+        public string? GioHang_DatHang(short maKH)
+        {
+            var connection = Database.GetDbConnection();
+            Database.OpenConnection();
+            try
+            {
+                using var cmd = connection.CreateCommand();
+                cmd.CommandText = "dbo.GioHang_DatHang";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@MaKH", maKH));
+                var result = cmd.ExecuteScalar();
+                return result == null || result == DBNull.Value ? null : Convert.ToString(result);
+            }
+            finally
+            {
+                Database.CloseConnection();
+            }
+        }
+
         // Cấu hình khóa chính ghép
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<GioHangItemViewModel>().HasNoKey();
 
             // PhanQuyen: khóa gồm MaQuyen và MaNV
             modelBuilder.Entity<PhanQuyen>()

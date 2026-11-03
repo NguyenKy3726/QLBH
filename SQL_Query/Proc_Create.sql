@@ -340,7 +340,7 @@ CREATE OR ALTER PROC DonBH_Them
     @NgayGiao smalldatetime,
     @DCGH nvarchar(50),
     @MaXP char(5),
-    @MaNV tinyint,
+    @MaNV tinyint = NULL,
     @MaKH smallint
 AS
 BEGIN

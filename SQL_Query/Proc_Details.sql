@@ -114,7 +114,7 @@ GO
 
 -- 13. Chi tiết một dòng mua hàng: khóa chính ghép
 CREATE OR ALTER PROC dbo.CTMH_CT
-    @MaDMH char(7),
+    @MaDMH char(11),
     @MaSP char(9)
 AS
     SELECT MaDMH, MaSP, SLM, DGM
@@ -144,7 +144,7 @@ GO
 
 -- 16. Chi tiết một dòng bán hàng: khóa chính ghép
 CREATE OR ALTER PROC dbo.CTBH_CT
-    @MaDBH char(9),
+    @MaDBH char(11),
     @MaSP char(9)
 AS
     SELECT MaDBH, MaSP, SLB, DGB
