@@ -73,10 +73,9 @@ public class PhanQuyensController : Controller
                 _context.PhanQuyen_Them(phanQuyen);
                 return RedirectToAction(nameof(Index));
             }
-            catch (SqlException ex) when (ex.Number is 2627 or 2601)
+            catch (SqlException ex) when (ex.Number == 50000)
             {
-                ModelState.AddModelError(string.Empty,
-                    "Nhân viên này đã được gán quyền này. Không thể tạo trùng cặp quyền và nhân viên.");
+                ViewBag.LoiTao = ex.Message;
             }
         }
         ViewBag.MaQuyen = new SelectList(_context.Quyen_DS(), "MaQuyen", "TenQuyen", phanQuyen.MaQuyen);

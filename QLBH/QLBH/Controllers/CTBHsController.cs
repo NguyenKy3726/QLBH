@@ -63,10 +63,9 @@ public class CTBHsController : Controller
                 _context.CTBH_Them(ctbh);
                 return RedirectToAction(nameof(Index));
             }
-            catch (SqlException ex) when (ex.Number is 2627 or 2601)
+            catch (SqlException ex) when (ex.Number == 50000)
             {
-                ModelState.AddModelError(string.Empty,
-                    "Chi tiết bán hàng này đã tồn tại. Mỗi mã đơn bán hàng chỉ được có một dòng cho cùng một sản phẩm.");
+                ViewBag.LoiTao = ex.Message;
             }
         }
         ViewBag.MaDBH = new SelectList(_context.DonBH_DS(), "MaDBH", "MaDBH", ctbh.MaDBH);
