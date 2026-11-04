@@ -1,59 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Trang chủ";
+    var daDangNhap = !string.IsNullOrWhiteSpace(Context.Session.GetString("Username"));
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-
-<ul class="nav nav-tabs justify-content-center flex-wrap mt-4">
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="DonViTinhs" asp-action="Index">Đơn vị tính</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="NhomSPs" asp-action="Index">Nhóm sản phẩm</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="LoaiSPs" asp-action="Index">Loại sản phẩm</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="SanPhams" asp-action="Index">Sản phẩm</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="Tinhs" asp-action="Index">Tỉnh</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="XaPhuongs" asp-action="Index">Xã/phường</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="PhongBans" asp-action="Index">Phòng ban</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="NhanViens" asp-action="Index">Nhân viên</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="Quyens" asp-action="Index">Quyền</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="PhanQuyens" asp-action="Index">Phân quyền</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="CTMHs" asp-action="Index">Chi tiết mua hàng</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="CTBHs" asp-action="Index">Chi tiết bán hàng</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="NhaCCs" asp-action="Index">Nhà cung cấp</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="DonMHs" asp-action="Index">Đơn mua hàng</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="KhachHangs" asp-action="Index">Khách hàng</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" asp-controller="DonBHs" asp-action="Index">Đơn bán hàng</a>
-    </li>
-</ul>
+<section class="bg-light rounded-4 p-4 p-md-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+            <p class="text-uppercase text-secondary fw-semibold small mb-2">Hệ thống quản lý bán hàng</p>
+            <h1 class="display-5 fw-bold">Chào mừng đến với QLBH</h1>
+            <p class="lead text-secondary mb-4">
+                Truy cập các chức năng theo nhóm nghiệp vụ và quyền được cấp cho tài khoản của bạn.
+            </p>
+            @if (daDangNhap)
+            {
+                <a class="btn btn-primary btn-lg" asp-controller="QuanLy" asp-action="Index">Mở trang quản lý</a>
+            }
+            else
+            {
+                <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+            }
+        </div>
+        <div class="col-lg-4 text-center">
+            <span class="display-1" aria-hidden="true">📊</span>
+        </div>
+    </div>
+</section>
