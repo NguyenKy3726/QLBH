@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MaNV" />
             <div class="form-group">
@@ -61,9 +61,19 @@
                 @Html.ValidationMessage("MatKhauMoi", "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
-                <label>Ảnh đại diện</label>
-                <input asp-for="AnhNV" class="form-control" />
-                <span asp-validation-for="AnhNV" class="text-danger"></span>
+                <label>Ảnh đại diện hiện tại</label>
+                @if (!string.IsNullOrWhiteSpace(Model.AnhNV))
+                {
+                    var imageSource = Model.AnhNV.StartsWith("~/") || Model.AnhNV.StartsWith("/")
+                        ? Url.Content(Model.AnhNV)
+                        : Url.Action("NhanVien", "Images", new { id = Model.MaNV });
+                    <div><img src="@imageSource" alt="Ảnh @Model.HoNV @Model.TenNV" style="max-width:150px;max-height:150px;object-fit:cover;border-radius:50%" /></div>
+                    <small>@Model.AnhNV</small>
+                    <label class="form-check-label"><input type="checkbox" name="removeImage" value="true" /> Xóa ảnh hiện tại</label>
+                }
+                <label for="fileAnh">Chọn ảnh mới (JPG, PNG, WEBP; tối đa 5 MB)</label>
+                <input type="file" id="fileAnh" name="fileAnh" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+                @Html.ValidationMessage("fileAnh", "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
                 <label asp-for="MaPB" class="control-label">

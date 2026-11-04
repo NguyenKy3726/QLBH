@@ -36,7 +36,9 @@ CREATE TABLE dbo.SanPham
     MaSP   char(9)       NOT NULL,
     TenSP  nvarchar(50)  NOT NULL,
     DonGia money         NOT NULL,
-    AnhSP  nvarchar(100) NULL,
+    AnhSP  nvarchar(255) NULL,
+    AnhSPData varbinary(MAX) NULL,
+    AnhSPContentType varchar(100) NULL,
     MoTaCT ntext         NULL,
     MaLSP  smallint      NOT NULL,
     MaDVT  tinyint       NOT NULL,
@@ -113,7 +115,9 @@ CREATE TABLE dbo.NhanVien
     Email     varchar(40)   NOT NULL,
     TenDN     nvarchar(50)  NOT NULL,
     MatKhau   varbinary(MAX) NOT NULL,
-    AnhNV     nvarchar(250) NULL,
+    AnhNV     nvarchar(255)  NULL,
+    AnhNVData varbinary(MAX) NULL,
+    AnhNVContentType varchar(100) NULL,
     MaPB      tinyint       NOT NULL,
 
 CONSTRAINT PK_NhanVien PRIMARY KEY (MaNV),
@@ -208,6 +212,9 @@ CREATE TABLE dbo.KhachHang
     MaXP      char(5)        NOT NULL,
     TenDN     nvarchar(50)   NOT NULL,
     MatKhau   varbinary(MAX) NOT NULL,
+    AnhKH     nvarchar(255) NULL,
+    AnhKHData varbinary(MAX) NULL,
+    AnhKHContentType varchar(100) NULL,
 
 CONSTRAINT PK_KhachHang PRIMARY KEY (MaKH),
 

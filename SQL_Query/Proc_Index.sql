@@ -110,7 +110,7 @@ GO
 CREATE OR ALTER PROC dbo.KhachHang_DS
 AS
     SELECT MaKH, HoKH, TenKH, DienThoai, Email,
-           DiaChi, MaXP, TenDN, MatKhau
+           DiaChi, MaXP, TenDN, MatKhau, AnhKH
     FROM dbo.KhachHang
     ORDER BY MaKH, HoKH, TenKH;
 GO

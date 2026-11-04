@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MaSP" />
             <div class="form-group">
@@ -28,9 +28,19 @@
                 <span asp-validation-for="DonGia" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>Ảnh minh hoa</label>
-                <input asp-for="AnhSP" class="form-control" />
-                <span asp-validation-for="AnhSP" class="text-danger"></span>
+                <label>Ảnh hiện tại</label>
+                @if (!string.IsNullOrWhiteSpace(Model.AnhSP))
+                {
+                    var imageSource = Model.AnhSP.StartsWith("~/") || Model.AnhSP.StartsWith("/")
+                        ? Url.Content(Model.AnhSP)
+                        : Url.Action("SanPham", "Images", new { id = Model.MaSP });
+                    <div><img src="@imageSource" alt="Ảnh @Model.TenSP" style="max-width:180px;max-height:140px;object-fit:contain" /></div>
+                    <small>@Model.AnhSP</small>
+                    <label class="form-check-label"><input type="checkbox" name="removeImage" value="true" /> Xóa ảnh hiện tại</label>
+                }
+                <label for="fileAnh">Chọn ảnh mới (JPG, PNG, WEBP; tối đa 5 MB)</label>
+                <input type="file" id="fileAnh" name="fileAnh" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+                @Html.ValidationMessage("fileAnh", "", new { @class = "text-danger" })
             </div>
             <div class="form-group">
                 <label>Mô tả</label>

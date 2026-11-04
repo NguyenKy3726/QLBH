@@ -63,28 +63,30 @@ GO
 -- Mã gồm yyMMdd + số thứ tự 001, 002...
 CREATE OR ALTER PROC SanPham_Them
     @TenSP nvarchar(50),
-    @AnhSP nvarchar(100),
     @DonGia money,
     @MoTaCT ntext,
     @MaLSP smallint,
-    @MaDVT tinyint
+    @MaDVT tinyint,
+    @AnhSP nvarchar(255) = NULL,
+    @AnhSPData varbinary(MAX) = NULL,
+    @AnhSPContentType varchar(100) = NULL
 AS
 BEGIN
-    DECLARE @MaSP char(9)
-    DECLARE @MaSo bigint
+    SET NOCOUNT ON;
+    DECLARE @MaSP char(9);
+    DECLARE @MaSo bigint;
+    SET @MaSP = FORMAT(GETDATE(), 'yyMMdd') + '001';
 
-    SET @MaSP = FORMAT(GETDATE(), 'yyMMdd') + '001'
-
-    WHILE @MaSP IN (SELECT MaSP FROM SanPham)
+    WHILE @MaSP IN (SELECT MaSP FROM dbo.SanPham)
     BEGIN
-        SET @MaSo = CAST(@MaSP AS bigint) + 1
-        SET @MaSP = CAST(@MaSo AS char(9))
-    END
+        SET @MaSo = CAST(@MaSP AS bigint) + 1;
+        SET @MaSP = CAST(@MaSo AS char(9));
+    END;
 
-    INSERT INTO SanPham
-        (MaSP, TenSP, AnhSP, DonGia, MoTaCT, MaLSP, MaDVT)
+    INSERT INTO dbo.SanPham
+        (MaSP, TenSP, AnhSP, AnhSPData, AnhSPContentType, DonGia, MoTaCT, MaLSP, MaDVT)
     VALUES
-        (@MaSP, @TenSP, @AnhSP, @DonGia, @MoTaCT, @MaLSP, @MaDVT)
+        (@MaSP, @TenSP, @AnhSP, @AnhSPData, @AnhSPContentType, @DonGia, @MoTaCT, @MaLSP, @MaDVT);
 END
 GO
 
@@ -183,24 +185,25 @@ CREATE OR ALTER PROC NhanVien_Them
     @Email varchar(40),
     @TenDN nvarchar(50),
     @MatKhau varbinary(MAX),
-    @AnhNV nvarchar(250),
-    @MaPB tinyint
+    @MaPB tinyint,
+    @AnhNV nvarchar(255) = NULL,
+    @AnhNVData varbinary(MAX) = NULL,
+    @AnhNVContentType varchar(100) = NULL
 AS
 BEGIN
-    DECLARE @MaNV int
-    SET @MaNV = 1
+    SET NOCOUNT ON;
+    DECLARE @MaNV int;
+    SET @MaNV = 1;
 
-    WHILE @MaNV IN (SELECT MaNV FROM NhanVien)
-    BEGIN
-        SET @MaNV = @MaNV + 1
-    END
+    WHILE @MaNV IN (SELECT MaNV FROM dbo.NhanVien)
+        SET @MaNV = @MaNV + 1;
 
-    INSERT INTO NhanVien
-        (MaNV, HoNV, TenNV, DienThoai, Email,
-         TenDN, MatKhau, AnhNV, MaPB)
+    INSERT INTO dbo.NhanVien
+        (MaNV, HoNV, TenNV, DienThoai, Email, TenDN, MatKhau,
+         AnhNV, AnhNVData, AnhNVContentType, MaPB)
     VALUES
-        (@MaNV, @HoNV, @TenNV, @DienThoai, @Email,
-         @TenDN, @MatKhau, @AnhNV, @MaPB)
+        (@MaNV, @HoNV, @TenNV, @DienThoai, @Email, @TenDN, @MatKhau,
+         @AnhNV, @AnhNVData, @AnhNVContentType, @MaPB);
 END
 GO
 
@@ -316,23 +319,25 @@ CREATE OR ALTER PROC KhachHang_Them
     @DiaChi nvarchar(50),
     @MaXP char(5),
     @TenDN nvarchar(50),
-    @MatKhau varbinary(MAX)
+    @MatKhau varbinary(MAX),
+    @AnhKH nvarchar(255) = NULL,
+    @AnhKHData varbinary(MAX) = NULL,
+    @AnhKHContentType varchar(100) = NULL
 AS
 BEGIN
-    DECLARE @MaKH int
-    SET @MaKH = 1
+    SET NOCOUNT ON;
+    DECLARE @MaKH int;
+    SET @MaKH = 1;
 
-    WHILE @MaKH IN (SELECT MaKH FROM KhachHang)
-    BEGIN
-        SET @MaKH = @MaKH + 1
-    END
+    WHILE @MaKH IN (SELECT MaKH FROM dbo.KhachHang)
+        SET @MaKH = @MaKH + 1;
 
-    INSERT INTO KhachHang
-        (MaKH, HoKH, TenKH, DienThoai, Email,
-         DiaChi, MaXP, TenDN, MatKhau)
+    INSERT INTO dbo.KhachHang
+        (MaKH, HoKH, TenKH, DienThoai, Email, DiaChi, MaXP, TenDN, MatKhau,
+         AnhKH, AnhKHData, AnhKHContentType)
     VALUES
-        (@MaKH, @HoKH, @TenKH, @DienThoai, @Email,
-         @DiaChi, @MaXP, @TenDN, @MatKhau)
+        (@MaKH, @HoKH, @TenKH, @DienThoai, @Email, @DiaChi, @MaXP, @TenDN, @MatKhau,
+         @AnhKH, @AnhKHData, @AnhKHContentType);
 END
 GO
 

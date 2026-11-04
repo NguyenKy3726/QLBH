@@ -54,7 +54,13 @@
                 @Html.DisplayFor(model => item.DonGia)
             </td>
             <td>
-                @Html.DisplayFor(model => item.AnhSP)
+                @if (!string.IsNullOrWhiteSpace(item.AnhSP))
+                {
+                    var imageSource = item.AnhSP.StartsWith("~/") || item.AnhSP.StartsWith("/")
+                        ? Url.Content(item.AnhSP)
+                        : Url.Action("SanPham", "Images", new { id = item.MaSP });
+                    <img src="@imageSource" alt="Ảnh @item.TenSP" style="max-width:70px;max-height:70px;object-fit:contain" />
+                }
             </td>
             <td>
                 @Html.DisplayFor(model => item.MoTaCT)

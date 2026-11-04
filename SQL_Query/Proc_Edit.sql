@@ -35,19 +35,27 @@ CREATE OR ALTER PROC SanPham_Sua
     @MaSP char(9),
     @TenSP nvarchar(50),
     @DonGia money,
-    @AnhSP nvarchar(100),
     @MoTaCT ntext,
     @MaLSP smallint,
-    @MaDVT tinyint
+    @MaDVT tinyint,
+    @AnhSP nvarchar(255) = NULL,
+    @AnhSPData varbinary(MAX) = NULL,
+    @AnhSPContentType varchar(100) = NULL,
+    @XoaAnh bit = 0
 AS
-    UPDATE SanPham
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE dbo.SanPham
     SET TenSP = @TenSP,
         DonGia = @DonGia,
-        AnhSP = @AnhSP,
+        AnhSP = CASE WHEN @XoaAnh = 1 THEN NULL WHEN @AnhSPData IS NOT NULL THEN @AnhSP ELSE AnhSP END,
+        AnhSPData = CASE WHEN @XoaAnh = 1 THEN NULL WHEN @AnhSPData IS NOT NULL THEN @AnhSPData ELSE AnhSPData END,
+        AnhSPContentType = CASE WHEN @XoaAnh = 1 THEN NULL WHEN @AnhSPData IS NOT NULL THEN @AnhSPContentType ELSE AnhSPContentType END,
         MoTaCT = @MoTaCT,
         MaLSP = @MaLSP,
         MaDVT = @MaDVT
-    WHERE MaSP = @MaSP
+    WHERE MaSP = @MaSP;
+END
 GO
 
 -- 5. Cập nhật bảng Tỉnh
@@ -102,25 +110,31 @@ CREATE OR ALTER PROC dbo.NhanVien_Sua
     @DienThoai varchar(11),
     @Email varchar(40),
     @TenDN nvarchar(50),
-    @AnhNV nvarchar(250),
     @MaPB tinyint,
+    @AnhNV nvarchar(255) = NULL,
+    @AnhNVData varbinary(MAX) = NULL,
+    @AnhNVContentType varchar(100) = NULL,
+    @XoaAnh bit = 0,
     @MatKhauMoi nvarchar(50) = NULL
 AS
+BEGIN
+    SET NOCOUNT ON;
     UPDATE dbo.NhanVien
     SET HoNV = @HoNV,
         TenNV = @TenNV,
         DienThoai = @DienThoai,
         Email = @Email,
         TenDN = @TenDN,
-        AnhNV = @AnhNV,
+        AnhNV = CASE WHEN @XoaAnh = 1 THEN NULL WHEN @AnhNVData IS NOT NULL THEN @AnhNV ELSE AnhNV END,
+        AnhNVData = CASE WHEN @XoaAnh = 1 THEN NULL WHEN @AnhNVData IS NOT NULL THEN @AnhNVData ELSE AnhNVData END,
+        AnhNVContentType = CASE WHEN @XoaAnh = 1 THEN NULL WHEN @AnhNVData IS NOT NULL THEN @AnhNVContentType ELSE AnhNVContentType END,
         MaPB = @MaPB,
         MatKhau = CASE
-            WHEN @MatKhauMoi IS NULL
-                 OR DATALENGTH(@MatKhauMoi) = 0
-                THEN MatKhau
+            WHEN @MatKhauMoi IS NULL OR DATALENGTH(@MatKhauMoi) = 0 THEN MatKhau
             ELSE HASHBYTES('SHA2_512', @MatKhauMoi)
         END
     WHERE MaNV = @MaNV;
+END
 GO
 
 -- 10. Bảng Phân quyền
@@ -185,8 +199,14 @@ CREATE OR ALTER PROC dbo.KhachHang_Sua
     @DiaChi nvarchar(50),
     @MaXP char(5),
     @TenDN nvarchar(50),
-    @matkhaumoi nvarchar(50) = NULL
+    @matkhaumoi nvarchar(50) = NULL,
+    @AnhKH nvarchar(255) = NULL,
+    @AnhKHData varbinary(MAX) = NULL,
+    @AnhKHContentType varchar(100) = NULL,
+    @XoaAnh bit = 0
 AS
+BEGIN
+    SET NOCOUNT ON;
     UPDATE dbo.KhachHang
     SET HoKH = @HoKH,
         TenKH = @TenKH,
@@ -195,13 +215,15 @@ AS
         DiaChi = @DiaChi,
         MaXP = @MaXP,
         TenDN = @TenDN,
+        AnhKH = CASE WHEN @XoaAnh = 1 THEN NULL WHEN @AnhKHData IS NOT NULL THEN @AnhKH ELSE AnhKH END,
+        AnhKHData = CASE WHEN @XoaAnh = 1 THEN NULL WHEN @AnhKHData IS NOT NULL THEN @AnhKHData ELSE AnhKHData END,
+        AnhKHContentType = CASE WHEN @XoaAnh = 1 THEN NULL WHEN @AnhKHData IS NOT NULL THEN @AnhKHContentType ELSE AnhKHContentType END,
         MatKhau = CASE
-            WHEN @MatKhauMoi IS NULL
-                 OR DATALENGTH(@matkhaumoi) = 0
-                THEN MatKhau
+            WHEN @MatKhauMoi IS NULL OR DATALENGTH(@matkhaumoi) = 0 THEN MatKhau
             ELSE HASHBYTES('SHA2_512', @matkhaumoi)
         END
     WHERE MaKH = @MaKH;
+END
 GO
 
 -- 15. Cập nhật bảng Đơn bán hàng

@@ -9,6 +9,10 @@
 <div>
     <h4>KhachHang</h4>
     <hr />
+    @if (!string.IsNullOrWhiteSpace(Model.AnhKH))
+    {
+        <img src="@Url.Action("KhachHang", "Images", new { id = Model.MaKH })" alt="Ảnh @Model.HoKH @Model.TenKH" style="width:120px;height:120px;object-fit:cover;border-radius:50%" />
+    }
     <dl class="row">
         <dt class="col-sm-2">
             Mã khách hàng

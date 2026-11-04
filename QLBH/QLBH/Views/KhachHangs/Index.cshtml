@@ -24,6 +24,7 @@
             <th>
                 Điện thoại
             </th>
+            <th>Ảnh đại diện</th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
@@ -56,6 +57,12 @@
             </td>
             <td>
                 @Html.DisplayFor(model => item.DienThoai)
+            </td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(item.AnhKH))
+                {
+                    <img src="@Url.Action("KhachHang", "Images", new { id = item.MaKH })" alt="Ảnh @item.HoKH @item.TenKH" style="width:48px;height:48px;object-fit:cover;border-radius:50%" />
+                }
             </td>
             <td>
                 @Html.DisplayFor(model => item.Email)

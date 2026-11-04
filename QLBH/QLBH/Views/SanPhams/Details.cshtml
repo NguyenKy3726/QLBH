@@ -39,7 +39,14 @@
             Ảnh minh họa
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AnhSP)
+            @if (!string.IsNullOrWhiteSpace(Model.AnhSP))
+            {
+                var imageSource = Model.AnhSP.StartsWith("~/") || Model.AnhSP.StartsWith("/")
+                    ? Url.Content(Model.AnhSP)
+                    : Url.Action("SanPham", "Images", new { id = Model.MaSP });
+                <img src="@imageSource" alt="Ảnh @Model.TenSP" style="max-width:240px;max-height:200px;object-fit:contain" />
+                <div>@Model.AnhSP</div>
+            }
         </dd>
     
         <dt class = "col-sm-2">

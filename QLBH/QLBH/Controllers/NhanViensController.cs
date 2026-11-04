@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using QLBH.Data;
 using QLBH.Models;
+using QLBH.Services;
 
 [QLBH.Filters.TablePermissionAuthorize("NhanVien")]
 public class NhanViensController : Controller
@@ -54,11 +55,17 @@ public class NhanViensController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("MaNV,HoNV,TenNV,DienThoai,Email,TenDN,MatKhau,AnhNV,MaPB")] NhanVien nhanvien)
+    [RequestSizeLimit(6 * 1024 * 1024)]
+    public async Task<IActionResult> Create([Bind("MaNV,HoNV,TenNV,DienThoai,Email,TenDN,MatKhau,MaPB")] NhanVien nhanvien, IFormFile? fileAnh)
     {
+        var upload = await ImageUploadService.ReadAsync(fileAnh);
+        if (upload.Error is not null)
+            ModelState.AddModelError("fileAnh", upload.Error);
+
         if (ModelState.IsValid)
         {
-            _context.NhanVien_Them(nhanvien);
+            nhanvien.AnhNV = upload.FileName;
+            _context.NhanVien_Them(nhanvien, upload.Bytes, upload.ContentType);
             return RedirectToAction(nameof(Index));
         }
         ViewBag.MaPB = new SelectList(_context.PhongBan_DS(), "MaPB", "TenPB", nhanvien.MaPB);
@@ -87,41 +94,39 @@ public class NhanViensController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(byte? manv, [Bind("MaNV,HoNV,TenNV,DienThoai,Email,TenDN,AnhNV,MaPB")] NhanVien nhanvien, string? matkhaumoi)
+    [RequestSizeLimit(6 * 1024 * 1024)]
+    public async Task<IActionResult> Edit(byte? manv, [Bind("MaNV,HoNV,TenNV,DienThoai,Email,TenDN,MaPB")] NhanVien nhanvien, string? matkhaumoi, IFormFile? fileAnh, bool removeImage = false)
     {
-        if (manv != nhanvien.MaNV)
-        {
-            return NotFound();
-        }
-        // Mật khẩu mới được nhận qua tham số matkhaumoi
+        if (manv != nhanvien.MaNV) return NotFound();
+
+        var current = _context.NhanVien_CT(manv!.Value);
+        if (current is null) return NotFound();
+
         ModelState.Remove(nameof(NhanVien.MatKhau));
-        if (matkhaumoi != null && matkhaumoi.Length > 50)
-        {
-            ModelState.AddModelError(
-                "MatKhauMoi",
-                "Mật khẩu không được vượt quá 50 ký tự."
-            );
-        }
+        if (matkhaumoi is { Length: > 50 })
+            ModelState.AddModelError("MatKhauMoi", "Mật khẩu không được vượt quá 50 ký tự.");
+
+        var upload = await ImageUploadService.ReadAsync(fileAnh);
+        if (upload.Error is not null)
+            ModelState.AddModelError("fileAnh", upload.Error);
+        if (removeImage && upload.Bytes is not null)
+            ModelState.AddModelError("fileAnh", "Hãy chọn thay ảnh hoặc xóa ảnh hiện tại, không thể chọn cả hai.");
+
         if (ModelState.IsValid)
         {
+            nhanvien.AnhNV = removeImage ? null : upload.FileName ?? current.AnhNV;
             try
             {
-                _context.Update(nhanvien);
-                _context.NhanVien_Sua(nhanvien, matkhaumoi);
+                _context.NhanVien_Sua(nhanvien, matkhaumoi, upload.Bytes, upload.ContentType, removeImage);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!NhanVienExists(nhanvien.MaNV))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!NhanVienExists(nhanvien.MaNV)) return NotFound();
+                throw;
             }
             return RedirectToAction(nameof(Index));
         }
+        nhanvien.AnhNV = current.AnhNV;
         ViewBag.MaPB = new SelectList(_context.PhongBan_DS(), "MaPB", "TenPB", nhanvien.MaPB);
         return View(nhanvien);
     }

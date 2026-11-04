@@ -128,7 +128,7 @@ CREATE OR ALTER PROC dbo.KhachHang_CT
     @MaKH smallint
 AS
     SELECT MaKH, HoKH, TenKH, DienThoai, Email,
-           DiaChi, MaXP, TenDN, MatKhau
+           DiaChi, MaXP, TenDN, MatKhau, AnhKH
     FROM dbo.KhachHang
     WHERE MaKH = @MaKH;
 GO

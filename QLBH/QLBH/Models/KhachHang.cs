@@ -14,5 +14,6 @@ namespace QLBH.Models
         public string MaXP { get; set; }
         public string TenDN { get; set; }
         public byte[] MatKhau { get; set; }
+        public string? AnhKH { get; set; }
     }
 }

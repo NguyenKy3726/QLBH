@@ -216,39 +216,42 @@ namespace QLBH.Data
             return SanPhams.FromSqlRaw("EXEC SanPham_CT @MaSP", p).ToList().FirstOrDefault();
         }
 
-        public int SanPham_Them(SanPham sp)
+        public int SanPham_Them(SanPham sp, byte[]? imageData = null, string? contentType = null)
         {
-            var cmd = Database.GetDbConnection().CreateCommand();
+            using var cmd = Database.GetDbConnection().CreateCommand();
             cmd.CommandText = "SanPham_Them";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(new SqlParameter("@TenSP", sp.TenSP));
             cmd.Parameters.Add(new SqlParameter("@DonGia", sp.DonGia));
-            cmd.Parameters.Add(new SqlParameter("@AnhSP", (object?)sp.AnhSP ?? DBNull.Value));
+            cmd.Parameters.Add(new SqlParameter("@AnhSP", SqlDbType.NVarChar, 255) { Value = (object?)sp.AnhSP ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhSPData", SqlDbType.VarBinary, -1) { Value = (object?)imageData ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhSPContentType", SqlDbType.VarChar, 100) { Value = (object?)contentType ?? DBNull.Value });
             cmd.Parameters.Add(new SqlParameter("@MoTaCT", (object?)sp.MoTaCT ?? DBNull.Value));
             cmd.Parameters.Add(new SqlParameter("@MaLSP", sp.MaLSP));
             cmd.Parameters.Add(new SqlParameter("@MaDVT", sp.MaDVT));
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try { return cmd.ExecuteNonQuery(); }
+            finally { Database.CloseConnection(); }
         }
 
-        public int SanPham_Sua(SanPham sp)
+        public int SanPham_Sua(SanPham sp, byte[]? imageData = null, string? contentType = null, bool removeImage = false)
         {
-            var cmd = Database.GetDbConnection().CreateCommand();
+            using var cmd = Database.GetDbConnection().CreateCommand();
             cmd.CommandText = "SanPham_Sua";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(new SqlParameter("@MaSP", sp.MaSP));
             cmd.Parameters.Add(new SqlParameter("@TenSP", sp.TenSP));
             cmd.Parameters.Add(new SqlParameter("@DonGia", sp.DonGia));
-            cmd.Parameters.Add(new SqlParameter("@AnhSP", (object?)sp.AnhSP ?? DBNull.Value));
+            cmd.Parameters.Add(new SqlParameter("@AnhSP", SqlDbType.NVarChar, 255) { Value = (object?)sp.AnhSP ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhSPData", SqlDbType.VarBinary, -1) { Value = (object?)imageData ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhSPContentType", SqlDbType.VarChar, 100) { Value = (object?)contentType ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@XoaAnh", SqlDbType.Bit) { Value = removeImage });
             cmd.Parameters.Add(new SqlParameter("@MoTaCT", (object?)sp.MoTaCT ?? DBNull.Value));
             cmd.Parameters.Add(new SqlParameter("@MaLSP", sp.MaLSP));
             cmd.Parameters.Add(new SqlParameter("@MaDVT", sp.MaDVT));
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try { return cmd.ExecuteNonQuery(); }
+            finally { Database.CloseConnection(); }
         }
 
         public int SanPham_Xoa(string MaSP)
@@ -539,9 +542,9 @@ namespace QLBH.Data
             return NhanViens.FromSqlRaw("EXEC NhanVien_CT @MaNV", p).ToList().FirstOrDefault();
         }
 
-        public int NhanVien_Them(NhanVien nv)
+        public int NhanVien_Them(NhanVien nv, byte[]? imageData = null, string? contentType = null)
         {
-            var cmd = Database.GetDbConnection().CreateCommand();
+            using var cmd = Database.GetDbConnection().CreateCommand();
             cmd.CommandText = "NhanVien_Them";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(new SqlParameter("@HoNV", nv.HoNV));
@@ -550,38 +553,35 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@Email", nv.Email));
             cmd.Parameters.Add(new SqlParameter("@TenDN", nv.TenDN));
             cmd.Parameters.Add(new SqlParameter("@MatKhau", nv.MatKhau));
-            cmd.Parameters.Add(new SqlParameter("@AnhNV", (object?)nv.AnhNV ?? DBNull.Value));
+            cmd.Parameters.Add(new SqlParameter("@AnhNV", SqlDbType.NVarChar, 255) { Value = (object?)nv.AnhNV ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhNVData", SqlDbType.VarBinary, -1) { Value = (object?)imageData ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhNVContentType", SqlDbType.VarChar, 100) { Value = (object?)contentType ?? DBNull.Value });
             cmd.Parameters.Add(new SqlParameter("@MaPB", nv.MaPB));
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try { return cmd.ExecuteNonQuery(); }
+            finally { Database.CloseConnection(); }
         }
 
-        public int NhanVien_Sua(NhanVien nv, string? matkhaumoi)    
+        public int NhanVien_Sua(NhanVien nv, string? matkhaumoi, byte[]? imageData = null, string? contentType = null, bool removeImage = false)
         {
-            var cmd = Database.GetDbConnection().CreateCommand();
-
+            using var cmd = Database.GetDbConnection().CreateCommand();
             cmd.CommandText = "NhanVien_Sua";
             cmd.CommandType = CommandType.StoredProcedure;
-
             cmd.Parameters.Add(new SqlParameter("@MaNV", nv.MaNV));
             cmd.Parameters.Add(new SqlParameter("@HoNV", nv.HoNV));
             cmd.Parameters.Add(new SqlParameter("@TenNV", nv.TenNV));
             cmd.Parameters.Add(new SqlParameter("@DienThoai", nv.DienThoai));
             cmd.Parameters.Add(new SqlParameter("@Email", nv.Email));
             cmd.Parameters.Add(new SqlParameter("@TenDN", nv.TenDN));
-            cmd.Parameters.Add(new SqlParameter("@AnhNV", (object?)nv.AnhNV ?? DBNull.Value));
+            cmd.Parameters.Add(new SqlParameter("@AnhNV", SqlDbType.NVarChar, 255) { Value = (object?)nv.AnhNV ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhNVData", SqlDbType.VarBinary, -1) { Value = (object?)imageData ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhNVContentType", SqlDbType.VarChar, 100) { Value = (object?)contentType ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@XoaAnh", SqlDbType.Bit) { Value = removeImage });
             cmd.Parameters.Add(new SqlParameter("@MaPB", nv.MaPB));
-            cmd.Parameters.Add(new SqlParameter("@MatKhauMoi", SqlDbType.NVarChar, 50)
-            {
-                Value = (object?)matkhaumoi ?? DBNull.Value
-            });
-
+            cmd.Parameters.Add(new SqlParameter("@MatKhauMoi", SqlDbType.NVarChar, 50) { Value = (object?)matkhaumoi ?? DBNull.Value });
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try { return cmd.ExecuteNonQuery(); }
+            finally { Database.CloseConnection(); }
         }
 
         public int NhanVien_Xoa(byte MaNV)
@@ -931,9 +931,9 @@ namespace QLBH.Data
             return KhachHangs.FromSqlRaw("EXEC KhachHang_CT @MaKH", p).ToList().FirstOrDefault();
         }
 
-        public int KhachHang_Them(KhachHang kh)
+        public int KhachHang_Them(KhachHang kh, byte[]? imageData = null, string? contentType = null)
         {
-            var cmd = Database.GetDbConnection().CreateCommand();
+            using var cmd = Database.GetDbConnection().CreateCommand();
             cmd.CommandText = "KhachHang_Them";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(new SqlParameter("@HoKH", kh.HoKH));
@@ -944,15 +944,17 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@MaXP", kh.MaXP));
             cmd.Parameters.Add(new SqlParameter("@TenDN", kh.TenDN));
             cmd.Parameters.Add(new SqlParameter("@MatKhau", kh.MatKhau));
+            cmd.Parameters.Add(new SqlParameter("@AnhKH", SqlDbType.NVarChar, 255) { Value = (object?)kh.AnhKH ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhKHData", SqlDbType.VarBinary, -1) { Value = (object?)imageData ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhKHContentType", SqlDbType.VarChar, 100) { Value = (object?)contentType ?? DBNull.Value });
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try { return cmd.ExecuteNonQuery(); }
+            finally { Database.CloseConnection(); }
         }
 
-        public int KhachHang_Sua(KhachHang kh, string? matkhaumoi)
+        public int KhachHang_Sua(KhachHang kh, string? matkhaumoi, byte[]? imageData = null, string? contentType = null, bool removeImage = false)
         {
-            var cmd = Database.GetDbConnection().CreateCommand();
+            using var cmd = Database.GetDbConnection().CreateCommand();
             cmd.CommandText = "KhachHang_Sua";
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(new SqlParameter("@MaKH", kh.MaKH));
@@ -963,14 +965,14 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@DiaChi", kh.DiaChi));
             cmd.Parameters.Add(new SqlParameter("@MaXP", kh.MaXP));
             cmd.Parameters.Add(new SqlParameter("@TenDN", kh.TenDN));
-            cmd.Parameters.Add(new SqlParameter("@matkhaumoi", SqlDbType.NVarChar, 50)
-            {
-                Value = (object?)matkhaumoi ?? DBNull.Value
-            });
+            cmd.Parameters.Add(new SqlParameter("@matkhaumoi", SqlDbType.NVarChar, 50) { Value = (object?)matkhaumoi ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhKH", SqlDbType.NVarChar, 255) { Value = (object?)kh.AnhKH ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhKHData", SqlDbType.VarBinary, -1) { Value = (object?)imageData ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@AnhKHContentType", SqlDbType.VarChar, 100) { Value = (object?)contentType ?? DBNull.Value });
+            cmd.Parameters.Add(new SqlParameter("@XoaAnh", SqlDbType.Bit) { Value = removeImage });
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try { return cmd.ExecuteNonQuery(); }
+            finally { Database.CloseConnection(); }
         }
 
         public int KhachHang_Xoa(short MaKH)
@@ -1230,6 +1232,51 @@ namespace QLBH.Data
         }
 
         // Cấu hình khóa chính ghép
+        public (byte[] Bytes, string ContentType)? StoredImage(string kind, string id)
+        {
+            string sql;
+            SqlParameter key;
+            switch (kind)
+            {
+                case "product":
+                    if (id.Length != 9) return null;
+                    sql = "SELECT AnhSPData, AnhSPContentType FROM dbo.SanPham WHERE MaSP = @id";
+                    key = new SqlParameter("@id", SqlDbType.Char, 9) { Value = id };
+                    break;
+                case "employee":
+                    if (!byte.TryParse(id, out var employeeId)) return null;
+                    sql = "SELECT AnhNVData, AnhNVContentType FROM dbo.NhanVien WHERE MaNV = @id";
+                    key = new SqlParameter("@id", SqlDbType.TinyInt) { Value = employeeId };
+                    break;
+                case "customer":
+                    if (!short.TryParse(id, out var customerId)) return null;
+                    sql = "SELECT AnhKHData, AnhKHContentType FROM dbo.KhachHang WHERE MaKH = @id";
+                    key = new SqlParameter("@id", SqlDbType.SmallInt) { Value = customerId };
+                    break;
+                default:
+                    return null;
+            }
+
+            var connection = Database.GetDbConnection();
+            var closeWhenDone = connection.State != ConnectionState.Open;
+            if (closeWhenDone) Database.OpenConnection();
+            try
+            {
+                using var cmd = connection.CreateCommand();
+                cmd.CommandText = sql;
+                cmd.Parameters.Add(key);
+                using var reader = cmd.ExecuteReader();
+                if (!reader.Read() || reader.IsDBNull(0)) return null;
+                var bytes = reader.GetFieldValue<byte[]>(0);
+                var contentType = reader.IsDBNull(1) ? "application/octet-stream" : reader.GetString(1);
+                return (bytes, contentType);
+            }
+            finally
+            {
+                if (closeWhenDone) Database.CloseConnection();
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

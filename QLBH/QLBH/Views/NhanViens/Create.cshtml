@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -50,9 +50,9 @@
             </div>
 
             <div class="form-group">
-                <label>Ảnh đại diện</label>
-                <input asp-for="AnhNV" class="form-control" />
-                <span asp-validation-for="AnhNV" class="text-danger"></span>
+                <label for="fileAnh">Ảnh đại diện (JPG, PNG, WEBP; tối đa 5 MB)</label>
+                <input type="file" id="fileAnh" name="fileAnh" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+                @Html.ValidationMessage("fileAnh", "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group">
