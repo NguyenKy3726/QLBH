@@ -5,14 +5,43 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using QLBH.Data;
 using QLBH.Models;
+using QLBH.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 public class SanPhamsController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public SanPhamsController(AppDbContext context)
+    public SanPhamsController(AppDbContext context, IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
+    }
+
+    [HttpGet("/uploads/products/{fileName}")]
+    public IActionResult ProductImage(string fileName)
+    {
+        if (string.IsNullOrWhiteSpace(fileName) || fileName != Path.GetFileName(fileName))
+            return NotFound();
+
+        var contentType = Path.GetExtension(fileName).ToLowerInvariant() switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".webp" => "image/webp",
+            _ => null
+        };
+        if (contentType is null)
+            return NotFound();
+
+        var webRoot = _environment.WebRootPath;
+        if (string.IsNullOrWhiteSpace(webRoot))
+            webRoot = Path.Combine(_environment.ContentRootPath, "wwwroot");
+
+        var path = Path.Combine(webRoot, "uploads", "products", fileName);
+        return System.IO.File.Exists(path) ? PhysicalFile(path, contentType) : NotFound();
     }
 
     // GET: SANPHAMS
@@ -99,9 +128,21 @@ public class SanPhamsController : Controller
     [ValidateAntiForgeryToken]
     [QLBH.Filters.TablePermissionAuthorize("SanPham")]
 
-    public async Task<IActionResult> Create([Bind("TenSP,DonGia,AnhSP,MoTaCT,MaLSP,MaDVT")] SanPham sanpham)
+    public async Task<IActionResult> Create(
+        [Bind("TenSP,DonGia,MoTaCT,MaLSP,MaDVT")] SanPham sanpham,
+        IFormFile? fileAnh,
+        CancellationToken cancellationToken)
     {
         ModelState.Remove(nameof(SanPham.MaSP));
+        if (ModelState.IsValid && fileAnh is { Length: > 0 })
+        {
+            var upload = await ProductImageUploadService.SaveAsync(fileAnh, _environment, cancellationToken);
+            if (upload.Error is not null)
+                ModelState.AddModelError("fileAnh", upload.Error);
+            else
+                sanpham.AnhSP = upload.RelativePath;
+        }
+
         if (ModelState.IsValid)
         {
             _context.SanPham_Them(sanpham);
@@ -139,11 +180,29 @@ public class SanPhamsController : Controller
     [ValidateAntiForgeryToken]
     [QLBH.Filters.TablePermissionAuthorize("SanPham")]
 
-    public async Task<IActionResult> Edit(string? masp, [Bind("MaSP, TenSP,DonGia,AnhSP,MoTaCT,MaLSP,MaDVT")] SanPham sanpham)
+    public async Task<IActionResult> Edit(
+        string? masp,
+        [Bind("MaSP,TenSP,DonGia,MoTaCT,MaLSP,MaDVT")] SanPham sanpham,
+        IFormFile? fileAnh,
+        CancellationToken cancellationToken)
     {
         if (masp != sanpham.MaSP)
         {
             return NotFound();
+        }
+
+        var currentProduct = _context.SanPham_CT(masp);
+        if (currentProduct is null)
+            return NotFound();
+
+        sanpham.AnhSP = currentProduct.AnhSP;
+        if (ModelState.IsValid && fileAnh is { Length: > 0 })
+        {
+            var upload = await ProductImageUploadService.SaveAsync(fileAnh, _environment, cancellationToken);
+            if (upload.Error is not null)
+                ModelState.AddModelError("fileAnh", upload.Error);
+            else
+                sanpham.AnhSP = upload.RelativePath;
         }
 
         if (ModelState.IsValid)
