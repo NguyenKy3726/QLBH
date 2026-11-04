@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QLBH.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body id="top" class="app-shell">
     <header class="site-header">
@@ -54,6 +55,8 @@
                                 <ul class="dropdown-menu site-menu">
                                     @if (hasAdmin)
                                     {
+                                        <li><a class="dropdown-item" asp-controller="QuanLy" asp-action="Index">Tổng quan quản lý</a></li>
+                                        <li><hr class="dropdown-divider" /></li>
                                         <li><h2 class="dropdown-header">Danh mục & hệ thống</h2></li>
                                         <li><a class="dropdown-item" asp-controller="DonViTinhs" asp-action="Index">Đơn vị tính</a></li>
                                         <li><a class="dropdown-item" asp-controller="NhomSPs" asp-action="Index">Nhóm sản phẩm</a></li>
@@ -78,6 +81,8 @@
                                     {
                                         @if (visibleTables.Count > 0)
                                         {
+                                            <li><a class="dropdown-item" asp-controller="QuanLy" asp-action="Index">Tổng quan quản lý</a></li>
+                                            <li><hr class="dropdown-divider" /></li>
                                             @if (CanRead("DonViTinh") || CanRead("NhomSP") || CanRead("LoaiSP") || CanRead("SanPham") || CanRead("Tinh") || CanRead("XaPhuong"))
                                             { <li><h2 class="dropdown-header">Danh mục</h2></li> }
                                             @if (CanRead("DonViTinh")) { <li><a class="dropdown-item" asp-controller="DonViTinhs" asp-action="Index">Đơn vị tính</a></li> }
