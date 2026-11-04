@@ -150,7 +150,6 @@ public class KhachHangsController : Controller
         {
             try
             {
-                _context.Update(khachhang);
                 _context.KhachHang_Sua(khachhang, matkhaumoi);
             }
             catch (DbUpdateConcurrencyException)

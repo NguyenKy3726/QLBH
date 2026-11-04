@@ -222,7 +222,7 @@ public class SanPhamsController : Controller
         {
             try
             {
-                _context.Update(sanpham);
+
                 _context.SanPham_Sua(sanpham);
             }
             catch (DbUpdateConcurrencyException)

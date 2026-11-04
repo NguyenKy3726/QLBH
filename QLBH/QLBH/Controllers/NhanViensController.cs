@@ -154,7 +154,6 @@ public class NhanViensController : Controller
         {
             try
             {
-                _context.Update(nhanvien);
                 _context.NhanVien_Sua(nhanvien, matkhaumoi);
             }
             catch (DbUpdateConcurrencyException)
