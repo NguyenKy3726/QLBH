@@ -105,13 +105,21 @@ namespace QLBH.Controllers
             return View();
         }
 
-        private short? CurrentCustomerId() =>
-            short.TryParse(HttpContext.Session.GetString("MaKH"), out var maKH) ? maKH : null;
+        private short? CurrentCustomerId()
+        {
+            if (HttpContext.Session.GetString("Role") != "KhachHang")
+                return null;
+
+            var maKH = HttpContext.Session.GetInt32("MaKH");
+            return maKH is >= short.MinValue and <= short.MaxValue
+                ? (short)maKH.Value
+                : null;
+        }
 
         private IActionResult RedirectToCustomerLogin()
         {
             var returnUrl = Url.Action(nameof(Index), "GioHang");
-            return RedirectToAction("KhachHangDangNhap", "Account", new { returnUrl });
+            return RedirectToAction("Login", "Account", new { returnUrl });
         }
     }
 }

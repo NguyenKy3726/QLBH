@@ -601,6 +601,24 @@ namespace QLBH.Data
             }
         }
 
+        public byte NhanVien_DangNhap(string TenDN, string MatKhau) //Trả về Mã nhân viên nếu đăng nhập thành công
+        {
+            var cmd = Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = "NhanVien_DangNhap";
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@TenDN", TenDN));
+            cmd.Parameters.Add(new SqlParameter("@MatKhau", MatKhau));
+            Database.OpenConnection();
+            var reader = cmd.ExecuteReader();
+            byte maNV = 0;
+            if (reader.Read())//Nếu có dữ liệu để đọc
+            {
+                maNV = reader.GetByte(reader.GetOrdinal("MaNV"));
+            }
+            Database.CloseConnection();
+            return maNV;
+        }
+
         public short KhachHang_DangNhap(string tenDN, string matKhau)
         {
             var cmd = Database.GetDbConnection().CreateCommand();
@@ -621,22 +639,14 @@ namespace QLBH.Data
             }
         }
 
-        public byte NhanVien_DangNhap(string TenDN, string MatKhau) //Trả về Mã nhân viên nếu đăng nhập thành công
+        public List<string> NhanVien_QuyenDanhSach(byte maNV)
         {
-            var cmd = Database.GetDbConnection().CreateCommand();
-            cmd.CommandText = "NhanVien_DangNhap";
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.Add(new SqlParameter("@TenDN", TenDN));
-            cmd.Parameters.Add(new SqlParameter("@MatKhau", MatKhau));
-            Database.OpenConnection();
-            var reader = cmd.ExecuteReader();
-            byte maNV = 0;
-            if (reader.Read())//Nếu có dữ liệu để đọc
-            {
-                maNV = reader.GetByte(reader.GetOrdinal("MaNV"));
-            }
-            Database.CloseConnection();
-            return maNV;
+            return (from pq in PhanQuyens
+                    join q in Quyens on pq.MaQuyen equals q.MaQuyen
+                    where pq.MaNV == maNV
+                    select q.TenQuyen)
+                .Distinct()
+                .ToList();
         }
 
         // 10. Thao tác trên bảng PhanQuyen
@@ -667,9 +677,14 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@MaQuyen", pq.MaQuyen));
             cmd.Parameters.Add(new SqlParameter("@MaNV", pq.MaNV));
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try
+            {
+                return cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                Database.CloseConnection();
+            }
         }
 
         public int PhanQuyen_Xoa(byte MaQuyen, byte MaNV)
@@ -856,9 +871,14 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@SLM", ctmh.SLM));
             cmd.Parameters.Add(new SqlParameter("@DGM", ctmh.DGM));
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try
+            {
+                return cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                Database.CloseConnection();
+            }
         }
 
         public int CTMH_Sua(CTMH ctmh)
@@ -1072,9 +1092,14 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@SLB", ctbh.SLB));
             cmd.Parameters.Add(new SqlParameter("@DGB", ctbh.DGB));
             Database.OpenConnection();
-            var kq = cmd.ExecuteNonQuery();
-            Database.CloseConnection();
-            return kq;
+            try
+            {
+                return cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                Database.CloseConnection();
+            }
         }
 
         public int CTBH_Sua(CTBH ctbh)
@@ -1109,14 +1134,54 @@ namespace QLBH.Data
                 Database.CloseConnection();
             }
         }
-        // Các thao tác giỏ hàng. Giỏ và chi tiết giỏ được lưu riêng với đơn bán hàng.
+        /// <summary>Kiểm tra quyền C/R/U/D của nhân viên trên một bảng nghiệp vụ.</summary>
+        public bool NhanVien_CoQuyenBang(byte maNV, string tenBang, string thaoTac)
+        {
+            using var cmd = Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = @"
+                SELECT CASE WHEN EXISTS
+                (
+                    SELECT 1
+                    FROM dbo.PhanQuyen AS pq
+                    INNER JOIN dbo.Quyen AS q ON q.MaQuyen = pq.MaQuyen
+                    INNER JOIN dbo.QuyenBang AS qb ON qb.MaQuyen = q.MaQuyen
+                    WHERE pq.MaNV = @MaNV
+                      AND qb.TenBang = @TenBang
+                      AND
+                      (
+                           (@ThaoTac = 'C' AND qb.ChoPhepThem = 1)
+                        OR (@ThaoTac = 'R' AND qb.ChoPhepXem = 1)
+                        OR (@ThaoTac = 'U' AND qb.ChoPhepSua = 1)
+                        OR (@ThaoTac = 'D' AND qb.ChoPhepXoa = 1)
+                      )
+                ) THEN 1 ELSE 0 END;";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new SqlParameter("@MaNV", SqlDbType.TinyInt) { Value = maNV });
+            cmd.Parameters.Add(new SqlParameter("@TenBang", SqlDbType.VarChar, 30) { Value = tenBang });
+            cmd.Parameters.Add(new SqlParameter("@ThaoTac", SqlDbType.Char, 1) { Value = thaoTac });
+
+            var connectionWasClosed = Database.GetDbConnection().State != ConnectionState.Open;
+            if (connectionWasClosed)
+                Database.OpenConnection();
+
+            try
+            {
+                return Convert.ToInt32(cmd.ExecuteScalar()) == 1;
+            }
+            finally
+            {
+                if (connectionWasClosed)
+                    Database.CloseConnection();
+            }
+        }
+
+        // Giỏ hàng được lưu riêng, không sửa các dòng CTBH đã tạo thành đơn.
         public DbSet<GioHangItemViewModel> GioHangItems { get; set; } = null!;
 
         public List<GioHangItemViewModel> GioHang_DS(short maKH)
         {
             var p = new SqlParameter("@MaKH", maKH);
-            return GioHangItems
-                .FromSqlRaw("EXEC dbo.GioHang_DS @MaKH", p)
+            return GioHangItems.FromSqlRaw("EXEC dbo.GioHang_DS @MaKH", p)
                 .AsNoTracking()
                 .ToList();
         }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QLBH.Data;
 using QLBH.Models;
 
+[QLBH.Filters.TablePermissionAuthorize("CTMH")]
 public class CTMHsController : Controller
 {
     private readonly AppDbContext _context;
@@ -66,10 +67,17 @@ public class CTMHsController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.CTMH_Them(ctmh);
-            return RedirectToAction(nameof(Index));
+            if (_context.CTMH_CT(ctmh.MaDMH, ctmh.MaSP) != null)
+            {
+                ModelState.AddModelError(string.Empty, "Không được tạo trùng khóa chính: mã đơn mua hàng và mã sản phẩm đã tồn tại.");
+            }
+            else
+            {
+                _context.CTMH_Them(ctmh);
+                return RedirectToAction(nameof(Index));
+            }
         }
-        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "TenDMH", ctmh.MaDMH);
+        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "MaDMH", ctmh.MaDMH);
         ViewBag.MaSP = new SelectList(
             _context.SanPham_DS().Select(sp => new
             {
@@ -96,7 +104,7 @@ public class CTMHsController : Controller
         {
             return NotFound();
         }
-        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "TenDMH", ctmh.MaDMH);
+        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "MaDMH", ctmh.MaDMH);
         ViewBag.MaSP = new SelectList(
             _context.SanPham_DS().Select(sp => new
             {
@@ -144,7 +152,7 @@ public class CTMHsController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
-        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "TenDMH", ctmh.MaDMH);
+        ViewBag.MaDMH = new SelectList(_context.DonMH_DS(), "MaDMH", "MaDMH", ctmh.MaDMH);
         ViewBag.MaSP = new SelectList(
             _context.SanPham_DS().Select(sp => new
             {

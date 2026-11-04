@@ -1,63 +1,121 @@
 ﻿@using Microsoft.AspNetCore.Http
+@{
+    var role = Context.Session.GetString("Role");
+    var displayName = Context.Session.GetString("DisplayName") ?? Context.Session.GetString("Username") ?? "";
+    var isCustomer = role == "KhachHang";
+    var isEmployee = role == "NhanVien";
+    var hasAdmin = Context.Session.GetString("Permission:ADMIN") == "1";
+    var hasSales = Context.Session.GetString("Permission:SALES") == "1";
+    var hasWarehouse = Context.Session.GetString("Permission:WAREHOUSE") == "1";
+    var canReadCatalog = hasSales || hasWarehouse;
+}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - QLBH</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QLBH.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">QLBH</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm mb-4">
+            <div class="container">
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">QLBH</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation"
+                        aria-controls="mainNavigation" aria-expanded="false" aria-label="Mở menu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="SanPhams" asp-action="Index">Sản phẩm</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="GioHang" asp-action="Index">Giỏ hàng</a>
-                        </li>
-                        <li class="nav-item">
-                            @if (Context.Session.GetString("MaKH") != null)
-                            {
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Đăng xuất khách hàng</a>
-                            }
-                            else
-                            {
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="KhachHangDangNhap">Đăng nhập khách hàng</a>
-                            }
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                <div class="collapse navbar-collapse" id="mainNavigation">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="SanPhams" asp-action="Index">Sản phẩm</a></li>
+
+                        @if (isCustomer)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="GioHang" asp-action="Index">Giỏ hàng</a></li>
+                        }
+
+                        @if (isEmployee && (hasAdmin || hasSales || hasWarehouse))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Quản lý</a>
+                                <ul class="dropdown-menu">
+                                    @if (hasAdmin)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="DonViTinhs" asp-action="Index">Đơn vị tính</a></li>
+                                        <li><a class="dropdown-item" asp-controller="NhomSPs" asp-action="Index">Nhóm sản phẩm</a></li>
+                                        <li><a class="dropdown-item" asp-controller="LoaiSPs" asp-action="Index">Loại sản phẩm</a></li>
+                                        <li><a class="dropdown-item" asp-controller="SanPhams" asp-action="Index">Sản phẩm</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Tinhs" asp-action="Index">Tỉnh</a></li>
+                                        <li><a class="dropdown-item" asp-controller="XaPhuongs" asp-action="Index">Xã/phường</a></li>
+                                        <li><a class="dropdown-item" asp-controller="PhongBans" asp-action="Index">Phòng ban</a></li>
+                                        <li><a class="dropdown-item" asp-controller="NhanViens" asp-action="Index">Nhân viên</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Quyens" asp-action="Index">Quyền</a></li>
+                                        <li><a class="dropdown-item" asp-controller="PhanQuyens" asp-action="Index">Phân quyền</a></li>
+                                        <li><a class="dropdown-item" asp-controller="NhaCCs" asp-action="Index">Nhà cung cấp</a></li>
+                                        <li><a class="dropdown-item" asp-controller="DonMHs" asp-action="Index">Đơn mua hàng</a></li>
+                                        <li><a class="dropdown-item" asp-controller="CTMHs" asp-action="Index">Chi tiết mua hàng</a></li>
+                                        <li><a class="dropdown-item" asp-controller="KhachHangs" asp-action="Index">Khách hàng</a></li>
+                                        <li><a class="dropdown-item" asp-controller="DonBHs" asp-action="Index">Đơn bán hàng</a></li>
+                                        <li><a class="dropdown-item" asp-controller="CTBHs" asp-action="Index">Chi tiết bán hàng</a></li>
+                                    }
+                                    else
+                                    {
+                                        @if (canReadCatalog)
+                                        {
+                                            <li><a class="dropdown-item" asp-controller="DonViTinhs" asp-action="Index">Đơn vị tính</a></li>
+                                            <li><a class="dropdown-item" asp-controller="NhomSPs" asp-action="Index">Nhóm sản phẩm</a></li>
+                                            <li><a class="dropdown-item" asp-controller="LoaiSPs" asp-action="Index">Loại sản phẩm</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Tinhs" asp-action="Index">Tỉnh</a></li>
+                                            <li><a class="dropdown-item" asp-controller="XaPhuongs" asp-action="Index">Xã/phường</a></li>
+                                        }
+                                        @if (hasSales)
+                                        {
+                                            <li><a class="dropdown-item" asp-controller="KhachHangs" asp-action="Index">Khách hàng</a></li>
+                                        }
+                                        @if (hasSales || hasWarehouse)
+                                        {
+                                            <li><a class="dropdown-item" asp-controller="DonBHs" asp-action="Index">Đơn bán hàng</a></li>
+                                            <li><a class="dropdown-item" asp-controller="CTBHs" asp-action="Index">Chi tiết bán hàng</a></li>
+                                        }
+                                        @if (hasWarehouse)
+                                        {
+                                            <li><a class="dropdown-item" asp-controller="NhaCCs" asp-action="Index">Nhà cung cấp</a></li>
+                                            <li><a class="dropdown-item" asp-controller="DonMHs" asp-action="Index">Đơn mua hàng</a></li>
+                                            <li><a class="dropdown-item" asp-controller="CTMHs" asp-action="Index">Chi tiết mua hàng</a></li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
                     </ul>
+                    <div class="d-flex align-items-center gap-3">
+                        @if (role == null)
+                        {
+                            <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                        }
+                        else
+                        {
+                            <span class="text-secondary">@displayName</span>
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                                <button class="btn btn-outline-secondary" type="submit">Đăng xuất</button>
+                            </form>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - QLBH - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <main class="container pb-5">
+        @RenderBody()
+    </main>
+    <footer class="border-top text-muted py-3">
+        <div class="container">&copy; 2026 - QLBH</div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

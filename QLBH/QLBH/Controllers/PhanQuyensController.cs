@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using QLBH.Models;
 using QLBH.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 
+[QLBH.Filters.TablePermissionAuthorize("PhanQuyen")]
 public class PhanQuyensController : Controller
 {
     private readonly AppDbContext _context;
@@ -66,8 +68,15 @@ public class PhanQuyensController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.PhanQuyen_Them(phanQuyen);
-            return RedirectToAction(nameof(Index));
+            if (_context.PhanQuyen_CT(phanQuyen.MaQuyen, phanQuyen.MaNV) != null)
+            {
+                ModelState.AddModelError(string.Empty, "Không được tạo trùng khóa chính: cặp mã quyền và mã nhân viên đã tồn tại.");
+            }
+            else
+            {
+                _context.PhanQuyen_Them(phanQuyen);
+                return RedirectToAction(nameof(Index));
+            }
         }
         ViewBag.MaQuyen = new SelectList(_context.Quyen_DS(), "MaQuyen", "TenQuyen", phanQuyen.MaQuyen);
         ViewBag.MaNV = new SelectList(

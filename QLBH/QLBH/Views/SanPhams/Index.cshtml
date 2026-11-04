@@ -1,14 +1,19 @@
+@using Microsoft.AspNetCore.Http
 @model IEnumerable<QLBH.Models.SanPham>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Sản phẩm";
+    var role = Context.Session.GetString("Role");
+    var isGuest = string.IsNullOrEmpty(role);
+    var isCustomer = role == "KhachHang";
+    var canManage = Context.Session.GetString("Permission:ADMIN") == "1";
 }
 
-<h1>Index</h1>
+<h1>Sản phẩm</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (canManage)
+{
+    <p><a asp-action="Create" class="btn btn-primary">Thêm sản phẩm</a></p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -61,16 +66,27 @@
                 @(ViewBag.TenDVT[item.MaDVT])
             </td>
             <td>
-                <form asp-controller="GioHang" asp-action="Them" method="post" class="d-inline">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="maSP" value="@item.MaSP" />
-                    <input type="hidden" name="soLuong" value="1" />
-                    <button type="submit" class="btn btn-sm btn-primary">Thêm vào giỏ</button>
-                </form>
-                <br />
-                <a asp-action="Edit" asp-route-masp="@item.MaSP">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaSP">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaSP">Delete</a>
+                @if (isCustomer)
+                {
+                    <form asp-controller="GioHang" asp-action="Them" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="maSP" value="@item.MaSP" />
+                        <input type="hidden" name="soLuong" value="1" />
+                        <button type="submit" class="btn btn-sm btn-primary">Thêm vào giỏ</button>
+                    </form>
+                    <br />
+                }
+                else if (isGuest)
+                {
+                    <a class="btn btn-sm btn-outline-primary" asp-controller="Account" asp-action="Login">Đăng nhập để mua</a>
+                    <br />
+                }
+                <a asp-action="Details" asp-route-id="@item.MaSP">Chi tiết</a>
+                @if (canManage)
+                {
+                    <span> | </span><a asp-action="Edit" asp-route-masp="@item.MaSP">Sửa</a>
+                    <span> | </span><a asp-action="Delete" asp-route-id="@item.MaSP">Xóa</a>
+                }
             </td>
         </tr>
 }

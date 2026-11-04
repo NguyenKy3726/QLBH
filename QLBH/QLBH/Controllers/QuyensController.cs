@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using QLBH.Data;
 using QLBH.Models;
 
+[QLBH.Filters.TablePermissionAuthorize("Quyen")]
 public class QuyensController : Controller
 {
     private readonly AppDbContext _context;
