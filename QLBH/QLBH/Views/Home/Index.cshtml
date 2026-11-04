@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
+@using QLBH.Models
+@inject QLBH.Data.AppDbContext AppDb
 @{
     ViewData["Title"] = "Trang chủ";
     var role = Context.Session.GetString("Role");
@@ -7,94 +9,155 @@
     var hasAdmin = Context.Session.GetString("Permission:ADMIN") == "1";
     var hasSales = Context.Session.GetString("Permission:SALES") == "1";
     var hasWarehouse = Context.Session.GetString("Permission:WAREHOUSE") == "1";
-    var canReadCatalog = hasSales || hasWarehouse;
+    var categories = ViewBag.DanhMuc as Dictionary<short, string> ?? new Dictionary<short, string>();
+    var products = ViewBag.GoiY as IEnumerable<SanPham> ?? Enumerable.Empty<SanPham>();
+    var tenLsp = ViewBag.TenLSP as Dictionary<short, string> ?? new Dictionary<short, string>();
+    var employeeId = Context.Session.GetInt32("MaNV");
+    var visibleTables = isEmployee && !hasAdmin && employeeId is >= 0 and <= 255
+        ? AppDb.NhanVien_BangDuocXem((byte)employeeId.Value)
+        : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+    bool CanRead(string tableName) => hasAdmin || visibleTables.Contains(tableName);
 }
 
-<section class="bg-light rounded-4 p-4 p-md-5 mb-4">
-    <div class="row align-items-center g-4">
-        <div class="col-lg-8">
+<section class="home-hero">
+    <div class="home-hero__copy">
+        <p class="home-eyebrow">WHISKFUL RICE COLLECTION</p>
+        @if (isCustomer)
+        {
+            <h1>Chào @Context.Session.GetString("DisplayName"),<br /><em>bữa cơm ngon bắt đầu từ gạo tốt.</em></h1>
+            <p>Khám phá các loại gạo được tuyển chọn cho bữa cơm gia đình. Chọn loại phù hợp, thêm vào giỏ và theo dõi đơn hàng ngay trong tài khoản của bạn.</p>
+        }
+        else if (isEmployee)
+        {
+            <h1>Whiskful,<br /><em>chăm chút từng hạt gạo.</em></h1>
+            <p>Chào @Context.Session.GetString("DisplayName"). Quản lý danh mục và nghiệp vụ bán hàng theo quyền được cấp.</p>
+        }
+        else
+        {
+            <h1>Hạt gạo ngon,<br /><em>giữ trọn vị nhà.</em></h1>
+            <p>Chọn gạo ngon cho bữa cơm hằng ngày. Khám phá các dòng gạo theo loại sản phẩm và mức giá phù hợp.</p>
+        }
+        <div class="home-hero__buttons">
+            <a class="btn site-button site-button--dark" asp-controller="SanPhams" asp-action="Index">Khám phá sản phẩm <span aria-hidden="true">→</span></a>
             @if (isCustomer)
             {
-                <h1 class="display-5 fw-bold">Chào @Context.Session.GetString("DisplayName")</h1>
-                <p class="lead">Xem sản phẩm và quản lý giỏ hàng của bạn.</p>
+                <a class="btn btn-outline-primary" asp-controller="GioHang" asp-action="DonCuaToi">Đơn hàng của tôi</a>
             }
-            else if (isEmployee)
+            else if (role == null)
             {
-                <h1 class="display-5 fw-bold">Trang làm việc QLBH</h1>
-                <p class="lead">Các chức năng hiển thị theo quyền được gán cho tài khoản.</p>
+                <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">Đăng nhập</a>
             }
-            else
-            {
-                <h1 class="display-5 fw-bold">Chào mừng đến với cửa hàng</h1>
-                <p class="lead">Xem danh sách sản phẩm hoặc đăng nhập để sử dụng giỏ hàng.</p>
-            }
-
-            <div class="d-flex flex-wrap gap-2 mt-3">
-                <a class="btn btn-primary btn-lg" asp-controller="SanPhams" asp-action="Index">Xem sản phẩm</a>
-                @if (isCustomer)
-                {
-                    <a class="btn btn-outline-primary btn-lg" asp-controller="GioHang" asp-action="Index">Mở giỏ hàng</a>
-                }
-                else if (role == null)
-                {
-                    <a class="btn btn-outline-primary btn-lg" asp-controller="Account" asp-action="Login">Đăng nhập</a>
-                }
-            </div>
-        </div>
-        <div class="col-lg-4 text-center">
-            <div class="display-1" aria-hidden="true">🛍️</div>
         </div>
     </div>
+
+    <div class="home-hero__image">
+        <img src="~/assets/images/banners/hero-cake-1.png" alt="Ảnh minh họa sản phẩm" />
+    </div>
+
+    <form class="home-quick-filter" asp-controller="SanPhams" asp-action="Index" method="get">
+        <p class="home-eyebrow">GỢI Ý DÀNH CHO BẠN</p>
+        <h2>Tìm loại gạo phù hợp</h2>
+        <div>
+            <label class="form-label" for="home-category">Loại sản phẩm</label>
+            <select class="form-select" id="home-category" name="category">
+                <option value="">Tất cả loại gạo</option>
+                @foreach (var category in categories)
+                {
+                    <option value="@category.Value">@category.Value</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label class="form-label" for="home-budget">Tầm giá</label>
+            <select class="form-select" id="home-budget" name="budget">
+                <option value="">Mọi mức giá</option>
+                <option value="0-300000">Dưới 300.000đ</option>
+                <option value="300000-500000">300.000đ – 500.000đ</option>
+                <option value="500000-1000000">500.000đ – 1.000.000đ</option>
+                <option value="1000000-">Trên 1.000.000đ</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Xem sản phẩm <span aria-hidden="true">→</span></button>
+    </form>
+</section>
+
+<section class="home-featured" aria-labelledby="featured-title">
+    <div class="home-featured__heading">
+        <div>
+            <p class="home-eyebrow">TỪ CỬA HÀNG WHISKFUL</p>
+            <h2 id="featured-title">Gợi ý cho bữa cơm hôm nay</h2>
+        </div>
+        <a asp-controller="SanPhams" asp-action="Index">Xem tất cả sản phẩm →</a>
+    </div>
+    @if (products.Any())
+    {
+        <div class="product-grid">
+            @foreach (var item in products)
+            {
+                var image = string.IsNullOrWhiteSpace(item.AnhSP) || !(item.AnhSP.StartsWith("/") || item.AnhSP.StartsWith("~/") || item.AnhSP.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                    ? Url.Content("~/assets/images/products/tiramisu.webp")
+                    : Url.Content(item.AnhSP);
+                <article class="product-card">
+                    <a class="product-card__image-wrap" asp-controller="SanPhams" asp-action="Details" asp-route-id="@item.MaSP">
+                        <img src="@image" alt="@item.TenSP" loading="lazy" onerror="this.onerror=null;this.src='/assets/images/products/tiramisu.webp'" />
+                        <span class="product-card__tag">@(tenLsp.TryGetValue(item.MaLSP, out var tenLoai) ? tenLoai : "Gạo ngon")</span>
+                    </a>
+                    <div class="product-card__body">
+                        <h3 class="product-card__name"><a asp-controller="SanPhams" asp-action="Details" asp-route-id="@item.MaSP">@item.TenSP</a></h3>
+                        <p class="product-card__description">@item.MoTaCT</p>
+                        <p class="product-card__price">@item.DonGia.ToString("N0")đ</p>
+                        <a class="btn btn-outline-primary" asp-controller="SanPhams" asp-action="Details" asp-route-id="@item.MaSP">Xem chi tiết</a>
+                    </div>
+                </article>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="catalog-empty">Cửa hàng đang cập nhật sản phẩm. Hãy quay lại sau nhé.</div>
+    }
+</section>
+
+<section class="home-stat-row" aria-label="Cam kết Whiskful">
+    <article class="home-stat"><strong>Chọn lọc kỹ càng</strong><span>Thông tin sản phẩm rõ ràng, dễ lựa chọn.</span></article>
+    <article class="home-stat"><strong>Đặt hàng thuận tiện</strong><span>Thêm sản phẩm vào giỏ và đặt hàng trực tuyến.</span></article>
+    <article class="home-stat"><strong>Theo dõi đơn hàng</strong><span>Cập nhật trạng thái đơn hàng từ tài khoản của bạn.</span></article>
 </section>
 
 @if (isEmployee)
 {
-    <section id="role-actions" class="mb-4">
-        <h2 class="h4 mb-3">Chức năng theo quyền</h2>
-        <div class="d-flex flex-wrap gap-2">
+    <section class="home-featured" id="role-actions" aria-labelledby="work-title">
+        <div class="home-featured__heading">
+            <div><p class="home-eyebrow">KHÔNG GIAN LÀM VIỆC</p><h2 id="work-title">Chức năng theo quyền</h2></div>
+        </div>
+        <div class="role-card-grid">
             @if (hasAdmin)
             {
-                <a class="btn btn-outline-dark" asp-controller="DonViTinhs" asp-action="Index">Đơn vị tính</a>
-                <a class="btn btn-outline-dark" asp-controller="NhomSPs" asp-action="Index">Nhóm sản phẩm</a>
-                <a class="btn btn-outline-dark" asp-controller="LoaiSPs" asp-action="Index">Loại sản phẩm</a>
-                <a class="btn btn-outline-dark" asp-controller="SanPhams" asp-action="Index">Sản phẩm</a>
-                <a class="btn btn-outline-dark" asp-controller="Tinhs" asp-action="Index">Tỉnh</a>
-                <a class="btn btn-outline-dark" asp-controller="XaPhuongs" asp-action="Index">Xã/phường</a>
-                <a class="btn btn-outline-dark" asp-controller="PhongBans" asp-action="Index">Phòng ban</a>
-                <a class="btn btn-outline-dark" asp-controller="NhanViens" asp-action="Index">Nhân viên</a>
-                <a class="btn btn-outline-dark" asp-controller="Quyens" asp-action="Index">Quyền</a>
-                <a class="btn btn-outline-dark" asp-controller="PhanQuyens" asp-action="Index">Phân quyền</a>
-                <a class="btn btn-outline-dark" asp-controller="NhaCCs" asp-action="Index">Nhà cung cấp</a>
-                <a class="btn btn-outline-dark" asp-controller="DonMHs" asp-action="Index">Đơn mua hàng</a>
-                <a class="btn btn-outline-dark" asp-controller="CTMHs" asp-action="Index">Chi tiết mua hàng</a>
-                <a class="btn btn-outline-dark" asp-controller="KhachHangs" asp-action="Index">Khách hàng</a>
-                <a class="btn btn-outline-dark" asp-controller="DonBHs" asp-action="Index">Đơn bán hàng</a>
-                <a class="btn btn-outline-dark" asp-controller="CTBHs" asp-action="Index">Chi tiết bán hàng</a>
+                @if (CanRead("SanPham")) { <a class="role-card" asp-controller="SanPhams" asp-action="Index"><span>01</span><strong>Sản phẩm & danh mục</strong><small>Quản trị dữ liệu cửa hàng</small></a> }
+                @if (CanRead("NhanVien") || CanRead("PhanQuyen")) { <a class="role-card" asp-controller="NhanViens" asp-action="Index"><span>02</span><strong>Tài khoản & phân quyền</strong><small>Quản lý nhân viên và quyền truy cập</small></a> }
+                @if (CanRead("DonBH")) { <a class="role-card" asp-controller="DonBHs" asp-action="Index"><span>03</span><strong>Nghiệp vụ bán hàng</strong><small>Theo dõi đơn hàng và tiến độ xử lý</small></a> }
             }
             else
             {
-                @if (canReadCatalog)
+                @if (CanRead("DonViTinh")) { <a class="role-card" asp-controller="DonViTinhs" asp-action="Index"><span>01</span><strong>Đơn vị tính</strong><small>Danh mục đơn vị tính</small></a> }
+                @if (CanRead("NhomSP")) { <a class="role-card" asp-controller="NhomSPs" asp-action="Index"><span>02</span><strong>Nhóm sản phẩm</strong><small>Danh mục nhóm sản phẩm</small></a> }
+                @if (CanRead("LoaiSP")) { <a class="role-card" asp-controller="LoaiSPs" asp-action="Index"><span>03</span><strong>Loại sản phẩm</strong><small>Danh mục loại sản phẩm</small></a> }
+                @if (CanRead("SanPham")) { <a class="role-card" asp-controller="SanPhams" asp-action="Index"><span>04</span><strong>Sản phẩm</strong><small>Danh mục sản phẩm được cấp quyền</small></a> }
+                @if (CanRead("Tinh")) { <a class="role-card" asp-controller="Tinhs" asp-action="Index"><span>05</span><strong>Tỉnh</strong><small>Danh mục địa bàn</small></a> }
+                @if (CanRead("XaPhuong")) { <a class="role-card" asp-controller="XaPhuongs" asp-action="Index"><span>06</span><strong>Xã/phường</strong><small>Danh mục địa bàn</small></a> }
+                @if (CanRead("NhaCC")) { <a class="role-card" asp-controller="NhaCCs" asp-action="Index"><span>07</span><strong>Nhà cung cấp</strong><small>Bảng nhà cung cấp được cấp quyền</small></a> }
+                @if (CanRead("DonMH")) { <a class="role-card" asp-controller="DonMHs" asp-action="Index"><span>08</span><strong>Đơn mua hàng</strong><small>Theo dõi đơn mua hàng</small></a> }
+                @if (CanRead("CTMH")) { <a class="role-card" asp-controller="CTMHs" asp-action="Index"><span>09</span><strong>Chi tiết mua hàng</strong><small>Các mặt hàng trong đơn mua</small></a> }
+                @if (CanRead("KhachHang")) { <a class="role-card" asp-controller="KhachHangs" asp-action="Index"><span>10</span><strong>Khách hàng</strong><small>Bảng khách hàng được cấp quyền</small></a> }
+                @if (CanRead("DonBH")) { <a class="role-card" asp-controller="DonBHs" asp-action="Index"><span>11</span><strong>Đơn bán hàng</strong><small>Xử lý đơn bán hàng</small></a> }
+                @if (CanRead("CTBH")) { <a class="role-card" asp-controller="CTBHs" asp-action="Index"><span>12</span><strong>Chi tiết bán hàng</strong><small>Các mặt hàng trong đơn bán</small></a> }
+                @if (CanRead("PhongBan")) { <a class="role-card" asp-controller="PhongBans" asp-action="Index"><span>13</span><strong>Phòng ban</strong><small>Thông tin phòng ban được cấp quyền</small></a> }
+                @if (CanRead("NhanVien")) { <a class="role-card" asp-controller="NhanViens" asp-action="Index"><span>14</span><strong>Nhân viên</strong><small>Thông tin nhân viên được cấp quyền</small></a> }
+                @if (CanRead("Quyen")) { <a class="role-card" asp-controller="Quyens" asp-action="Index"><span>15</span><strong>Quyền</strong><small>Danh mục quyền được cấp quyền</small></a> }
+                @if (CanRead("PhanQuyen")) { <a class="role-card" asp-controller="PhanQuyens" asp-action="Index"><span>16</span><strong>Phân quyền</strong><small>Bảng phân quyền được cấp quyền</small></a> }
+                @if (visibleTables.Count == 0)
                 {
-                    <a class="btn btn-outline-dark" asp-controller="DonViTinhs" asp-action="Index">Đơn vị tính</a>
-                    <a class="btn btn-outline-dark" asp-controller="NhomSPs" asp-action="Index">Nhóm sản phẩm</a>
-                    <a class="btn btn-outline-dark" asp-controller="LoaiSPs" asp-action="Index">Loại sản phẩm</a>
-                    <a class="btn btn-outline-dark" asp-controller="Tinhs" asp-action="Index">Tỉnh</a>
-                    <a class="btn btn-outline-dark" asp-controller="XaPhuongs" asp-action="Index">Xã/phường</a>
-                }
-                @if (hasSales)
-                {
-                    <a class="btn btn-outline-dark" asp-controller="KhachHangs" asp-action="Index">Khách hàng</a>
-                }
-                @if (hasSales || hasWarehouse)
-                {
-                    <a class="btn btn-outline-dark" asp-controller="DonBHs" asp-action="Index">Đơn bán hàng</a>
-                    <a class="btn btn-outline-dark" asp-controller="CTBHs" asp-action="Index">Chi tiết bán hàng</a>
-                }
-                @if (hasWarehouse)
-                {
-                    <a class="btn btn-outline-dark" asp-controller="NhaCCs" asp-action="Index">Nhà cung cấp</a>
-                    <a class="btn btn-outline-dark" asp-controller="DonMHs" asp-action="Index">Đơn mua hàng</a>
-                    <a class="btn btn-outline-dark" asp-controller="CTMHs" asp-action="Index">Chi tiết mua hàng</a>
+                    <p class="catalog-empty">Tài khoản chưa được cấp quyền xem bảng quản lý nào.</p>
                 }
             }
         </div>

@@ -16,18 +16,55 @@ public class SanPhamsController : Controller
     }
 
     // GET: SANPHAMS
-    public async Task<IActionResult> Index()    
+    public IActionResult Index(string? category, string? budget, string? q)
     {
-        ViewBag.TenLSP = _context.LoaiSP_DS()
+        if (EmployeeCatalogAccessDenied())
+            return RedirectToAction("AccessDenied", "Account");
+
+        var productTypes = _context.LoaiSP_DS();
+        ViewBag.TenLSP = productTypes
             .ToDictionary(lsp => lsp.MaLSP, lsp => lsp.TenLSP);
         ViewBag.TenDVT = _context.DonViTinh_DS()
             .ToDictionary(dvt => dvt.MaDVT, dvt => dvt.TenDVT);
-        return View(_context.SanPham_DS());
+
+        var products = _context.SanPham_DS();
+        if (!string.IsNullOrWhiteSpace(category))
+        {
+            var selectedType = productTypes.FirstOrDefault(item =>
+                string.Equals(item.TenLSP, category, StringComparison.OrdinalIgnoreCase));
+            if (selectedType != null)
+                products = products.Where(item => item.MaLSP == selectedType.MaLSP).ToList();
+        }
+
+        if (!string.IsNullOrWhiteSpace(budget))
+        {
+            var priceRange = budget.Split('-', 2);
+            var minimum = 0m;
+            var maximum = 0m;
+            var hasMinimum = decimal.TryParse(priceRange[0], System.Globalization.NumberStyles.Number,
+                System.Globalization.CultureInfo.InvariantCulture, out minimum);
+            var hasMaximum = priceRange.Length > 1 && decimal.TryParse(priceRange[1], System.Globalization.NumberStyles.Number,
+                System.Globalization.CultureInfo.InvariantCulture, out maximum);
+            products = products.Where(item => (!hasMinimum || item.DonGia >= minimum)
+                && (!hasMaximum || item.DonGia <= maximum)).ToList();
+        }
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            products = products.Where(item =>
+                (item.TenSP?.Contains(q, StringComparison.CurrentCultureIgnoreCase) ?? false)
+                || (item.MoTaCT?.Contains(q, StringComparison.CurrentCultureIgnoreCase) ?? false)).ToList();
+        }
+
+        return View(products);
     }
 
     // GET: SANPHAMS/Details/5
-    public async Task<IActionResult> Details(string? id)
+    public IActionResult Details(string? id)
     {
+        if (EmployeeCatalogAccessDenied())
+            return RedirectToAction("AccessDenied", "Account");
+
         if (id == null)
         {
             return NotFound();
@@ -189,5 +226,15 @@ public class SanPhamsController : Controller
     private bool SanPhamExists(string? masp)
     {
         return _context.SanPhams.Any(e => e.MaSP == masp);
+    }
+
+    private bool EmployeeCatalogAccessDenied()
+    {
+        if (HttpContext.Session.GetString("Role") != "NhanVien")
+            return false;
+
+        var maNV = HttpContext.Session.GetInt32("MaNV");
+        return maNV is null || maNV < byte.MinValue || maNV > byte.MaxValue
+            || !_context.NhanVien_CoQuyenBang((byte)maNV.Value, "SanPham", "R");
     }
 }

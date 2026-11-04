@@ -1,94 +1,214 @@
-@using Microsoft.AspNetCore.Http
+﻿@using Microsoft.AspNetCore.Http
 @model IEnumerable<QLBH.Models.SanPham>
 @{
     ViewData["Title"] = "Sản phẩm";
     var role = Context.Session.GetString("Role");
     var isGuest = string.IsNullOrEmpty(role);
     var isCustomer = role == "KhachHang";
-    var canManage = Context.Session.GetString("Permission:ADMIN") == "1";
+    var isEmployee = role == "NhanVien";
+    var hasAdmin = Context.Session.GetString("Permission:ADMIN") == "1";
+    var canManage = isEmployee && hasAdmin;
+    var categories = ViewBag.TenLSP as Dictionary<short, string> ?? new Dictionary<short, string>();
+    var units = ViewBag.TenDVT as Dictionary<byte, string> ?? new Dictionary<byte, string>();
+    var selectedCategory = Context.Request.Query["category"].ToString();
+    var selectedBudget = Context.Request.Query["budget"].ToString();
 }
 
-<h1>Sản phẩm</h1>
-
-@if (canManage)
+@if (isEmployee)
 {
-    <p><a asp-action="Create" class="btn btn-primary">Thêm sản phẩm</a></p>
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+        <div><p class="home-eyebrow mb-1">WHISKFUL · QUẢN TRỊ DANH MỤC</p><h1 class="mb-0">Sản phẩm</h1></div>
+        @if (canManage)
+        {
+            <a asp-action="Create" class="btn btn-primary">+ Thêm sản phẩm</a>
+        }
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Mã SP</th><th>Sản phẩm</th><th>Đơn giá</th><th>Loại sản phẩm</th><th>Đơn vị tính</th><th>Mô tả</th><th>Thao tác</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-nowrap">@item.MaSP</td>
+                    <td><strong>@item.TenSP</strong></td>
+                    <td class="text-nowrap">@item.DonGia.ToString("N0")đ</td>
+                    <td>@(categories.TryGetValue(item.MaLSP, out var categoryName) ? categoryName : item.MaLSP.ToString())</td>
+                    <td>@(units.TryGetValue(item.MaDVT, out var unitName) ? unitName : item.MaDVT.ToString())</td>
+                    <td>@item.MoTaCT</td>
+                    <td class="text-nowrap">
+                        <a asp-action="Details" asp-route-id="@item.MaSP">Chi tiết</a>
+                        @if (canManage)
+                        {
+                            <span> · </span><a asp-action="Edit" asp-route-masp="@item.MaSP">Sửa</a>
+                            <span> · </span><a asp-action="Delete" asp-route-id="@item.MaSP">Xóa</a>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
 }
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Mã sản phẩm
-            </th>
-            <th>
-                Tên sản phẩm
-            </th>
-            <th>
-                Đơn giá
-            </th>
-            <th>
-                Ảnh minh họa
-            </th>
-            <th>
-                Mô tả
-            </th>
-            <th>
-                Loại sản phẩm
-            </th>
-            <th>
-                Đơn vị tính
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.MaSP)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.TenSP)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DonGia)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.AnhSP)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.MoTaCT)
-            </td>
-            <td>
-                @(ViewBag.TenLSP[item.MaLSP])
-            </td>
-            <td>
-                @(ViewBag.TenDVT[item.MaDVT])
-            </td>
-            <td>
-                @if (isCustomer)
+else
+{
+    <section class="catalog-heading">
+        <p class="home-eyebrow">WHISKFUL RICE COLLECTION</p>
+        <h1>Chọn gạo ngon cho bữa cơm nhà</h1>
+        <p>Khám phá các loại gạo theo danh mục và mức giá. Thông tin sản phẩm được lấy trực tiếp từ cửa hàng.</p>
+    </section>
+
+    <form class="catalog-tools" id="catalog-filter" method="get" asp-controller="SanPhams" asp-action="Index">
+        <div>
+            <label class="form-label" for="catalog-search">Tìm sản phẩm</label>
+            <input class="form-control" id="catalog-search" type="search" placeholder="Tên gạo, mô tả..." />
+        </div>
+        <div>
+            <label class="form-label" for="catalog-category">Loại sản phẩm</label>
+            <select class="form-select" id="catalog-category" name="category">
+                <option value="">Tất cả loại gạo</option>
+                @foreach (var category in categories)
                 {
-                    <form asp-controller="GioHang" asp-action="Them" method="post" class="d-inline">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="maSP" value="@item.MaSP" />
-                        <input type="hidden" name="soLuong" value="1" />
-                        <button type="submit" class="btn btn-sm btn-primary">Thêm vào giỏ</button>
-                    </form>
-                    <br />
+                    if (category.Value == selectedCategory)
+                    {
+                        <option value="@category.Value" selected>@category.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@category.Value">@category.Value</option>
+                    }
                 }
-                else if (isGuest)
-                {
-                    <a class="btn btn-sm btn-outline-primary" asp-controller="Account" asp-action="Login">Đăng nhập để mua</a>
-                    <br />
-                }
-                <a asp-action="Details" asp-route-id="@item.MaSP">Chi tiết</a>
-                @if (canManage)
-                {
-                    <span> | </span><a asp-action="Edit" asp-route-masp="@item.MaSP">Sửa</a>
-                    <span> | </span><a asp-action="Delete" asp-route-id="@item.MaSP">Xóa</a>
-                }
-            </td>
-        </tr>
+            </select>
+        </div>
+        <div>
+            <label class="form-label" for="catalog-budget">Tầm giá</label>
+            <select class="form-select" id="catalog-budget" name="budget">
+                <option value="" selected="@(string.IsNullOrEmpty(selectedBudget) ? "selected" : null)">Mọi mức giá</option>
+                <option value="0-300000" selected="@(selectedBudget == "0-300000" ? "selected" : null)">Dưới 300.000đ</option>
+                <option value="300000-500000" selected="@(selectedBudget == "300000-500000" ? "selected" : null)">300.000đ – 500.000đ</option>
+                <option value="500000-1000000" selected="@(selectedBudget == "500000-1000000" ? "selected" : null)">500.000đ – 1.000.000đ</option>
+                <option value="1000000-" selected="@(selectedBudget == "1000000-" ? "selected" : null)">Trên 1.000.000đ</option>
+            </select>
+        </div>
+        <div>
+            <label class="form-label" for="catalog-sort">Sắp xếp</label>
+            <select class="form-select" id="catalog-sort">
+                <option value="default">Mặc định</option>
+                <option value="price-asc">Giá thấp đến cao</option>
+                <option value="price-desc">Giá cao đến thấp</option>
+                <option value="name-asc">Tên A–Z</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Lọc sản phẩm</button>
+    </form>
+
+    <p class="text-muted mb-3" id="catalog-count" role="status" aria-live="polite">@Model.Count() sản phẩm</p>
+    <div class="product-grid" id="product-grid">
+        @foreach (var item in Model)
+        {
+            var categoryName = categories.TryGetValue(item.MaLSP, out var name) ? name : "Gạo ngon";
+            var imagePath = string.IsNullOrWhiteSpace(item.AnhSP) || !(item.AnhSP.StartsWith("/") || item.AnhSP.StartsWith("~/") || item.AnhSP.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                ? Url.Content("~/assets/images/products/tiramisu.webp")
+                : Url.Content(item.AnhSP);
+            <article class="product-card" data-name="@item.TenSP" data-category="@categoryName" data-price="@item.DonGia.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+                <a class="product-card__image-wrap" asp-action="Details" asp-route-id="@item.MaSP" aria-label="Xem @item.TenSP">
+                    <img src="@imagePath" alt="@item.TenSP" loading="lazy" onerror="this.onerror=null;this.src='/assets/images/products/tiramisu.webp'" />
+                    <span class="product-card__tag">@categoryName</span>
+                </a>
+                <div class="product-card__body">
+                    <h2 class="product-card__name"><a asp-action="Details" asp-route-id="@item.MaSP">@item.TenSP</a></h2>
+                    <p class="product-card__description">@item.MoTaCT</p>
+                    <p class="product-card__price">@item.DonGia.ToString("N0")đ</p>
+                    <div class="product-card__actions">
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.MaSP">Chi tiết</a>
+                        @if (isCustomer)
+                        {
+                            <form asp-controller="GioHang" asp-action="Them" method="post" class="m-0">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="maSP" value="@item.MaSP" />
+                                <input type="hidden" name="soLuong" value="1" />
+                                <button type="submit" class="btn btn-primary">Thêm giỏ</button>
+                            </form>
+                        }
+                        else if (isGuest)
+                        {
+                            <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Đăng nhập để mua</a>
+                        }
+                    </div>
+                </div>
+            </article>
+        }
+        <p class="catalog-empty" id="catalog-empty" hidden>Không tìm thấy sản phẩm phù hợp. Hãy thử đổi bộ lọc.</p>
+    </div>
+    <script>
+        (() => {
+            const form = document.getElementById('catalog-filter');
+            const grid = document.getElementById('product-grid');
+            if (!form || !grid) return;
+            const cards = [...grid.querySelectorAll('.product-card')];
+            const search = document.getElementById('catalog-search');
+            const category = document.getElementById('catalog-category');
+            const budget = document.getElementById('catalog-budget');
+            const sort = document.getElementById('catalog-sort');
+            const count = document.getElementById('catalog-count');
+            const empty = document.getElementById('catalog-empty');
+            const params = new URLSearchParams(window.location.search);
+            const rawBudget = (params.get('budget') || '').split('-');
+            const min = rawBudget[0] ? Number(rawBudget[0]) : 0;
+            const max = rawBudget[1] ? Number(rawBudget[1]) : Number.POSITIVE_INFINITY;
+            const q = (params.get('q') || '').toLocaleLowerCase('vi');
+            if (search) search.value = q;
+            const filtered = cards.filter(card => {
+                const price = Number(card.dataset.price || 0);
+                const matchesCategory = !category.value || card.dataset.category === category.value;
+                const matchesBudget = price >= min && price <= max;
+                const matchesText = !search.value || (card.dataset.name || '').toLocaleLowerCase('vi').includes(search.value.toLocaleLowerCase('vi'));
+                card.hidden = !(matchesCategory && matchesBudget && matchesText);
+                return !card.hidden;
+            });
+            const sortCards = () => {
+                const visible = cards.filter(card => !card.hidden);
+                visible.sort((a, b) => {
+                    if (sort.value === 'price-asc') return Number(a.dataset.price) - Number(b.dataset.price);
+                    if (sort.value === 'price-desc') return Number(b.dataset.price) - Number(a.dataset.price);
+                    if (sort.value === 'name-asc') return (a.dataset.name || '').localeCompare(b.dataset.name || '', 'vi');
+                    return cards.indexOf(a) - cards.indexOf(b);
+                });
+                visible.forEach(card => grid.insertBefore(card, empty));
+            };
+            if (params.has('q')) search.value = params.get('q');
+            const refresh = () => {
+                let shown = 0;
+                cards.forEach(card => {
+                    const price = Number(card.dataset.price || 0);
+                    const range = (budget.value || '').split('-');
+                    const low = range[0] ? Number(range[0]) : 0;
+                    const high = range[1] ? Number(range[1]) : Number.POSITIVE_INFINITY;
+                    const matches = (!category.value || card.dataset.category === category.value)
+                        && price >= low && price <= high
+                        && (!search.value || (card.dataset.name || '').toLocaleLowerCase('vi').includes(search.value.toLocaleLowerCase('vi')));
+                    card.hidden = !matches;
+                    if (matches) shown++;
+                });
+                if (count) count.textContent = `${shown} sản phẩm`;
+                if (empty) empty.hidden = shown > 0;
+                sortCards();
+            };
+            budget.value = params.get('budget') || '';
+            category.addEventListener('change', refresh);
+            budget.addEventListener('change', refresh);
+            search.addEventListener('input', refresh);
+            sort.addEventListener('change', refresh);
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                const next = new URLSearchParams();
+                if (category.value) next.set('category', category.value);
+                if (budget.value) next.set('budget', budget.value);
+                if (search.value) next.set('q', search.value);
+                window.location.assign(`${form.action}?${next.toString()}`);
+            });
+            if (filtered.length === 0) refresh(); else sortCards();
+            refresh();
+        })();
+    </script>
 }
-    </tbody>
-</table>

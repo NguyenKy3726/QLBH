@@ -1203,6 +1203,41 @@ namespace QLBH.Data
             }
         }
 
+        /// <summary>Danh sách bảng nhân viên có quyền xem, dùng để chỉ hiện mục quản lý được cấp quyền.</summary>
+        public HashSet<string> NhanVien_BangDuocXem(byte maNV)
+        {
+            using var cmd = Database.GetDbConnection().CreateCommand();
+            cmd.CommandText = @"
+                SELECT DISTINCT qb.TenBang
+                FROM dbo.PhanQuyen AS pq
+                INNER JOIN dbo.Quyen AS q ON q.MaQuyen = pq.MaQuyen
+                INNER JOIN dbo.QuyenBang AS qb ON qb.MaQuyen = q.MaQuyen
+                WHERE pq.MaNV = @MaNV AND qb.ChoPhepXem = 1;";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new SqlParameter("@MaNV", SqlDbType.TinyInt) { Value = maNV });
+
+            var connectionWasClosed = Database.GetDbConnection().State != ConnectionState.Open;
+            if (connectionWasClosed)
+                Database.OpenConnection();
+
+            try
+            {
+                var tables = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (!reader.IsDBNull(0))
+                        tables.Add(reader.GetString(0));
+                }
+                return tables;
+            }
+            finally
+            {
+                if (connectionWasClosed)
+                    Database.CloseConnection();
+            }
+        }
+
         // Giỏ hàng được lưu riêng, không sửa các dòng CTBH đã tạo thành đơn.
         public DbSet<GioHangItemViewModel> GioHangItems { get; set; } = null!;
 
