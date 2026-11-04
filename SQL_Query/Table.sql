@@ -160,7 +160,7 @@ GO
 -- 12. Đơn mua hàng
 CREATE TABLE dbo.DonMH
 (
-    MaDMH    char(7)       NOT NULL,
+    MaDMH    char(11)       NOT NULL,
     NgayDat  smalldatetime NOT NULL,
     NgayGiao smalldatetime NULL,
     MaNV     tinyint       NOT NULL,
@@ -180,7 +180,7 @@ GO
 -- 13. Chi tiết mua hàng
 CREATE TABLE dbo.CTMH
 (
-    MaDMH char(7)  NOT NULL,
+    MaDMH char(11)  NOT NULL,
     MaSP  char(9)  NOT NULL,
     SLM   smallint NOT NULL,
     DGM   money    NOT NULL,
@@ -219,12 +219,12 @@ GO
 -- 15. Đơn bán hàng
 CREATE TABLE dbo.DonBH
 (
-    MaDBH    char(9)       NOT NULL,
+    MaDBH    char(11)       NOT NULL,
     NgayDat  smalldatetime NOT NULL,
     NgayGiao smalldatetime NULL,
     DCGH     nvarchar(50)  NOT NULL,
     MaXP     char(5)       NOT NULL,
-    MaNV     tinyint       NOT NULL,
+    MaNV     tinyint       NULL,
     MaKH     smallint      NOT NULL,
 
 CONSTRAINT PK_DonBH PRIMARY KEY (MaDBH),
@@ -243,7 +243,7 @@ GO
 -- 16. Chi tiết bán hàng
 CREATE TABLE dbo.CTBH
 (
-    MaDBH char(9) NOT NULL,
+    MaDBH char(11) NOT NULL,
     MaSP  char(9) NOT NULL,
     SLB   tinyint NOT NULL,
     DGB   money   NOT NULL,
@@ -255,5 +255,35 @@ CONSTRAINT PK_CTBH PRIMARY KEY (MaDBH, MaSP),
         FOREIGN KEY (MaSP)
         REFERENCES dbo.SanPham (MaSP)
 
+);
+GO
+
+-- 17. Giỏ hàng của khách hàng
+CREATE TABLE dbo.GioHang
+(
+    MaGH int IDENTITY(1,1) NOT NULL,
+    MaKH smallint NOT NULL,
+    NgayCapNhat datetime2 NOT NULL CONSTRAINT DF_GioHang_NgayCapNhat DEFAULT (SYSDATETIME()),
+
+    CONSTRAINT PK_GioHang PRIMARY KEY (MaGH),
+    CONSTRAINT UQ_GioHang_MaKH UNIQUE (MaKH),
+    CONSTRAINT FK_GioHang_KhachHang FOREIGN KEY (MaKH)
+        REFERENCES dbo.KhachHang (MaKH)
+);
+GO
+
+-- 18. Các sản phẩm đang nằm trong giỏ; đây không phải chi tiết bán hàng.
+CREATE TABLE dbo.CTGioHang
+(
+    MaGH int NOT NULL,
+    MaSP char(9) NOT NULL,
+    SoLuong smallint NOT NULL,
+
+    CONSTRAINT PK_CTGioHang PRIMARY KEY (MaGH, MaSP),
+    CONSTRAINT CK_CTGioHang_SoLuong CHECK (SoLuong BETWEEN 1 AND 255),
+    CONSTRAINT FK_CTGioHang_GioHang FOREIGN KEY (MaGH)
+        REFERENCES dbo.GioHang (MaGH),
+    CONSTRAINT FK_CTGioHang_SanPham FOREIGN KEY (MaSP)
+        REFERENCES dbo.SanPham (MaSP)
 );
 GO

@@ -1,0 +1,56 @@
+@model IEnumerable<QLBH.Models.GioHangItemViewModel>
+
+@{
+    ViewData["Title"] = "Giỏ hàng";
+}
+
+<h1>Giỏ hàng</h1>
+@if (TempData["ThongBaoGioHang"] is string thongBao) { <div class="alert alert-success">@thongBao</div> }
+@if (TempData["LoiGioHang"] is string loi) { <div class="alert alert-danger">@loi</div> }
+
+@if (!Model.Any())
+{
+    <p>Giỏ hàng đang trống.</p>
+    <a asp-controller="SanPhams" asp-action="Index" class="btn btn-primary">Tiếp tục mua hàng</a>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Sản phẩm</th><th class="text-end">Đơn giá</th><th>Số lượng</th><th class="text-end">Thành tiền</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><strong>@item.TenSP</strong><div class="text-muted small">@item.MaSP</div></td>
+                    <td class="text-end">@item.DonGia.ToString("N0") đ</td>
+                    <td>
+                        <form asp-action="CapNhat" method="post" class="d-flex gap-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="maSP" value="@item.MaSP" />
+                            <input type="number" name="soLuong" value="@item.SoLuong" min="1" max="255" class="form-control" style="max-width:90px" aria-label="Số lượng" />
+                            <button type="submit" class="btn btn-outline-secondary">Cập nhật</button>
+                        </form>
+                    </td>
+                    <td class="text-end">@item.ThanhTien.ToString("N0") đ</td>
+                    <td>
+                        <form asp-action="Xoa" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="maSP" value="@item.MaSP" />
+                            <button type="submit" class="btn btn-outline-danger">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+            <tfoot><tr><th colspan="3" class="text-end">Tổng cộng</th><th class="text-end">@(((decimal)ViewBag.TongTien).ToString("N0")) đ</th><th></th></tr></tfoot>
+        </table>
+    </div>
+    <div class="d-flex justify-content-between">
+        <a asp-controller="SanPhams" asp-action="Index" class="btn btn-outline-primary">Tiếp tục mua hàng</a>
+        <form asp-action="DatHang" method="post">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-primary">Đặt hàng</button>
+        </form>
+    </div>
+}

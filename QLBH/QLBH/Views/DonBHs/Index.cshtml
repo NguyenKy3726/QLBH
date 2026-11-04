@@ -55,7 +55,14 @@
                 @(ViewBag.TenXP[item.MaXP])
             </td>
             <td>
-                @item.MaNV - @(ViewBag.TenNV[item.MaNV])
+                @if (item.MaNV.HasValue)
+                {
+                    @($"{item.MaNV.Value} - {ViewBag.TenNV[item.MaNV.Value]}")
+                }
+                else
+                {
+                    @:Chưa tiếp nhận
+                }
             </td>
             <td>
                 @item.MaKH - @(ViewBag.TenKH[item.MaKH])

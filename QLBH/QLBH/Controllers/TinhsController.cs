@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using QLBH.Data;
 using QLBH.Models;
 
+[QLBH.Filters.TablePermissionAuthorize("Tinh")]
 public class TinhsController : Controller
 {
     private readonly AppDbContext _context;

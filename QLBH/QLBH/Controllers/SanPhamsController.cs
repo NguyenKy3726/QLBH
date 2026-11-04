@@ -46,6 +46,8 @@ public class SanPhamsController : Controller
     }
 
     // GET: SANPHAMS/Create
+    [QLBH.Filters.TablePermissionAuthorize("SanPham")]
+
     public IActionResult Create()
     {
         ViewBag.MaLSP = new SelectList(_context.LoaiSP_DS(), "MaLSP", "TenLSP");
@@ -58,6 +60,8 @@ public class SanPhamsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [QLBH.Filters.TablePermissionAuthorize("SanPham")]
+
     public async Task<IActionResult> Create([Bind("TenSP,DonGia,AnhSP,MoTaCT,MaLSP,MaDVT")] SanPham sanpham)
     {
         ModelState.Remove(nameof(SanPham.MaSP));
@@ -72,6 +76,8 @@ public class SanPhamsController : Controller
     }
 
     // GET: SANPHAMS/Edit/5
+    [QLBH.Filters.TablePermissionAuthorize("SanPham")]
+
     public async Task<IActionResult> Edit(string? masp)
     {
         if (masp == null)
@@ -94,6 +100,8 @@ public class SanPhamsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [QLBH.Filters.TablePermissionAuthorize("SanPham")]
+
     public async Task<IActionResult> Edit(string? masp, [Bind("MaSP, TenSP,DonGia,AnhSP,MoTaCT,MaLSP,MaDVT")] SanPham sanpham)
     {
         if (masp != sanpham.MaSP)
@@ -127,6 +135,8 @@ public class SanPhamsController : Controller
     }
 
     // GET: SanPhams/Delete/261015001
+    [QLBH.Filters.TablePermissionAuthorize("SanPham")]
+
     public IActionResult Delete(string? id)
     {
         if (id == null)
@@ -145,6 +155,7 @@ public class SanPhamsController : Controller
     }
 
     // POST: SanPhams/Delete/261015001
+    [QLBH.Filters.TablePermissionAuthorize("SanPham")]
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed(string? id)

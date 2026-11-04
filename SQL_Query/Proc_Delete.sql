@@ -226,6 +226,12 @@ CREATE OR ALTER PROC DonBH_Xoa
     @MaDBH char(11)
 AS
 BEGIN
+    IF EXISTS (SELECT 1 FROM dbo.DonBH WHERE MaDBH = @MaDBH AND MaNV IS NULL)
+    BEGIN
+        RAISERROR(N'Không thể xóa đơn hàng do khách hàng đặt; cần giữ lại làm lịch sử bán hàng.', 16, 1);
+        RETURN;
+    END;
+
     IF EXISTS (SELECT 1 FROM CTBH WHERE MaDBH = @MaDBH)
     BEGIN
         RAISERROR(N'Không thể xóa đơn bán hàng này vì vẫn còn chi tiết bán hàng. Hãy xóa các dòng chi tiết trước.', 16, 1);
@@ -243,6 +249,12 @@ CREATE OR ALTER PROC CTBH_Xoa
     @MaSP char(9)
 AS
 BEGIN
+    IF EXISTS (SELECT 1 FROM dbo.DonBH WHERE MaDBH = @MaDBH AND MaNV IS NULL)
+    BEGIN
+        RAISERROR(N'Không thể xóa chi tiết của đơn do khách hàng đặt. Dòng giỏ hàng đã được chuyển thành lịch sử đơn bán.', 16, 1);
+        RETURN;
+    END;
+
     DELETE FROM CTBH
     WHERE MaDBH = @MaDBH
       AND MaSP = @MaSP;

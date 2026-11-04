@@ -1,0 +1,11 @@
+@{
+    ViewData["Title"] = "Không có quyền truy cập";
+}
+
+<div class="container py-5">
+    <div class="alert alert-warning" role="alert">
+        <h1 class="h4">Bạn không có quyền truy cập chức năng này</h1>
+        <p class="mb-0">Quyền của tài khoản được quản lý theo vai trò ADMIN, SALES và WAREHOUSE.</p>
+    </div>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Về trang chủ</a>
+</div>

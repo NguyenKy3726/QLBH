@@ -9,16 +9,17 @@
         {
             var http = context.HttpContext;
             var user = http.Session.GetString("Username");
-            if (string.IsNullOrEmpty(user))
+            var role = http.Session.GetString("Role");
+            var maNV = http.Session.GetInt32("MaNV");
+
+            if (string.IsNullOrEmpty(user) || role != "NhanVien" || maNV is null)
             {
-                // build returnUrl (đầy đủ path + query)
                 var request = http.Request;
                 var returnUrl = request.Path + request.QueryString;
-                context.Result = new RedirectToActionResult("Login", "Account", new { returnUrl = returnUrl });
+                context.Result = new RedirectToActionResult("Login", "Account", new { returnUrl });
                 return;
             }
             base.OnActionExecuting(context);
         }
     }
-
 }

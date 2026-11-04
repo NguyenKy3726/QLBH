@@ -1,0 +1,9 @@
+@{
+    ViewData["Title"] = "Đặt hàng thành công";
+}
+<div class="text-center py-5">
+    <h1 class="text-success">Đặt hàng thành công</h1>
+    <p>Mã đơn hàng của bạn: <strong>@ViewBag.MaDBH</strong></p>
+    <p>Các sản phẩm đã được chuyển thành chi tiết đơn bán hàng. Giỏ hàng đã được làm trống.</p>
+    <a asp-controller="SanPhams" asp-action="Index" class="btn btn-primary">Tiếp tục mua hàng</a>
+</div>

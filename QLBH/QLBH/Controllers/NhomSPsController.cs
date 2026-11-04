@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using QLBH.Models;
 using QLBH.Data;
 
+[QLBH.Filters.TablePermissionAuthorize("NhomSP")]
 public class NhomSPsController : Controller
 {
     private readonly AppDbContext _context;

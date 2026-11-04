@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using QLBH.Data;
 
 namespace QLBH.Controllers
 {
-    public class AccountController: Controller
+    public class AccountController : Controller
     {
         private readonly AppDbContext _context;
+
         public AccountController(AppDbContext context)
         {
             _context = context;
@@ -22,48 +23,78 @@ namespace QLBH.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(string TenDN, string MatKhau, string? returnUrl = null)
         {
-            var MaNV = _context.NhanVien_DangNhap(TenDN, MatKhau);
-            if (MaNV == 0)
+            ViewData["ReturnUrl"] = returnUrl;
+
+            if (string.IsNullOrWhiteSpace(TenDN) || string.IsNullOrWhiteSpace(MatKhau))
             {
-                ModelState.AddModelError(string.Empty, "Sai tên đăng nhập hoặc mật khẩu.");
-                ViewData["ReturnUrl"] = returnUrl;
+                ModelState.AddModelError(string.Empty, "Vui lòng nhập tên đăng nhập và mật khẩu.");
                 return View();
             }
 
-            // đọc thông tin chi tiết nhân viên và Lưu vào session
-            var nv = _context.NhanVien_CT(MaNV);
-            //Tự thêm vào vì có cảnh báo lỗi null 'nv'
-            if (nv == null)
+            var maNV = _context.NhanVien_DangNhap(TenDN, MatKhau);
+            if (maNV != 0)
             {
-                ModelState.AddModelError(
-                    string.Empty,
-                    "Không tìm thấy thông tin nhân viên."
-                );
+                var nv = _context.NhanVien_CT(maNV);
+                if (nv == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Không tìm thấy thông tin nhân viên.");
+                    return View();
+                }
 
-                ViewData["ReturnUrl"] = returnUrl;
-                return View();
+                HttpContext.Session.Clear();
+                HttpContext.Session.SetString("Role", "NhanVien");
+                HttpContext.Session.SetString("UserType", "NhanVien");
+                HttpContext.Session.SetString("Username", nv.TenDN);
+                HttpContext.Session.SetString("DisplayName", $"{nv.HoNV} {nv.TenNV}");
+                HttpContext.Session.SetInt32("MaNV", nv.MaNV);
+
+                foreach (var tenQuyen in _context.NhanVien_QuyenDanhSach(nv.MaNV))
+                    HttpContext.Session.SetString("Permission:" + tenQuyen.ToUpperInvariant(), "1");
+
+                return RedirectAfterLogin(returnUrl);
             }
-            HttpContext.Session.SetString("Username", nv.TenDN);
-            HttpContext.Session.SetString("DisplayName", nv.HoNV + " " + nv.TenNV);
 
-            // Redirect về returnUrl nếu an toàn
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                return Redirect(returnUrl);
+            var maKH = _context.KhachHang_DangNhap(TenDN, MatKhau);
+            if (maKH != 0)
+            {
+                var kh = _context.KhachHang_CT(maKH);
+                if (kh == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Không tìm thấy thông tin khách hàng.");
+                    return View();
+                }
 
-            return RedirectToAction("Index", "NhanViens");
-        }
+                HttpContext.Session.Clear();
+                HttpContext.Session.SetString("Role", "KhachHang");
+                HttpContext.Session.SetString("UserType", "KhachHang");
+                HttpContext.Session.SetString("Username", kh.TenDN);
+                HttpContext.Session.SetString("DisplayName", $"{kh.HoKH} {kh.TenKH}");
+                HttpContext.Session.SetInt32("MaKH", kh.MaKH);
 
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Remove("Username");
-            HttpContext.Session.Remove("DisplayName");
-            HttpContext.Session.Clear();
-            return RedirectToAction("Login");
-        }
+                return RedirectAfterLogin(returnUrl);
+            }
 
-        public IActionResult AccessDenied()
-        {
+            ModelState.AddModelError(string.Empty, "Sai tên đăng nhập hoặc mật khẩu.");
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout(string? returnUrl = null)
+        {
+            HttpContext.Session.Clear();
+            return Url.IsLocalUrl(returnUrl)
+                ? LocalRedirect(returnUrl!)
+                : RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult AccessDenied() => View();
+
+        private IActionResult RedirectAfterLogin(string? returnUrl)
+        {
+            return Url.IsLocalUrl(returnUrl)
+                ? LocalRedirect(returnUrl!)
+                : RedirectToAction("Index", "Home");
         }
     }
 }

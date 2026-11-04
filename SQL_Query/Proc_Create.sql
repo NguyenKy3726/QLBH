@@ -212,6 +212,8 @@ CREATE OR ALTER PROC PhanQuyen_Them
     @MaNV tinyint
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     INSERT INTO PhanQuyen(MaQuyen, MaNV)
     VALUES(@MaQuyen, @MaNV)
 END
@@ -297,6 +299,8 @@ CREATE OR ALTER PROC CTMH_Them
     @DGM money
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     INSERT INTO CTMH(MaDMH, MaSP, SLM, DGM)
     VALUES(@MaDMH, @MaSP, @SLM, @DGM)
 END
@@ -340,7 +344,7 @@ CREATE OR ALTER PROC DonBH_Them
     @NgayGiao smalldatetime,
     @DCGH nvarchar(50),
     @MaXP char(5),
-    @MaNV tinyint,
+    @MaNV tinyint = NULL,
     @MaKH smallint
 AS
 BEGIN
@@ -391,6 +395,8 @@ CREATE OR ALTER PROC CTBH_Them
     @DGB money
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     INSERT INTO CTBH(MaDBH, MaSP, SLB, DGB)
     VALUES(@MaDBH, @MaSP, @SLB, @DGB)
 END

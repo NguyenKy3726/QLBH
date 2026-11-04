@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using QLBH.Data;
 using QLBH.Models;
 
+[QLBH.Filters.TablePermissionAuthorize("CTBH")]
 public class CTBHsController : Controller
 {
     private readonly AppDbContext _context;
@@ -57,8 +58,15 @@ public class CTBHsController : Controller
     {
         if (ModelState.IsValid)
         {
-            _context.CTBH_Them(ctbh);
-            return RedirectToAction(nameof(Index));
+            if (_context.CTBH_CT(ctbh.MaDBH, ctbh.MaSP) != null)
+            {
+                ModelState.AddModelError(string.Empty, "Không được tạo trùng khóa chính: mã đơn bán hàng và mã sản phẩm đã tồn tại.");
+            }
+            else
+            {
+                _context.CTBH_Them(ctbh);
+                return RedirectToAction(nameof(Index));
+            }
         }
         ViewBag.MaDBH = new SelectList(_context.DonBH_DS(), "MaDBH", "MaDBH", ctbh.MaDBH);
         ViewBag.MaSP = new SelectList(_context.SanPham_DS(), "MaSP", "TenSP", ctbh.MaSP);
