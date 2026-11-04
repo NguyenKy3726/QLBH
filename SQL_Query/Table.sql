@@ -36,9 +36,9 @@ CREATE TABLE dbo.SanPham
     MaSP   char(9)       NOT NULL,
     TenSP  nvarchar(50)  NOT NULL,
     DonGia money         NOT NULL,
-    AnhSP  nvarchar(255) NULL,
-    AnhSPData varbinary(MAX) NULL,
-    AnhSPContentType varchar(100) NULL,
+    AnhSP  nvarchar(255) NULL, -- Tên file ảnh gốc
+    AnhSPData varbinary(MAX) NULL, -- Dữ liệu ảnh lưu trực tiếp trong database
+    AnhSPContentType varchar(100) NULL, -- MIME type của ảnh
     MoTaCT ntext         NULL,
     MaLSP  smallint      NOT NULL,
     MaDVT  tinyint       NOT NULL,
@@ -115,9 +115,9 @@ CREATE TABLE dbo.NhanVien
     Email     varchar(40)   NOT NULL,
     TenDN     nvarchar(50)  NOT NULL,
     MatKhau   varbinary(MAX) NOT NULL,
-    AnhNV     nvarchar(255)  NULL,
-    AnhNVData varbinary(MAX) NULL,
-    AnhNVContentType varchar(100) NULL,
+    AnhNV     nvarchar(255)  NULL, -- Tên file ảnh gốc
+    AnhNVData varbinary(MAX) NULL, -- Dữ liệu ảnh lưu trực tiếp trong database
+    AnhNVContentType varchar(100) NULL, -- MIME type của ảnh
     MaPB      tinyint       NOT NULL,
 
 CONSTRAINT PK_NhanVien PRIMARY KEY (MaNV),
@@ -212,9 +212,9 @@ CREATE TABLE dbo.KhachHang
     MaXP      char(5)        NOT NULL,
     TenDN     nvarchar(50)   NOT NULL,
     MatKhau   varbinary(MAX) NOT NULL,
-    AnhKH     nvarchar(255) NULL,
-    AnhKHData varbinary(MAX) NULL,
-    AnhKHContentType varchar(100) NULL,
+    AnhKH     nvarchar(255) NULL, -- Tên file ảnh gốc
+    AnhKHData varbinary(MAX) NULL, -- Dữ liệu ảnh lưu trực tiếp trong database
+    AnhKHContentType varchar(100) NULL, -- MIME type của ảnh
 
 CONSTRAINT PK_KhachHang PRIMARY KEY (MaKH),
 
