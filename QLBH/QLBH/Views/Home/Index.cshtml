@@ -20,6 +20,9 @@
 }
 
 <section class="home-hero">
+    <div class="home-hero__banner">
+        <img src="~/assets/images/banners/home-rice-banner.webp" alt="Bữa cơm gia đình quây quần bên mâm cơm ấm cúng" />
+    </div>
     <div class="home-hero__copy">
         <p class="home-eyebrow">WHISKFUL RICE COLLECTION</p>
         @if (isCustomer)
@@ -50,9 +53,7 @@
         </div>
     </div>
 
-    <div class="home-hero__banner">
-        <img src="~/assets/images/banners/home-rice-banner.webp" alt="Bữa cơm gia đình quây quần bên mâm cơm ấm cúng" />
-    </div>
+
 
     <form class="home-quick-filter" asp-controller="SanPhams" asp-action="Index" method="get">
         <p class="home-eyebrow">GỢI Ý DÀNH CHO BẠN</p>
