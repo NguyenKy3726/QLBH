@@ -226,8 +226,12 @@ CREATE TABLE dbo.DonBH
     MaXP     char(5)       NOT NULL,
     MaNV     tinyint       NULL,
     MaKH     smallint      NOT NULL,
+    TrangThai varchar(20) NOT NULL
+        CONSTRAINT DF_DonBH_TrangThai DEFAULT ('CHO_XAC_NHAN'),
 
 CONSTRAINT PK_DonBH PRIMARY KEY (MaDBH),
+    CONSTRAINT CK_DonBH_TrangThai
+        CHECK (TrangThai IN ('CHO_XAC_NHAN', 'DA_XAC_NHAN', 'DANG_CHUAN_BI', 'DANG_GIAO', 'HOAN_TAT', 'DA_HUY')),
 
     CONSTRAINT FK_DonBH_XaPhuong
         FOREIGN KEY (MaXP)
@@ -255,6 +259,30 @@ CONSTRAINT PK_CTBH PRIMARY KEY (MaDBH, MaSP),
         FOREIGN KEY (MaSP)
         REFERENCES dbo.SanPham (MaSP)
 
+);
+GO
+
+-- Lịch sử trạng thái đơn bán hàng.
+CREATE TABLE dbo.LichSuTrangThaiDonBH
+(
+    MaLSTT bigint IDENTITY(1,1) NOT NULL,
+    MaDBH char(11) NOT NULL,
+    TrangThaiCu varchar(20) NULL,
+    TrangThaiMoi varchar(20) NOT NULL,
+    ThoiDiem datetime2 NOT NULL
+        CONSTRAINT DF_LichSuTrangThaiDonBH_ThoiDiem DEFAULT (SYSDATETIME()),
+    MaNV tinyint NULL,
+    GhiChu nvarchar(500) NULL,
+
+    CONSTRAINT PK_LichSuTrangThaiDonBH PRIMARY KEY (MaLSTT),
+    CONSTRAINT FK_LichSuTrangThaiDonBH_DonBH FOREIGN KEY (MaDBH)
+        REFERENCES dbo.DonBH (MaDBH),
+    CONSTRAINT FK_LichSuTrangThaiDonBH_NhanVien FOREIGN KEY (MaNV)
+        REFERENCES dbo.NhanVien (MaNV),
+    CONSTRAINT CK_LichSuTrangThaiDonBH_TrangThaiCu
+        CHECK (TrangThaiCu IS NULL OR TrangThaiCu IN ('CHO_XAC_NHAN', 'DA_XAC_NHAN', 'DANG_CHUAN_BI', 'DANG_GIAO', 'HOAN_TAT', 'DA_HUY')),
+    CONSTRAINT CK_LichSuTrangThaiDonBH_TrangThaiMoi
+        CHECK (TrangThaiMoi IN ('CHO_XAC_NHAN', 'DA_XAC_NHAN', 'DANG_CHUAN_BI', 'DANG_GIAO', 'HOAN_TAT', 'DA_HUY'))
 );
 GO
 

@@ -992,6 +992,7 @@ namespace QLBH.Data
 
         // 15. Thao tác trên bảng DonBH
         public DbSet<DonBH> DonBHs { get; set; }
+        public DbSet<LichSuTrangThaiDonBH> LichSuTrangThaiDonBHs { get; set; }
 
         public List<DonBH> DonBH_DS()
         {
@@ -1007,6 +1008,35 @@ namespace QLBH.Data
                 new Microsoft.Data.SqlClient.SqlParameter("MaDBH", MaDBH)
             };
             return DonBHs.FromSqlRaw("EXEC DonBH_CT @MaDBH", p).ToList().FirstOrDefault();
+        }
+
+        public List<DonBH> DonBH_KhachHang_DS(short maKH)
+        {
+            return DonBHs
+                .FromSqlRaw("EXEC dbo.DonBH_KhachHang_DS @MaKH",
+                    new SqlParameter("@MaKH", maKH))
+                .AsNoTracking()
+                .ToList();
+        }
+
+        public List<LichSuTrangThaiDonBH> DonBH_LichSu(string maDBH)
+        {
+            return LichSuTrangThaiDonBHs
+                .FromSqlRaw("EXEC dbo.DonBH_LichSu @MaDBH",
+                    new SqlParameter("@MaDBH", SqlDbType.Char, 11) { Value = maDBH })
+                .AsNoTracking()
+                .ToList();
+        }
+
+        public int DonBH_ChuyenTrangThai(string maDBH, string trangThaiMoi, byte maNV, string? ghiChu)
+        {
+            return Database.ExecuteSqlRaw(
+                "EXEC dbo.DonBH_ChuyenTrangThai @MaDBH, @TrangThaiMoi, @MaNV, @GhiChu",
+                new SqlParameter("@MaDBH", SqlDbType.Char, 11) { Value = maDBH },
+                new SqlParameter("@TrangThaiMoi", SqlDbType.VarChar, 20) { Value = trangThaiMoi },
+                new SqlParameter("@MaNV", maNV),
+                new SqlParameter("@GhiChu", SqlDbType.NVarChar, 500)
+                    { Value = (object?)ghiChu ?? DBNull.Value });
         }
 
         public int DonBH_Them(DonBH dbh)
@@ -1235,6 +1265,7 @@ namespace QLBH.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<GioHangItemViewModel>().HasNoKey();
+            modelBuilder.Entity<LichSuTrangThaiDonBH>().ToTable("LichSuTrangThaiDonBH");
 
             // Ánh xạ đúng tên bảng thật trong SQL Server (số ít)
             modelBuilder.Entity<PhanQuyen>().ToTable("PhanQuyen");
@@ -1247,6 +1278,8 @@ namespace QLBH.Data
             // CTMH: khóa gồm MaDMH và MaSP
             modelBuilder.Entity<CTMH>()
                 .HasKey(c => new { c.MaDMH, c.MaSP });
+
+            modelBuilder.Entity<LichSuTrangThaiDonBH>().HasKey(x => x.MaLSTT);
 
             // CTBH: khóa gồm MaDBH và MaSP
             modelBuilder.Entity<CTBH>()

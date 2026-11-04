@@ -96,6 +96,14 @@ namespace QLBH.Controllers
             }
         }
 
+        public IActionResult DonCuaToi()
+        {
+            var maKH = CurrentCustomerId();
+            if (maKH == null) return RedirectToCustomerLogin();
+
+            return View(_context.DonBH_KhachHang_DS(maKH.Value));
+        }
+
         public IActionResult ThanhCong()
         {
             if (CurrentCustomerId() == null) return RedirectToCustomerLogin();

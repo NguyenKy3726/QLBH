@@ -1,0 +1,56 @@
+@model IEnumerable<QLBH.Models.DonBH>
+
+@functions {
+    private static string TrangThaiLabel(string? status) => status switch
+    {
+        "CHO_XAC_NHAN" => "Chờ xác nhận",
+        "DA_XAC_NHAN" => "Đã xác nhận",
+        "DANG_CHUAN_BI" => "Đang chuẩn bị",
+        "DANG_GIAO" => "Đang giao",
+        "HOAN_TAT" => "Hoàn tất",
+        "DA_HUY" => "Đã hủy",
+        _ => "Không xác định"
+    };
+}
+
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+}
+
+<h1>Đơn hàng của tôi</h1>
+<p>Danh sách chỉ gồm đơn hàng của tài khoản khách hàng đang đăng nhập.</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Bạn chưa có đơn hàng nào.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th>Ngày giao</th>
+                    <th>Địa chỉ giao</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var don in Model)
+            {
+                <tr>
+                    <td>@don.MaDBH</td>
+                    <td>@don.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@(don.NgayGiao?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa giao")</td>
+                    <td>@don.DCGH</td>
+                    <td><strong>@TrangThaiLabel(don.TrangThai)</strong></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a asp-controller="GioHang" asp-action="Index" class="btn btn-outline-secondary">Quay lại giỏ hàng</a>

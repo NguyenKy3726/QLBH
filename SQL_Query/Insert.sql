@@ -257,33 +257,45 @@ DECLARE @MatKhauMau varbinary(MAX)
 
 
     -- 15. Đơn bán hàng: 6 dòng
-    -- Bốn đơn đã giao, hai đơn chưa giao.
+    -- Bốn đơn đã giao được đặt HOAN_TAT; hai đơn chưa giao được đặt DA_XAC_NHAN.
+    -- Trạng thái hai đơn chưa giao là trạng thái mẫu khởi tạo.
     INSERT INTO dbo.DonBH
-        (MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH)
+        (MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH, TrangThai)
     VALUES
         ('BH0000001', '2026-10-15T07:30:00',
          '2026-10-15T08:00:00',
-         N'10 Đường Hoa Mai', '01001', 2, 1),
+         N'10 Đường Hoa Mai', '01001', 2, 1, 'HOAN_TAT'),
 
         ('BH0000002', '2026-10-15T07:40:00',
          '2026-10-15T08:10:00',
-         N'20 Đường Hoa Đào', '01002', 3, 2),
+         N'20 Đường Hoa Đào', '01002', 3, 2, 'HOAN_TAT'),
 
         ('BH0000003', '2026-10-15T07:50:00',
          '2026-10-15T08:20:00',
-         N'30 Đường Hoa Sen', '02001', 2, 3),
+         N'30 Đường Hoa Sen', '02001', 2, 3, 'HOAN_TAT'),
 
         ('BH0000004', '2026-10-15T08:00:00',
          '2026-10-15T08:30:00',
-         N'40 Đường Hoa Cúc', '02002', 3, 4),
+         N'40 Đường Hoa Cúc', '02002', 3, 4, 'HOAN_TAT'),
 
         ('BH0000005', '2026-10-15T08:40:00',
          NULL,
-         N'50 Đường Hoa Lan', '03001', 2, 5),
+         N'50 Đường Hoa Lan', '03001', 2, 5, 'DA_XAC_NHAN'),
 
         ('BH0000006', '2026-10-15T08:50:00',
          NULL,
-         N'60 Đường Hoa Hồng', '03002', 3, 6);
+         N'60 Đường Hoa Hồng', '03002', 3, 6, 'DA_XAC_NHAN');
+
+    -- Đây là bản ghi trạng thái khởi tạo cho dữ liệu mẫu; file không có
+    -- lịch sử thao tác trước thời điểm tạo bộ dữ liệu này.
+    INSERT INTO dbo.LichSuTrangThaiDonBH
+        (MaDBH, TrangThaiCu, TrangThaiMoi, ThoiDiem, MaNV, GhiChu)
+    SELECT MaDBH, NULL, TrangThai, NgayDat, NULL,
+           N'Khởi tạo trạng thái trong dữ liệu mẫu.'
+    FROM dbo.DonBH
+    WHERE MaDBH IN
+        ('BH0000001', 'BH0000002', 'BH0000003',
+         'BH0000004', 'BH0000005', 'BH0000006');
 
 
     -- 16. Chi tiết bán hàng: 15 dòng

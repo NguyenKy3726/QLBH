@@ -1,59 +1,68 @@
 @model IEnumerable<QLBH.Models.DonBH>
 
-@{
-    ViewData["Title"] = "Index";
+@functions {
+    private static string TrangThaiLabel(string? status) => status switch
+    {
+        "CHO_XAC_NHAN" => "Chờ xác nhận",
+        "DA_XAC_NHAN" => "Đã xác nhận",
+        "DANG_CHUAN_BI" => "Đang chuẩn bị",
+        "DANG_GIAO" => "Đang giao",
+        "HOAN_TAT" => "Hoàn tất",
+        "DA_HUY" => "Đã hủy",
+        _ => "Không xác định"
+    };
+
+    private static string TrangThaiCss(string? status) => status switch
+    {
+        "CHO_XAC_NHAN" => "bg-secondary",
+        "DA_XAC_NHAN" => "bg-primary",
+        "DANG_CHUAN_BI" => "bg-info text-dark",
+        "DANG_GIAO" => "bg-warning text-dark",
+        "HOAN_TAT" => "bg-success",
+        "DA_HUY" => "bg-danger",
+        _ => "bg-dark"
+    };
 }
 
-<h1>Index</h1>
+@{
+    ViewData["Title"] = "Đơn bán hàng";
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<h1>Đơn bán hàng</h1>
+@if (TempData["ThongBaoDonBH"] is string thongBao)
+{
+    <div class="alert alert-success">@thongBao</div>
+}
+@if (TempData["LoiDonBH"] is string loi)
+{
+    <div class="alert alert-danger">@loi</div>
+}
+<p><a asp-action="Create" class="btn btn-primary">Tạo đơn</a></p>
+
+<div class="table-responsive">
+<table class="table align-middle">
     <thead>
         <tr>
-            <th>
-                Mã đơn bán hàng
-            </th>
-            <th>
-                Ngày đặt
-            </th>
-            <th>
-                Ngày giao
-            </th>
-            <th>
-                Địa chi giao hàng
-            </th>
-            <th>
-                Xã/ Phương
-            </th>
-            <th>
-                Nhân viên
-            </th>
-            <th>
-                Khách hàng
-            </th>
+            <th>Mã đơn</th>
+            <th>Ngày đặt</th>
+            <th>Ngày giao</th>
+            <th>Địa chỉ giao hàng</th>
+            <th>Xã/phường</th>
+            <th>Nhân viên</th>
+            <th>Khách hàng</th>
+            <th>Trạng thái</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr>
-             <td>
-                @Html.DisplayFor(model => item.MaDBH)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.NgayDat)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.NgayGiao)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.DCGH)
-            </td>
-            <td>
-                @(ViewBag.TenXP[item.MaXP])
-            </td>
+            <td>@item.MaDBH</td>
+            <td>@item.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+            <td>@(item.NgayGiao?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa giao")</td>
+            <td>@item.DCGH</td>
+            <td>@(ViewBag.TenXP[item.MaXP])</td>
             <td>
                 @if (item.MaNV.HasValue)
                 {
@@ -64,15 +73,18 @@
                     @:Chưa tiếp nhận
                 }
             </td>
-            <td>
-                @item.MaKH - @(ViewBag.TenKH[item.MaKH])
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-madbh="@item.MaDBH">Edit</a> |
-                <a asp-action="Details" asp-route-madbh="@item.MaDBH">Details</a> |
-                <a asp-action="Delete" asp-route-madbh="@item.MaDBH">Delete</a>
+            <td>@item.MaKH - @(ViewBag.TenKH[item.MaKH])</td>
+            <td><span class="badge @TrangThaiCss(item.TrangThai)">@TrangThaiLabel(item.TrangThai)</span></td>
+            <td class="text-nowrap">
+                <a asp-action="Details" asp-route-madbh="@item.MaDBH">Chi tiết</a>
+                @if (item.TrangThai == "CHO_XAC_NHAN")
+                {
+                    <span> | </span>
+                    <a asp-action="Edit" asp-route-madbh="@item.MaDBH">Sửa</a>
+                }
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>
+</div>

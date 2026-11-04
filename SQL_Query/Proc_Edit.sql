@@ -204,10 +204,10 @@ AS
     WHERE MaKH = @MaKH;
 GO
 
--- 15. Cập nhật bảng Đơn bán hàng
-CREATE OR ALTER PROC DonBH_Sua
+-- 15. Cập nhật thông tin đơn bán hàng.
+-- Không cho sửa dữ liệu đơn sau khi đã xác nhận; thay đổi trạng thái dùng proc riêng.
+CREATE OR ALTER PROC dbo.DonBH_Sua
     @MaDBH char(11),
-
     @NgayDat smalldatetime,
     @NgayGiao smalldatetime,
     @DCGH nvarchar(50),
@@ -215,26 +215,120 @@ CREATE OR ALTER PROC DonBH_Sua
     @MaNV tinyint = NULL,
     @MaKH smallint
 AS
-    UPDATE DonBH
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM dbo.DonBH WHERE MaDBH = @MaDBH)
+        THROW 50011, N'Không tìm thấy đơn bán hàng.', 1;
+
+    IF EXISTS
+    (
+        SELECT 1 FROM dbo.DonBH
+        WHERE MaDBH = @MaDBH AND TrangThai <> 'CHO_XAC_NHAN'
+    )
+        THROW 50012, N'Chỉ được sửa thông tin khi đơn còn chờ xác nhận.', 1;
+
+    UPDATE dbo.DonBH
     SET NgayDat = @NgayDat,
         NgayGiao = @NgayGiao,
         DCGH = @DCGH,
         MaXP = @MaXP,
         MaNV = @MaNV,
         MaKH = @MaKH
-    WHERE MaDBH = @MaDBH
+    WHERE MaDBH = @MaDBH;
+END
+GO
+
+-- Chỉ cho phép chuyển từng bước hợp lệ; cập nhật đơn và ghi lịch sử nguyên tử.
+CREATE OR ALTER PROC dbo.DonBH_ChuyenTrangThai
+    @MaDBH char(11),
+    @TrangThaiMoi varchar(20),
+    @MaNV tinyint,
+    @GhiChu nvarchar(500) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        DECLARE @TrangThaiCu varchar(20);
+
+        SELECT @TrangThaiCu = TrangThai
+        FROM dbo.DonBH WITH (UPDLOCK, ROWLOCK)
+        WHERE MaDBH = @MaDBH;
+
+        IF @TrangThaiCu IS NULL
+            THROW 50013, N'Không tìm thấy đơn bán hàng.', 1;
+
+        IF @TrangThaiMoi NOT IN
+            ('CHO_XAC_NHAN', 'DA_XAC_NHAN', 'DANG_CHUAN_BI',
+             'DANG_GIAO', 'HOAN_TAT', 'DA_HUY')
+            THROW 50014, N'Trạng thái yêu cầu không hợp lệ.', 1;
+
+        IF NOT
+        (
+            (@TrangThaiCu = 'CHO_XAC_NHAN'
+                AND @TrangThaiMoi IN ('DA_XAC_NHAN', 'DA_HUY'))
+            OR (@TrangThaiCu = 'DA_XAC_NHAN'
+                AND @TrangThaiMoi IN ('DANG_CHUAN_BI', 'DA_HUY'))
+            OR (@TrangThaiCu = 'DANG_CHUAN_BI'
+                AND @TrangThaiMoi IN ('DANG_GIAO', 'DA_HUY'))
+            OR (@TrangThaiCu = 'DANG_GIAO'
+                AND @TrangThaiMoi = 'HOAN_TAT')
+        )
+            THROW 50015, N'Không thể chuyển đơn từ trạng thái hiện tại sang trạng thái này.', 1;
+
+        IF @TrangThaiMoi = 'DA_HUY' AND NULLIF(LTRIM(RTRIM(@GhiChu)), N'') IS NULL
+            THROW 50016, N'Vui lòng nhập lý do hủy đơn.', 1;
+
+        UPDATE dbo.DonBH
+        SET TrangThai = @TrangThaiMoi,
+            MaNV = COALESCE(MaNV, @MaNV),
+            NgayGiao = CASE
+                WHEN @TrangThaiMoi = 'HOAN_TAT'
+                    THEN COALESCE(NgayGiao, CONVERT(smalldatetime, GETDATE()))
+                ELSE NgayGiao
+            END
+        WHERE MaDBH = @MaDBH;
+
+        INSERT INTO dbo.LichSuTrangThaiDonBH
+            (MaDBH, TrangThaiCu, TrangThaiMoi, ThoiDiem, MaNV, GhiChu)
+        VALUES
+            (@MaDBH, @TrangThaiCu, @TrangThaiMoi, SYSDATETIME(), @MaNV,
+             NULLIF(LTRIM(RTRIM(@GhiChu)), N''));
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
 GO
 
 -- 16. Cập nhật bảng Chi tiết bán hàng
-CREATE OR ALTER PROC CTBH_Sua
+CREATE OR ALTER PROC dbo.CTBH_Sua
     @MaDBH char(11),
     @MaSP char(9),
     @SLB tinyint,
     @DGB money
 AS
-    UPDATE CTBH
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS
+    (
+        SELECT 1 FROM dbo.DonBH
+        WHERE MaDBH = @MaDBH AND TrangThai = 'CHO_XAC_NHAN'
+    )
+        THROW 50032, N'Chỉ được sửa chi tiết khi đơn còn chờ xác nhận.', 1;
+
+    UPDATE dbo.CTBH
     SET SLB = @SLB,
         DGB = @DGB
     WHERE MaDBH = @MaDBH
-      AND MaSP = @MaSP
+      AND MaSP = @MaSP;
+END
 GO

@@ -137,9 +137,19 @@ GO
 CREATE OR ALTER PROC dbo.DonBH_CT
     @MaDBH char(11)
 AS
-    SELECT MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH
+    SELECT MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH, TrangThai
     FROM dbo.DonBH
     WHERE MaDBH = @MaDBH;
+GO
+
+-- Lịch sử trạng thái của một đơn bán hàng.
+CREATE OR ALTER PROC dbo.DonBH_LichSu
+    @MaDBH char(11)
+AS
+    SELECT MaLSTT, MaDBH, TrangThaiCu, TrangThaiMoi, ThoiDiem, MaNV, GhiChu
+    FROM dbo.LichSuTrangThaiDonBH
+    WHERE MaDBH = @MaDBH
+    ORDER BY ThoiDiem, MaLSTT;
 GO
 
 -- 16. Chi tiết một dòng bán hàng: khóa chính ghép
