@@ -1,337 +1,234 @@
-﻿USE DbQLBH;
+﻿USE [DbQLBH]
+GO
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'01', N'Thành phố Hà Nội')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'04', N'Tỉnh Cao Bằng')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'08', N'Tỉnh Tuyên Quang')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'11', N'Tỉnh Điện Biên')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'12', N'Tỉnh Lai Châu')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'14', N'Tỉnh Sơn La')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'15', N'Tỉnh Lào Cai')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'19', N'Tỉnh Thái Nguyên')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'20', N'Tỉnh Lạng Sơn')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'22', N'Tỉnh Quảng Ninh')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'24', N'Tỉnh Bắc Ninh')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'25', N'Tỉnh Phú Thọ')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'31', N'Thành phố Hải Phòng')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'33', N'Tỉnh Hưng Yên')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'37', N'Tỉnh Ninh Bình')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'38', N'Tỉnh Thanh Hóa')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'40', N'Tỉnh Nghệ An')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'42', N'Tỉnh Hà Tĩnh')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'44', N'Tỉnh Quảng Trị')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'46', N'Thành phố Huế')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'48', N'Thành phố Đà Nẵng')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'51', N'Tỉnh Quảng Ngãi')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'52', N'Tỉnh Gia Lai')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'56', N'Tỉnh Khánh Hòa')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'66', N'Tỉnh Đắk Lắk')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'68', N'Tỉnh Lâm Đồng')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'75', N'Tỉnh Đồng Nai')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'79', N'Thành phố Hồ Chí Minh')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'80', N'Tỉnh Tây Ninh')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'82', N'Tỉnh Đồng Tháp')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'86', N'Tỉnh Vĩnh Long')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'91', N'Tỉnh An Giang')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'92', N'Thành phố Cần Thơ')
+INSERT [dbo].[Tinh] ([MaTinh], [TenTinh]) VALUES (N'96', N'Tỉnh Cà Mau')
+GO
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'01001', N'Quận Hoàn Kiếm', N'01')
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'01002', N'Quận Bồ Đề', N'01')
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'01003', N'Quận Bạch Mai', N'01')
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'01004', N'Quận Long Biên', N'01')
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'56001', N'Phường Nha Trang', N'56')
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'56002', N'Phường Cam Ranh', N'56')
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'66001', N'Phường Phú Yên', N'66')
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'79001', N'Quận 1', N'79')
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'79002', N'Quận 5', N'79')
+INSERT [dbo].[XaPhuong] ([MaXP], [TenXP], [MaTinh]) VALUES (N'79003', N'Quận 7', N'79')
+GO
+INSERT [dbo].[DonViTinh] ([MaDVT], [TenDVT]) VALUES (1, N'hàng mẫu')
+INSERT [dbo].[DonViTinh] ([MaDVT], [TenDVT]) VALUES (2, N'5 kg')
+INSERT [dbo].[DonViTinh] ([MaDVT], [TenDVT]) VALUES (3, N'10 kg')
+INSERT [dbo].[DonViTinh] ([MaDVT], [TenDVT]) VALUES (4, N'25 kg')
+INSERT [dbo].[DonViTinh] ([MaDVT], [TenDVT]) VALUES (5, N'50 kg')
+GO
+INSERT [dbo].[NhomSP] ([MaNSP], [TenNSP]) VALUES (1, N'Hàng Việt Nam')
+INSERT [dbo].[NhomSP] ([MaNSP], [TenNSP]) VALUES (2, N'Hàng Trung Quốc')
+INSERT [dbo].[NhomSP] ([MaNSP], [TenNSP]) VALUES (3, N'Hàng Nhật Bản')
+INSERT [dbo].[NhomSP] ([MaNSP], [TenNSP]) VALUES (4, N'Hàng Thái Lan')
+INSERT [dbo].[NhomSP] ([MaNSP], [TenNSP]) VALUES (5, N'Hàng Campuchia')
+GO
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (1, N'Gạo thơm đặc sản', 1)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (2, N'Gạo thơm thông dụng', 1)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (3, N'Gạo dẻo', 1)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (4, N'Gạo nở, xốp', 1)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (5, N'Gạo nếp', 1)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (6, N'Gạo Nanatsuboshi', 3)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (7, N'Gạo nếp Trung Quốc', 2)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (8, N'Gạo thơm Japonica', 3)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (9, N'Gạo Nanatsuboshi', 3)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (10, N'Gạo nếp Thái', 4)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (11, N'Gạo thơm Hom Mali', 4)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (12, N'Gạo lài Miên', 5)
+INSERT [dbo].[LoaiSP] ([MaLSP], [TenLSP], [MaNSP]) VALUES (13, N'Gạo Phka Romeat', 5)
+GO
+INSERT [dbo].[PhongBan] ([MaPB], [TenPB]) VALUES (1, N'Quản lý')
+INSERT [dbo].[PhongBan] ([MaPB], [TenPB]) VALUES (2, N'Bán hàng')
+INSERT [dbo].[PhongBan] ([MaPB], [TenPB]) VALUES (3, N'Kho')
+GO
+INSERT [dbo].[Quyen] ([MaQuyen], [TenQuyen], [MoTa]) VALUES (1, N'ADMIN', N'Toàn quyền quản lý')
+INSERT [dbo].[Quyen] ([MaQuyen], [TenQuyen], [MoTa]) VALUES (2, N'SALES', N'Quản lý khách hàng và lập đơn bán hàng.')
+INSERT [dbo].[Quyen] ([MaQuyen], [TenQuyen], [MoTa]) VALUES (3, N'WAREHOUSE', N'Quản lý nhập xuất kho')
+GO
+INSERT [dbo].[NhanVien] ([MaNV], [HoNV], [TenNV], [DienThoai], [Email], [TenDN], [MatKhau], [AnhNV], [MaPB], [AnhNVData], [AnhNVContentType]) VALUES (1, N'Nguyễn Gia', N'Kỳ', N'0375641438', N'nguyenky.030706@gmail.com', N'admin', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, 1, NULL, NULL)
+INSERT [dbo].[NhanVien] ([MaNV], [HoNV], [TenNV], [DienThoai], [Email], [TenDN], [MatKhau], [AnhNV], [MaPB], [AnhNVData], [AnhNVContentType]) VALUES (2, N'Trần Thị', N'Bình', N'0364082026', N'binh@example.com', N'nv.binh', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, 2, NULL, NULL)
+INSERT [dbo].[NhanVien] ([MaNV], [HoNV], [TenNV], [DienThoai], [Email], [TenDN], [MatKhau], [AnhNV], [MaPB], [AnhNVData], [AnhNVContentType]) VALUES (3, N'Lê Minh', N'Châu', N'0394378351', N'chau@example.com', N'nv.chau', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, 2, NULL, NULL)
+INSERT [dbo].[NhanVien] ([MaNV], [HoNV], [TenNV], [DienThoai], [Email], [TenDN], [MatKhau], [AnhNV], [MaPB], [AnhNVData], [AnhNVContentType]) VALUES (4, N'Phạm Quốc', N'Dũng', N'0905206364', N'dung@example.com', N'nv.dung', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, 3, NULL, NULL)
+INSERT [dbo].[NhanVien] ([MaNV], [HoNV], [TenNV], [DienThoai], [Email], [TenDN], [MatKhau], [AnhNV], [MaPB], [AnhNVData], [AnhNVContentType]) VALUES (5, N'Võ Thị', N'Hà', N'0902056821', N'ha@example.com', N'nv.ha', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, 3, NULL, NULL)
+GO
+INSERT [dbo].[PhanQuyen] ([MaQuyen], [MaNV]) VALUES (1, 1)
+INSERT [dbo].[PhanQuyen] ([MaQuyen], [MaNV]) VALUES (2, 2)
+INSERT [dbo].[PhanQuyen] ([MaQuyen], [MaNV]) VALUES (2, 3)
+INSERT [dbo].[PhanQuyen] ([MaQuyen], [MaNV]) VALUES (3, 4)
+INSERT [dbo].[PhanQuyen] ([MaQuyen], [MaNV]) VALUES (3, 5)
+GO
+INSERT [dbo].[NhaCC] ([MaNCC], [TenNCC], [DienThoai], [Email], [DiaChi], [MaXP]) VALUES (1, N'Công ty Tư Bản Kim Quỳnh', N'0935220806', N'tuban@gmail.com', N'12 Đường Hoa Mai', N'66001')
+INSERT [dbo].[NhaCC] ([MaNCC], [TenNCC], [DienThoai], [Email], [DiaChi], [MaXP]) VALUES (2, N'Công ty Yến Bảo Tiên', N'0375641438', N'baotien@gmail.com', N'10 Thích Quảng Đức', N'56001')
+INSERT [dbo].[NhaCC] ([MaNCC], [TenNCC], [DienThoai], [Email], [DiaChi], [MaXP]) VALUES (3, N'Tập đoàn chăn nuôi đa quốc gia', NULL, N'tandat@gmail.com', N'Đường Cao Thắng', N'56001')
+GO
+INSERT [dbo].[KhachHang] ([MaKH], [HoKH], [TenKH], [DienThoai], [Email], [DiaChi], [MaXP], [TenDN], [MatKhau], [AnhKH], [AnhKHData], [AnhKHContentType]) VALUES (1, N'Quý Đại', N'Nhân', N'0794573512', N'quynhan@gmail.com', N'Đường bàn cờ', N'56001', N'kh.quynhan', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, NULL, NULL)
+INSERT [dbo].[KhachHang] ([MaKH], [HoKH], [TenKH], [DienThoai], [Email], [DiaChi], [MaXP], [TenDN], [MatKhau], [AnhKH], [AnhKHData], [AnhKHContentType]) VALUES (2, N'Trần Văn', N'Minh', N'0922547864', NULL, N'20 Đường Hoàng Hoa Thám', N'56002', N'kh.vanminh', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, NULL, NULL)
+INSERT [dbo].[KhachHang] ([MaKH], [HoKH], [TenKH], [DienThoai], [Email], [DiaChi], [MaXP], [TenDN], [MatKhau], [AnhKH], [AnhKHData], [AnhKHContentType]) VALUES (3, N'Lê Thị', N'Ngọc', N'0923245633', N'ngoc@gmail.com', N'30 Đường Hoa Sen', N'01001', N'kh.thingoc', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, NULL, NULL)
+INSERT [dbo].[KhachHang] ([MaKH], [HoKH], [TenKH], [DienThoai], [Email], [DiaChi], [MaXP], [TenDN], [MatKhau], [AnhKH], [AnhKHData], [AnhKHContentType]) VALUES (4, N'Phạm Hoàng', N'Nam', NULL, N'hoangnam@gmail.com', N'40 Đường Hoa Cúc', N'01002', N'kh.hoangnam', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, NULL, NULL)
+INSERT [dbo].[KhachHang] ([MaKH], [HoKH], [TenKH], [DienThoai], [Email], [DiaChi], [MaXP], [TenDN], [MatKhau], [AnhKH], [AnhKHData], [AnhKHContentType]) VALUES (5, N'Võ Thanh', N'Tâm', N'0925325875', N'thanhtam@gmail.com', N'50 Đường Hoa Lan', N'79002', N'kh.thanhtam', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, NULL, NULL)
+INSERT [dbo].[KhachHang] ([MaKH], [HoKH], [TenKH], [DienThoai], [Email], [DiaChi], [MaXP], [TenDN], [MatKhau], [AnhKH], [AnhKHData], [AnhKHContentType]) VALUES (6, N'Đặng Thị', N'Thu', N'0929564816', N'dangthithu@gmail.com', N'60 Đường Hoa Hồng', N'79003', N'kh.thu', 0x0A47151A074E633AB7B6BED6AAB724ABBDDCD3250F80A06BC612A233A907805101F2441B5B2926E54CE8AC8CFBC074BB7A56748830487DF09591DBE167E800F6, NULL, NULL, NULL)
+GO
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015001', N'Gạo ST25 (Gạo Ông Cua)', 0.0000, NULL, N'Hạt gạo thon dài, khi nấu cơm dẻo mềm, giữ nguyên hạt và có hương thơm đặc trưng của lá dứa pha lẫn mùi cốm mới.', 1, 1, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015002', N'Gạo ST25 (Gạo Ông Cua)', 220000.0000, NULL, N'Hạt gạo thon dài, khi nấu cơm dẻo mềm, giữ nguyên hạt và có hương thơm đặc trưng của lá dứa pha lẫn mùi cốm mới.', 1, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015003', N'Gạo ST21 (Gạo Long Lài)', 145000.0000, NULL, N'Hạt nhỏ dài, cơm ngọt và dẻo nhiều, được tiêu thụ rất phổ biến.', 2, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015004', N'Gạo Bắc Hương', 230000.0000, NULL, N'Đặc sản phổ biến nhất tại các tỉnh miền Bắc. Cơm dẻo nhiều, có độ dính nhẹ, vị ngọt đậm đà và thơm lúa mới.', 2, 3, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015005', N'Gạo RVT (Thơm Rồng Vàng)', 250000.0000, NULL, N'Hạt gạo thon dài, cơm mềm dẻo vừa phải, ráo cơm, thơm dịu và ngọt thanh.', 2, 3, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015006', N'Gạo Tám Điện Biên', 650000.0000, NULL, N'Trồng tại cánh đồng Mường Thanh. Hạt gạo hơi đục, khi nấu cho cơm dẻo đậm, hơi dính nhẹ và tỏa hương lúa mới ngào ngạt.', 3, 4, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015007', N'Gạo Tám Xoan Hải Hậu', 700000.0000, NULL, N'Đặc sản Nam Định truyền thống, hạt nhỏ thon. Cơm dẻo, săn hạt và mang vị ngọt đậm sâu đặc trưng.', 3, 4, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015008', N'Gạo Sóc Miền Tây', 800000.0000, NULL, N'Giống gạo hạt to đục ở khu vực Đồng bằng Sông Cửu Long. Cơm nấu ra nở tơi, khô ráo, thích hợp cho người có sở thích ăn cơm khô hoặc các quán cơm bình dân.', 4, 5, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015009', N'Gạo Khang Dân', 375000.0000, NULL, N'Giống gạo phổ biến ở miền Bắc. Hạt gạo nhỏ, thon. Khi nấu cho cơm nở xốp, hạt khô ráo, không bị dính, đặc biệt lợi cơm. Là loại gạo tiêu chuẩn hàng đầu để làm cơm chiên (cơm rang), làm bún, phở hoặc bánh cuốn.', 4, 4, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015010', N'Gạo Nếp Cái Hoa Vàng', 350000.0000, NULL, N'Giống nếp truyền thống nổi tiếng đồng bằng Bắc Bộ. Hạt tròn mẩy, khi đồ xôi dẻo quánh, tỏa hương thơm nồng nàn. Chuyên dùng đồ xôi cúng, gói bánh chưng hoặc ủ rượu.', 5, 3, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015011', N'Gạo Nếp Nhung', 150000.0000, NULL, N'Đặc sản vùng Bắc Giang - Bắc Ninh. Hạt to đều, màu trắng sữa. Cơm xôi dẻo ngon, độ kết dính cao và giữ được độ mềm lâu.', 5, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261015012', N'Gạo Nếp Tú Lệ', 550000.0000, NULL, N'Đặc sản thung lũng Tú Lệ (Yên Bái). Hạt tròn trong, khi hấp thành xôi có độ dẻo mềm dính nhẹ, vị ngọt đậm dịu tự nhiên và lưu giữ hương thơm lâu kể cả khi nguội.', 5, 3, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103001', N'Gạo Nếp Hạt Tròn', 175000.0000, NULL, N'Hạt gạo nếp to tròn, màu trắng đục tựa như hạt ngọc trai.', 7, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103002', N'Gạo Nếp Giang Nam', 400000.0000, NULL, N'Loại nếp này khi đồ xôi hoặc làm bánh có độ dẻo dính rất cao, giữ độ mềm lâu, tơi xốp nhẹ và không bị cứng khi để nguội.', 7, 3, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103003', N'Gạo Japonica A An', 500000.0000, NULL, N'Hạt gạo tròn mẩy, màu trắng sáng bóng. Khi nấu cho cơm dẻo dính nhẹ, hạt cơm căng tròn, vị ngọt đậm tự nhiên và giàu dưỡng chất.', 8, 3, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103004', N'Gạo Tawaraya Hokkaido Nanatsuboshi', 1100000.0000, NULL, N'Được nhập khẩu lứt và xay xát tươi theo đơn đặt hàng tại Việt Nam, giữ trọn hương vị tươi mới và hạt cơm dẻo mềm chuẩn vị Nhật.', 9, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103005', N'Gạo Ubara Hokkaido Nanatsuboshi', 1030000.0000, NULL, N'Dòng gạo đóng gói chân không 100% nguyên túi từ Hokkaido, giúp bảo quản tối ưu độ tươi ngon cho nhu cầu sử dụng dài ngày của gia đình hoặc nhà hàng.', 9, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103006', N'Gạo Nếp Thái Trắng', 160000.0000, NULL, N'Hạt gạo thon dài, màu trắng trong đều đặn. Khi đồ xôi cho hạt cơm dẻo mềm, ngậy hương thơm dịu nhẹ, độ dính vừa phải và không bị nhão hay bị khô khi để nguội.', 10, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103007', N'Gạo Nếp Than Thái Lan', 185000.0000, NULL, N'Hạt gạo có màu mầm tím sẫm hoặc đen huyền tự nhiên, giàu anthocyanin và chất xơ.', 10, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103008', N'Gạo Thơm Hom Mali Royal Umbrella', 280000.0000, NULL, N'Khi nấu tỏa hương thơm hoa lài dịu nhẹ, cơm mềm dẻo vừa phải, ngọt vị và giữ trọn độ ngon mịn ngay cả khi để nguội.', 11, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103009', N'Gạo Thơm Hom Mali Sandee', 300000.0000, NULL, N'Cơm nấu ra tơi xốp nhẹ nhưng vẫn đảm bảo độ mềm dẻo, thơm ngậy đặc trưng của thổ nhưỡng Thái Lan.', 11, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103010', N'Gạo Lài Miên Campuchia Chính Gốc', 135000.0000, NULL, N'Giống gạo đặc sản bản địa nổi tiếng của Campuchia, gieo trồng duy nhất 1 vụ/năm với thời gian canh tác 6 tháng.', 12, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103011', N'Gạo Phka Mulis Campuchia', 200000.0000, NULL, N'Dòng gạo thơm hạt dài cao cấp xuất khẩu chính ngạch của Campuchia, thường gieo trồng ở các tỉnh Battambang, Takeo và Kampong Speu.', 12, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103012', N'Gạo Phka Romeat Trắng', 140000.0000, NULL, N'Phù hợp nhất cho các bữa cơm gia đình hàng ngày, nấu cơm niêu, cơm hộp văn phòng hoặc cơm phần tại các nhà hàng cao cấp.', 13, 2, NULL, NULL)
+INSERT [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [AnhSP], [MoTaCT], [MaLSP], [MaDVT], [AnhSPData], [AnhSPContentType]) VALUES (N'261103013', N'Gạo Phka Romeat Xát Dối', 160000.0000, NULL, N'Dành cho người ăn kiêng, ăn thực dưỡng, người có nhu cầu kiểm soát đường huyết hoặc thích vị đậm đà nguyên bản của hạt lúa mùa Campuchia.', 13, 2, NULL, NULL)
+GO
+INSERT [dbo].[DonMH] ([MaDMH], [NgayDat], [NgayGiao], [MaNV], [MaNCC]) VALUES (N'MH261015001', CAST(N'2026-10-15T06:00:00' AS SmallDateTime), CAST(N'2026-10-15T07:00:00' AS SmallDateTime), 1, 1)
+INSERT [dbo].[DonMH] ([MaDMH], [NgayDat], [NgayGiao], [MaNV], [MaNCC]) VALUES (N'MH261015002', CAST(N'2026-10-15T06:10:00' AS SmallDateTime), CAST(N'2026-10-15T07:10:00' AS SmallDateTime), 5, 2)
+INSERT [dbo].[DonMH] ([MaDMH], [NgayDat], [NgayGiao], [MaNV], [MaNCC]) VALUES (N'MH261015003', CAST(N'2026-10-15T06:20:00' AS SmallDateTime), CAST(N'2026-10-15T07:20:00' AS SmallDateTime), 4, 2)
+INSERT [dbo].[DonMH] ([MaDMH], [NgayDat], [NgayGiao], [MaNV], [MaNCC]) VALUES (N'MH261015004', CAST(N'2026-10-15T07:30:00' AS SmallDateTime), NULL, 5, 3)
+GO
+INSERT [dbo].[DonBH] ([MaDBH], [NgayDat], [NgayGiao], [DCGH], [MaXP], [MaNV], [MaKH], [TrangThai]) VALUES (N'BH261015001', CAST(N'2026-10-15T07:30:00' AS SmallDateTime), CAST(N'2026-10-15T08:00:00' AS SmallDateTime), N'10 Đường Hoa Mai', N'01001', 2, 1, 'HOAN_TAT')
+INSERT [dbo].[DonBH] ([MaDBH], [NgayDat], [NgayGiao], [DCGH], [MaXP], [MaNV], [MaKH], [TrangThai]) VALUES (N'BH261015002', CAST(N'2026-10-15T07:40:00' AS SmallDateTime), CAST(N'2026-10-15T08:10:00' AS SmallDateTime), N'20 Đường Hoa Đào', N'01001', 3, 2, 'HOAN_TAT')
+INSERT [dbo].[DonBH] ([MaDBH], [NgayDat], [NgayGiao], [DCGH], [MaXP], [MaNV], [MaKH], [TrangThai]) VALUES (N'BH261015003', CAST(N'2026-10-15T07:50:00' AS SmallDateTime), CAST(N'2026-10-15T08:20:00' AS SmallDateTime), N'30 Đường Hoa Sen', N'01001', 2, 3, 'HOAN_TAT')
+INSERT [dbo].[DonBH] ([MaDBH], [NgayDat], [NgayGiao], [DCGH], [MaXP], [MaNV], [MaKH], [TrangThai]) VALUES (N'BH261015004', CAST(N'2026-10-15T08:00:00' AS SmallDateTime), CAST(N'2026-10-15T08:30:00' AS SmallDateTime), N'40 Đường Hoa Cúc', N'01001', 3, 4, 'HOAN_TAT')
+INSERT [dbo].[DonBH] ([MaDBH], [NgayDat], [NgayGiao], [DCGH], [MaXP], [MaNV], [MaKH], [TrangThai]) VALUES (N'BH261015005', CAST(N'2026-10-15T08:40:00' AS SmallDateTime), CAST(N'2026-10-15T09:10:00' AS SmallDateTime), N'50 Đường Hoa Lan', N'01001', 2, 5, 'HOAN_TAT')
+INSERT [dbo].[DonBH] ([MaDBH], [NgayDat], [NgayGiao], [DCGH], [MaXP], [MaNV], [MaKH], [TrangThai]) VALUES (N'BH261015006', CAST(N'2026-10-15T08:50:00' AS SmallDateTime), CAST(N'2026-10-15T09:20:00' AS SmallDateTime), N'60 Đường Hoa Hồng', N'01001', 3, 6, 'HOAN_TAT')
+INSERT [dbo].[DonBH] ([MaDBH], [NgayDat], [NgayGiao], [DCGH], [MaXP], [MaNV], [MaKH], [TrangThai]) VALUES (N'BH261106001', CAST(N'2026-11-06T23:41:00' AS SmallDateTime), CAST(N'2026-11-07T00:05:00' AS SmallDateTime), N'10 Đường Hoa Mai', N'79002', 1, 5, 'HOAN_TAT')
+GO
+-- Ghi lại đủ các bước để các đơn mẫu đang ở trạng thái HOAN_TAT có lịch sử tương ứng.
+INSERT dbo.LichSuTrangThaiDonBH
+    (MaDBH, TrangThaiCu, TrangThaiMoi, ThoiDiem, MaNV, GhiChu)
+SELECT d.MaDBH, s.TrangThaiCu, s.TrangThaiMoi,
+       DATEADD(MINUTE, s.PhutSauDat, d.NgayDat),
+       CASE WHEN s.TrangThaiCu IS NULL THEN NULL ELSE d.MaNV END,
+       s.GhiChu
+FROM dbo.DonBH AS d
+CROSS APPLY (VALUES
+    (CAST(NULL AS varchar(20)), CAST('CHO_XAC_NHAN' AS varchar(20)), 0,  N'Tạo đơn bán hàng.'),
+    ('CHO_XAC_NHAN', 'DA_XAC_NHAN', 5,  N'Đơn đã được xác nhận.'),
+    ('DA_XAC_NHAN', 'DANG_CHUAN_BI', 10, N'Bắt đầu chuẩn bị hàng.'),
+    ('DANG_CHUAN_BI', 'DANG_GIAO', 15, N'Đơn đang được giao.'),
+    ('DANG_GIAO', 'HOAN_TAT', 20, N'Đơn đã hoàn tất.')
+) AS s(TrangThaiCu, TrangThaiMoi, PhutSauDat, GhiChu)
+WHERE d.TrangThai = 'HOAN_TAT';
 GO
 
-SET XACT_ABORT ON;
-
-BEGIN TRY
-    BEGIN TRANSACTION;
-
-    -- 1. Đơn vị tính: 5 dòng
-    INSERT INTO dbo.DonViTinh (MaDVT, TenDVT)
-    VALUES
-        (1, N'Chai'),
-        (2, N'Lon'),
-        (3, N'Hộp'),
-        (4, N'Gói'),
-        (5, N'Thùng');
-
-
-    -- 2. Nhóm sản phẩm: 3 dòng
-    INSERT INTO dbo.NhomSP (MaNSP, TenNSP)
-    VALUES
-        (1, N'Đồ uống'),
-        (2, N'Bánh kẹo'),
-        (3, N'Thực phẩm');
-
-
-    -- 3. Loại sản phẩm: 6 dòng
-    INSERT INTO dbo.LoaiSP (MaLSP, TenLSP, MaNSP)
-    VALUES
-        (1, N'Nước suối', 1),
-        (2, N'Nước ngọt', 1),
-        (3, N'Bánh quy', 2),
-        (4, N'Kẹo', 2),
-        (5, N'Mì ăn liền', 3),
-        (6, N'Thực phẩm đóng hộp', 3);
-
-
-    -- 4. Sản phẩm: 12 dòng
-    -- Đơn giá mẫu tính bằng VND.
-    -- Chưa có file ảnh nên AnhSP để NULL.
-    INSERT INTO dbo.SanPham
-        (MaSP, TenSP, DonGia, AnhSP, MoTaCT, MaLSP, MaDVT)
-    VALUES
-        ('261015001', N'Nước suối An Nhiên 500ml',
-         5000, NULL, N'Nước uống đóng chai, dung tích 500ml.', 1, 1),
-
-        ('261015002', N'Nước suối An Nhiên 1.5L',
-         10000, NULL, N'Nước uống đóng chai, dung tích 1.5 lít.', 1, 1),
-
-        ('261015003', N'Nước ngọt vị cola 330ml',
-         10000, NULL, N'Nước ngọt có gas vị cola, lon 330ml.', 2, 2),
-
-        ('261015004', N'Nước ngọt vị cam 330ml',
-         10000, NULL, N'Nước ngọt có gas vị cam, lon 330ml.', 2, 2),
-
-        ('261015005', N'Bánh quy bơ 200g',
-         35000, NULL, N'Bánh quy vị bơ, hộp 200g.', 3, 3),
-
-        ('261015006', N'Bánh quy cacao 150g',
-         25000, NULL, N'Bánh quy vị cacao, gói 150g.', 3, 4),
-
-        ('261015007', N'Kẹo sữa 100g',
-         15000, NULL, N'Kẹo vị sữa, gói 100g.', 4, 4),
-
-        ('261015008', N'Kẹo trái cây 120g',
-         18000, NULL, NULL, 4, 4),
-
-        ('261015009', N'Mì ăn liền vị tôm 75g',
-         5000, NULL, N'Mì ăn liền vị tôm, gói 75g.', 5, 4),
-
-        ('261015010', N'Mì ăn liền vị bò 75g',
-         5000, NULL, N'Mì ăn liền vị bò, gói 75g.', 5, 4),
-
-        ('261015011', N'Cá hộp sốt cà 155g',
-         22000, NULL, N'Cá đóng hộp sốt cà chua, hộp 155g.', 6, 3),
-
-        ('261015012', N'Thịt hộp 170g',
-         32000, NULL, NULL, 6, 3);
-
-
-    -- 5. Tỉnh: 3 dòng
-    -- Mã nội bộ dùng cho bài thực hành.
-    INSERT INTO dbo.Tinh (MaTinh, TenTinh)
-    VALUES
-        ('01', N'Hà Nội'),
-        ('02', N'Đà Nẵng'),
-        ('03', N'Hồ Chí Minh');
-
-
-    -- 6. Xã/phường: 6 dòng
-    -- Tên minh họa, không phải danh mục hành chính chính thức.
-    INSERT INTO dbo.XaPhuong (MaXP, TenXP, MaTinh)
-    VALUES
-        ('01001', N'Phường Minh An', '01'),
-        ('01002', N'Phường Bình Minh', '01'),
-        ('02001', N'Phường An Hòa', '02'),
-        ('02002', N'Phường Hòa Bình', '02'),
-        ('03001', N'Phường Tân An', '03'),
-        ('03002', N'Phường An Bình', '03');
-
-
-    -- 7. Phòng ban: 3 dòng
-    INSERT INTO dbo.PhongBan (MaPB, TenPB)
-    VALUES
-        (1, N'Quản lý'),
-        (2, N'Bán hàng'),
-        (3, N'Kho');
-
-
-    -- 8. Quyền: 4 dòng
-    INSERT INTO dbo.Quyen (MaQuyen, TenQuyen, MoTa)
-    VALUES
-        (1, N'Quản trị',
-         N'Quản lý tài khoản, danh mục và phân quyền.'),
-
-        (2, N'Bán hàng',
-         N'Quản lý khách hàng và lập đơn bán hàng.'),
-
-        (3, N'Nhập hàng',
-         N'Quản lý nhà cung cấp và lập đơn mua hàng.'),
-
-        (4, N'Xem báo cáo',
-         N'Xem báo cáo mua hàng, bán hàng và doanh thu.');
-
-
-    -- Mật khẩu chung
-DECLARE @MatKhauMau varbinary(MAX)
-    = HASHBYTES('SHA2_512', N'ahihi2006');
-
-
-    -- 9. Nhân viên: 5 dòng
-    INSERT INTO dbo.NhanVien
-        (MaNV, HoNV, TenNV, DienThoai, Email,
-         TenDN, MatKhau, AnhNV, MaPB)
-    VALUES
-        (1, N'Nguyễn Văn', N'An', '0375641438',
-         'an@example.com', N'admin',
-         @MatKhauMau, NULL, 1),
-
-        (2, N'Trần Thị', N'Bình', '0364082026',
-         'binh@example.com', N'nvbinh',
-         @MatKhauMau, NULL, 2),
-
-        (3, N'Lê Minh', N'Châu', '0394378351',
-         'chau@example.com', N'nvchau',
-         @MatKhauMau, NULL, 2),
-
-        (4, N'Phạm Quốc', N'Dũng', '0905206364',
-         'dung@example.com', N'nvdung',
-         @MatKhauMau, NULL, 3),
-
-        (5, N'Võ Thị', N'Hà', '0902056821',
-         'ha@example.com', N'nvha',
-         @MatKhauMau, NULL, 3);
-
-
-    -- 10. Phân quyền: 8 dòng
-    INSERT INTO dbo.PhanQuyen (MaQuyen, MaNV)
-    VALUES
-        (1, 1),
-        (4, 1),
-        (2, 2),
-        (4, 2),
-        (2, 3),
-        (3, 4),
-        (4, 4),
-        (3, 5);
-
-
-    -- 11. Nhà cung cấp: 3 dòng
-    INSERT INTO dbo.NhaCC
-        (MaNCC, TenNCC, DienThoai, Email, DiaChi, MaXP)
-    VALUES
-        (1, N'Công ty Đồ uống Bình Minh',
-         '0910000001', 'douong@example.com',
-         N'12 Đường Hoa Mai', '01001'),
-
-        (2, N'Công ty Bánh kẹo An Phúc',
-         '0910000002', NULL,
-         N'25 Đường Hoa Sen', '02001'),
-
-        (3, N'Công ty Thực phẩm Minh An',
-         NULL, 'thucpham@example.com',
-         N'36 Đường Hoa Lan', '03001');
-
-
-    -- 12. Đơn mua hàng: 4 dòng
-    -- Ba đơn đã giao, một đơn chưa giao.
-    INSERT INTO dbo.DonMH
-        (MaDMH, NgayDat, NgayGiao, MaNV, MaNCC)
-    VALUES
-        ('MH00001', '2026-10-15T06:00:00',
-         '2026-10-15T07:00:00', 4, 1),
-
-        ('MH00002', '2026-10-15T06:10:00',
-         '2026-10-15T07:10:00', 5, 2),
-
-        ('MH00003', '2026-10-15T06:20:00',
-         '2026-10-15T07:20:00', 4, 2),
-
-        ('MH00004', '2026-10-15T07:30:00',
-         NULL, 5, 3);
-
-
-    -- 13. Chi tiết mua hàng: 10 dòng
-    INSERT INTO dbo.CTMH (MaDMH, MaSP, SLM, DGM)
-    VALUES
-        ('MH00001', '261015001', 100, 3500),
-        ('MH00001', '261015002',  60, 7000),
-        ('MH00001', '261015003', 100, 7500),
-
-        ('MH00002', '261015005',  40, 27000),
-        ('MH00002', '261015006',  50, 18000),
-        ('MH00002', '261015007',  60, 10000),
-
-        ('MH00003', '261015007',  40, 10000),
-        ('MH00003', '261015008',  60, 12000),
-
-        ('MH00004', '261015009', 100, 3500),
-        ('MH00004', '261015010', 100, 3500);
-
-
-    -- 14. Khách hàng: 6 dòng
-    INSERT INTO dbo.KhachHang
-        (MaKH, HoKH, TenKH, DienThoai, Email,
-         DiaChi, MaXP, TenDN, MatKhau)
-    VALUES
-        (1, N'Nguyễn Thị', N'Lan',
-         '0920000001', 'lan@example.com',
-         N'10 Đường Hoa Mai', '01001',
-         N'khlan', @MatKhauMau),
-
-        (2, N'Trần Văn', N'Minh',
-         '0920000002', NULL,
-         N'20 Đường Hoa Đào', '01002',
-         N'khminh', @MatKhauMau),
-
-        (3, N'Lê Thị', N'Ngọc',
-         '0920000003', 'ngoc@example.com',
-         N'30 Đường Hoa Sen', '02001',
-         N'khngoc', @MatKhauMau),
-
-        (4, N'Phạm Hoàng', N'Nam',
-         NULL, 'nam@example.com',
-         N'40 Đường Hoa Cúc', '02002',
-         N'khnam', @MatKhauMau),
-
-        (5, N'Võ Thanh', N'Tâm',
-         '0920000005', NULL,
-         N'50 Đường Hoa Lan', '03001',
-         N'khtam', @MatKhauMau),
-
-        (6, N'Đặng Thị', N'Thu',
-         '0920000006', 'thu@example.com',
-         N'60 Đường Hoa Hồng', '03002',
-         N'khthu', @MatKhauMau);
-
-
-    -- 15. Đơn bán hàng: 6 dòng
-    -- Bốn đơn đã giao được đặt HOAN_TAT; hai đơn chưa giao được đặt DA_XAC_NHAN.
-    -- Trạng thái hai đơn chưa giao là trạng thái mẫu khởi tạo.
-    INSERT INTO dbo.DonBH
-        (MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH, TrangThai)
-    VALUES
-        ('BH0000001', '2026-10-15T07:30:00',
-         '2026-10-15T08:00:00',
-         N'10 Đường Hoa Mai', '01001', 2, 1, 'HOAN_TAT'),
-
-        ('BH0000002', '2026-10-15T07:40:00',
-         '2026-10-15T08:10:00',
-         N'20 Đường Hoa Đào', '01002', 3, 2, 'HOAN_TAT'),
-
-        ('BH0000003', '2026-10-15T07:50:00',
-         '2026-10-15T08:20:00',
-         N'30 Đường Hoa Sen', '02001', 2, 3, 'HOAN_TAT'),
-
-        ('BH0000004', '2026-10-15T08:00:00',
-         '2026-10-15T08:30:00',
-         N'40 Đường Hoa Cúc', '02002', 3, 4, 'HOAN_TAT'),
-
-        ('BH0000005', '2026-10-15T08:40:00',
-         NULL,
-         N'50 Đường Hoa Lan', '03001', 2, 5, 'DA_XAC_NHAN'),
-
-        ('BH0000006', '2026-10-15T08:50:00',
-         NULL,
-         N'60 Đường Hoa Hồng', '03002', 3, 6, 'DA_XAC_NHAN');
-
-    -- Đây là bản ghi trạng thái khởi tạo cho dữ liệu mẫu; file không có
-    -- lịch sử thao tác trước thời điểm tạo bộ dữ liệu này.
-    INSERT INTO dbo.LichSuTrangThaiDonBH
-        (MaDBH, TrangThaiCu, TrangThaiMoi, ThoiDiem, MaNV, GhiChu)
-    SELECT MaDBH, NULL, TrangThai, SYSDATETIME(), NULL,
-           N'Khởi tạo trạng thái trong dữ liệu mẫu.'
-    FROM dbo.DonBH
-    WHERE MaDBH IN
-        ('BH0000001', 'BH0000002', 'BH0000003',
-         'BH0000004', 'BH0000005', 'BH0000006');
-
-
-    -- 16. Chi tiết bán hàng: 15 dòng
-    -- Chỉ bán các sản phẩm đã được giao ở đơn mua.
-    INSERT INTO dbo.CTBH (MaDBH, MaSP, SLB, DGB)
-    VALUES
-        ('BH0000001', '261015001',  5, 5000),
-        ('BH0000001', '261015003',  3, 10000),
-        ('BH0000001', '261015005',  1, 35000),
-
-        ('BH0000002', '261015002',  2, 10000),
-        ('BH0000002', '261015006',  2, 25000),
-
-        ('BH0000003', '261015001', 10, 5000),
-        ('BH0000003', '261015007',  3, 15000),
-        ('BH0000003', '261015008',  2, 18000),
-
-        ('BH0000004', '261015003',  6, 10000),
-        ('BH0000004', '261015005',  2, 35000),
-
-        ('BH0000005', '261015002',  4, 10000),
-        ('BH0000005', '261015006',  1, 25000),
-        ('BH0000005', '261015008',  3, 18000),
-
-        ('BH0000006', '261015001',  6, 5000),
-        ('BH0000006', '261015007',  2, 15000);
-
-
-    COMMIT TRANSACTION;
-
-    PRINT N'Đã thêm dữ liệu mẫu và trạng thái khởi tạo cho đơn bán hàng thành công.';
-END TRY
-BEGIN CATCH
-    IF XACT_STATE() <> 0
-        ROLLBACK TRANSACTION;
-
-    THROW;
-END CATCH;
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015001', N'261015001', 100, 3500.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015001', N'261015002', 60, 7000.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015001', N'261015003', 100, 7500.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015002', N'261015005', 40, 27000.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015002', N'261015006', 50, 18000.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015002', N'261015007', 60, 10000.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015003', N'261015007', 40, 10000.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015003', N'261015008', 60, 12000.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015004', N'261015001', 32, 43.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015004', N'261015009', 100, 3500.0000)
+INSERT [dbo].[CTMH] ([MaDMH], [MaSP], [SLM], [DGM]) VALUES (N'MH261015004', N'261015010', 100, 3500.0000)
+GO
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015001', N'261015001', 5, 5000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015001', N'261015003', 3, 10000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015001', N'261015005', 1, 35000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015002', N'261015002', 2, 10000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015002', N'261015006', 2, 25000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015003', N'261015001', 10, 5000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015003', N'261015007', 3, 15000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015003', N'261015008', 2, 18000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015004', N'261015003', 6, 10000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015004', N'261015005', 2, 35000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015005', N'261015002', 4, 10000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015005', N'261015006', 1, 25000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015005', N'261015008', 3, 18000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015006', N'261015001', 6, 5000.0000)
+INSERT [dbo].[CTBH] ([MaDBH], [MaSP], [SLB], [DGB]) VALUES (N'BH261015006', N'261015007', 2, 15000.0000)
+GO
+SET IDENTITY_INSERT [dbo].[GioHang] ON
+GO
+INSERT [dbo].[GioHang] ([MaGH], [MaKH], [NgayCapNhat]) VALUES (1, 1, CAST(N'2026-11-04T10:19:12.1769183' AS DateTime2))
+SET IDENTITY_INSERT [dbo].[GioHang] OFF
+GO
+INSERT [dbo].[CTGioHang] ([MaGH], [MaSP], [SoLuong]) VALUES (1, N'261015001', 1)
+GO
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'CTBH', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'CTMH', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'DonBH', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'DonMH', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'DonViTinh', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'KhachHang', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'LoaiSP', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'NhaCC', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'NhanVien', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'NhomSP', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'PhanQuyen', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'PhongBan', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'Quyen', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'SanPham', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'Tinh', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (1, N'XaPhuong', 1, 1, 1, 1)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (2, N'CTBH', 1, 1, 1, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (2, N'DonBH', 1, 1, 1, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (2, N'DonViTinh', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (2, N'KhachHang', 1, 1, 1, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (2, N'LoaiSP', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (2, N'NhomSP', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (2, N'SanPham', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (2, N'Tinh', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (2, N'XaPhuong', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'CTBH', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'CTMH', 1, 1, 1, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'DonBH', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'DonMH', 1, 1, 1, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'DonViTinh', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'LoaiSP', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'NhaCC', 1, 1, 1, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'NhomSP', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'SanPham', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'Tinh', 0, 1, 0, 0)
+INSERT [dbo].[QuyenBang] ([MaQuyen], [TenBang], [ChoPhepThem], [ChoPhepXem], [ChoPhepSua], [ChoPhepXoa]) VALUES (3, N'XaPhuong', 0, 1, 0, 0)
 GO
