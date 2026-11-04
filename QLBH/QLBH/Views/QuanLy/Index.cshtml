@@ -1,0 +1,52 @@
+@model QLBH.Models.QuanLyViewModel
+@{
+    ViewData["Title"] = "Quản lý";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/quanly.css" asp-append-version="true" />
+}
+
+<section class="management-page" aria-labelledby="management-title">
+    <header class="management-page__heading">
+        <p class="management-page__eyebrow">QLBH · KHU VỰC NHÂN VIÊN</p>
+        <h1 id="management-title">Quản lý</h1>
+        <p>Xin chào, <strong>@Model.TenNhanVien</strong>. Chọn một nhóm để mở chức năng cần dùng.</p>
+    </header>
+
+    @if (Model.NhomChucNang.Count == 0)
+    {
+        <div class="management-empty" role="status">
+            Tài khoản của bạn hiện chưa có quyền xem chức năng quản lý nào.
+        </div>
+    }
+    else
+    {
+        <div class="management-sections">
+            @foreach (var nhom in Model.NhomChucNang)
+            {
+                <section class="management-section" aria-label="@nhom.TieuDe">
+                    <header class="management-section__heading">
+                        <span class="management-section__icon" aria-hidden="true">@nhom.BieuTuong</span>
+                        <div>
+                            <h2>@nhom.TieuDe</h2>
+                            <p>@nhom.MoTa</p>
+                        </div>
+                        <span class="management-section__count">@nhom.ChucNang.Count mục</span>
+                    </header>
+
+                    <div class="management-grid">
+                        @foreach (var chucNang in nhom.ChucNang)
+                        {
+                            <a class="management-card" asp-controller="@chucNang.Controller" asp-action="Index">
+                                <span class="management-card__title">@chucNang.TieuDe</span>
+                                <span class="management-card__description">@chucNang.MoTa</span>
+                                <span class="management-card__link">Mở chức năng <span aria-hidden="true">→</span></span>
+                            </a>
+                        }
+                    </div>
+                </section>
+            }
+        </div>
+    }
+</section>
