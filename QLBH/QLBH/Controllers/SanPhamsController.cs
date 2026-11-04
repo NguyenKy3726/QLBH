@@ -20,10 +20,11 @@ public class SanPhamsController : Controller
         _environment = environment;
     }
 
-    [HttpGet("/uploads/products/{fileName}")]
-    public IActionResult ProductImage(string fileName)
+    [HttpGet("/uploads/{folder}/{fileName}")]
+    public IActionResult UploadedImage(string folder, string fileName)
     {
-        if (string.IsNullOrWhiteSpace(fileName) || fileName != Path.GetFileName(fileName))
+        if (folder is not ("products" or "employees" or "customers") ||
+            string.IsNullOrWhiteSpace(fileName) || fileName != Path.GetFileName(fileName))
             return NotFound();
 
         var contentType = Path.GetExtension(fileName).ToLowerInvariant() switch
@@ -40,7 +41,7 @@ public class SanPhamsController : Controller
         if (string.IsNullOrWhiteSpace(webRoot))
             webRoot = Path.Combine(_environment.ContentRootPath, "wwwroot");
 
-        var path = Path.Combine(webRoot, "uploads", "products", fileName);
+        var path = Path.Combine(webRoot, "uploads", folder, fileName);
         return System.IO.File.Exists(path) ? PhysicalFile(path, contentType) : NotFound();
     }
 
@@ -134,13 +135,19 @@ public class SanPhamsController : Controller
         CancellationToken cancellationToken)
     {
         ModelState.Remove(nameof(SanPham.MaSP));
-        if (ModelState.IsValid && fileAnh is { Length: > 0 })
+        if (fileAnh is { Length: > 0 })
         {
-            var upload = await ProductImageUploadService.SaveAsync(fileAnh, _environment, cancellationToken);
-            if (upload.Error is not null)
-                ModelState.AddModelError("fileAnh", upload.Error);
-            else
-                sanpham.AnhSP = upload.RelativePath;
+            var validationError = await ImageUploadService.ValidateAsync(fileAnh, cancellationToken);
+            if (validationError is not null)
+                ModelState.AddModelError("fileAnh", validationError);
+            else if (ModelState.IsValid)
+            {
+                var upload = await ImageUploadService.SaveAsync(fileAnh, _environment, "products", cancellationToken);
+                if (upload.Error is not null)
+                    ModelState.AddModelError("fileAnh", upload.Error);
+                else
+                    sanpham.AnhSP = upload.RelativePath;
+            }
         }
 
         if (ModelState.IsValid)
@@ -196,13 +203,19 @@ public class SanPhamsController : Controller
             return NotFound();
 
         sanpham.AnhSP = currentProduct.AnhSP;
-        if (ModelState.IsValid && fileAnh is { Length: > 0 })
+        if (fileAnh is { Length: > 0 })
         {
-            var upload = await ProductImageUploadService.SaveAsync(fileAnh, _environment, cancellationToken);
-            if (upload.Error is not null)
-                ModelState.AddModelError("fileAnh", upload.Error);
-            else
-                sanpham.AnhSP = upload.RelativePath;
+            var validationError = await ImageUploadService.ValidateAsync(fileAnh, cancellationToken);
+            if (validationError is not null)
+                ModelState.AddModelError("fileAnh", validationError);
+            else if (ModelState.IsValid)
+            {
+                var upload = await ImageUploadService.SaveAsync(fileAnh, _environment, "products", cancellationToken);
+                if (upload.Error is not null)
+                    ModelState.AddModelError("fileAnh", upload.Error);
+                else
+                    sanpham.AnhSP = upload.RelativePath;
+            }
         }
 
         if (ModelState.IsValid)

@@ -38,6 +38,7 @@ button, input, select, textarea { font: inherit; }
 .site-link:hover { color: var(--brand); }
 .site-link--button { padding: 0; border: 0; background: transparent; }
 .site-user { max-width: 170px; overflow: hidden; color: var(--brand-deep); font-size: .82rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.site-user__avatar { width: 30px; height: 30px; margin-right: 7px; border-radius: 50%; object-fit: cover; vertical-align: middle; }
 .site-role { padding: 6px 11px; border: 1px solid rgba(111,53,23,.2); border-radius: 999px; color: var(--brand-deep); font-size: .72rem; font-weight: 700; }
 .site-button { min-height: 42px; padding: 10px 19px; border: 0; border-radius: 999px; font-size: .78rem; font-weight: 700; letter-spacing: .04em; }
 .site-button--dark { color: #fffaf4; background: var(--brand-deep); }

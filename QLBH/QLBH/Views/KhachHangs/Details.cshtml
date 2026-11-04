@@ -66,6 +66,18 @@
             @Html.DisplayFor(model => model.TenDN)
         </dd>
 
+        <dt class="col-sm-2">Ảnh đại diện</dt>
+        <dd class="col-sm-10">
+            @if (!string.IsNullOrWhiteSpace(Model.AnhKH))
+            {
+                <img src="@Url.Content(Model.AnhKH)" alt="Ảnh đại diện của @Model.HoKH @Model.TenKH" style="width:120px;height:120px;border-radius:50%;object-fit:cover;" />
+            }
+            else
+            {
+                <span>Chưa có ảnh đại diện</span>
+            }
+        </dd>
+
         <dt class = "col-sm-2">
             Passwork
         </dt>

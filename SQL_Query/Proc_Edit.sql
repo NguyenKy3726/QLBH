@@ -185,7 +185,8 @@ CREATE OR ALTER PROC dbo.KhachHang_Sua
     @DiaChi nvarchar(50),
     @MaXP char(5),
     @TenDN nvarchar(50),
-    @matkhaumoi nvarchar(50) = NULL
+    @matkhaumoi nvarchar(50) = NULL,
+    @AnhKH nvarchar(255) = NULL
 AS
     UPDATE dbo.KhachHang
     SET HoKH = @HoKH,
@@ -195,6 +196,7 @@ AS
         DiaChi = @DiaChi,
         MaXP = @MaXP,
         TenDN = @TenDN,
+        AnhKH = @AnhKH,
         MatKhau = CASE
             WHEN @MatKhauMoi IS NULL
                  OR DATALENGTH(@matkhaumoi) = 0

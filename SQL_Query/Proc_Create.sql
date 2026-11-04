@@ -316,7 +316,8 @@ CREATE OR ALTER PROC KhachHang_Them
     @DiaChi nvarchar(50),
     @MaXP char(5),
     @TenDN nvarchar(50),
-    @MatKhau varbinary(MAX)
+    @MatKhau varbinary(MAX),
+    @AnhKH nvarchar(255) = NULL
 AS
 BEGIN
     DECLARE @MaKH int
@@ -329,10 +330,10 @@ BEGIN
 
     INSERT INTO KhachHang
         (MaKH, HoKH, TenKH, DienThoai, Email,
-         DiaChi, MaXP, TenDN, MatKhau)
+         DiaChi, MaXP, TenDN, MatKhau, AnhKH)
     VALUES
         (@MaKH, @HoKH, @TenKH, @DienThoai, @Email,
-         @DiaChi, @MaXP, @TenDN, @MatKhau)
+         @DiaChi, @MaXP, @TenDN, @MatKhau, @AnhKH)
 END
 GO
 

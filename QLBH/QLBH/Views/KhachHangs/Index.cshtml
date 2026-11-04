@@ -36,6 +36,7 @@
             <th>
                 Tên đăng nhập
             </th>
+            <th>Ảnh đại diện</th>
             <th>
                 Passwork
             </th>
@@ -68,6 +69,16 @@
             </td>
             <td>
                 @Html.DisplayFor(model => item.TenDN)
+            </td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(item.AnhKH))
+                {
+                    <img src="@Url.Content(item.AnhKH)" alt="Ảnh đại diện của @item.HoKH @item.TenKH" style="width:44px;height:44px;border-radius:50%;object-fit:cover;" />
+                }
+                else
+                {
+                    <span class="text-muted">Chưa có ảnh</span>
+                }
             </td>
             <td>
                 ...

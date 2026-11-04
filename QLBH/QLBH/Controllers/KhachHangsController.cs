@@ -3,17 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using QLBH.Data;
 using QLBH.Models;
+using QLBH.Services;
 
 [QLBH.Filters.TablePermissionAuthorize("KhachHang")]
 public class KhachHangsController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public KhachHangsController(AppDbContext context)
+    public KhachHangsController(AppDbContext context, IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     // GET: KHACHHANGS
@@ -54,8 +59,27 @@ public class KhachHangsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("MaKH,HoKH,TenKH,DienThoai,Email,DiaChi,MaXP,TenDN,MatKhau")] KhachHang khachhang)
+    [RequestSizeLimit(6 * 1024 * 1024)]
+    public async Task<IActionResult> Create(
+        [Bind("MaKH,HoKH,TenKH,DienThoai,Email,DiaChi,MaXP,TenDN,MatKhau")] KhachHang khachhang,
+        IFormFile? fileAnh,
+        CancellationToken cancellationToken)
     {
+        if (fileAnh is { Length: > 0 })
+        {
+            var validationError = await ImageUploadService.ValidateAsync(fileAnh, cancellationToken);
+            if (validationError is not null)
+                ModelState.AddModelError("fileAnh", validationError);
+            else if (ModelState.IsValid)
+            {
+                var upload = await ImageUploadService.SaveAsync(fileAnh, _environment, "customers", cancellationToken);
+                if (upload.Error is not null)
+                    ModelState.AddModelError("fileAnh", upload.Error);
+                else
+                    khachhang.AnhKH = upload.RelativePath;
+            }
+        }
+
         if (ModelState.IsValid)
         {
             _context.KhachHang_Them(khachhang);
@@ -87,7 +111,13 @@ public class KhachHangsController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(short? makh, [Bind("MaKH,HoKH,TenKH,DienThoai,Email,DiaChi,MaXP,TenDN")] KhachHang khachhang, string? matkhaumoi)
+    [RequestSizeLimit(6 * 1024 * 1024)]
+    public async Task<IActionResult> Edit(
+        short? makh,
+        [Bind("MaKH,HoKH,TenKH,DienThoai,Email,DiaChi,MaXP,TenDN")] KhachHang khachhang,
+        string? matkhaumoi,
+        IFormFile? fileAnh,
+        CancellationToken cancellationToken)
     {
         if (makh != khachhang.MaKH)
         {
@@ -95,8 +125,26 @@ public class KhachHangsController : Controller
         }
         ModelState.Remove(nameof(KhachHang.MatKhau));
         if (matkhaumoi != null && matkhaumoi.Length > 50)
-        {
             ModelState.AddModelError("MatKhauMoi", "Mật khẩu không được vượt quá 50 kí tự.");
+
+        var currentCustomer = _context.KhachHang_CT(makh.Value);
+        if (currentCustomer is null)
+            return NotFound();
+
+        khachhang.AnhKH = currentCustomer.AnhKH;
+        if (fileAnh is { Length: > 0 })
+        {
+            var validationError = await ImageUploadService.ValidateAsync(fileAnh, cancellationToken);
+            if (validationError is not null)
+                ModelState.AddModelError("fileAnh", validationError);
+            else if (ModelState.IsValid)
+            {
+                var upload = await ImageUploadService.SaveAsync(fileAnh, _environment, "customers", cancellationToken);
+                if (upload.Error is not null)
+                    ModelState.AddModelError("fileAnh", upload.Error);
+                else
+                    khachhang.AnhKH = upload.RelativePath;
+            }
         }
         if (ModelState.IsValid)
         {

@@ -67,7 +67,14 @@
                  ...
             </td>
             <td>
-                @Html.DisplayFor(model => item.AnhNV)
+                @if (!string.IsNullOrWhiteSpace(item.AnhNV))
+                {
+                    <img src="@Url.Content(item.AnhNV)" alt="Ảnh đại diện của @item.HoNV @item.TenNV" style="width:44px;height:44px;border-radius:50%;object-fit:cover;" />
+                }
+                else
+                {
+                    <span class="text-muted">Chưa có ảnh</span>
+                }
             </td>
             <td>
                 @(ViewBag.TenPB[item.MaPB])

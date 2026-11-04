@@ -47,6 +47,8 @@ namespace QLBH.Controllers
                 HttpContext.Session.SetString("Username", nv.TenDN);
                 HttpContext.Session.SetString("DisplayName", $"{nv.HoNV} {nv.TenNV}");
                 HttpContext.Session.SetInt32("MaNV", nv.MaNV);
+                if (!string.IsNullOrWhiteSpace(nv.AnhNV))
+                    HttpContext.Session.SetString("AvatarPath", nv.AnhNV);
 
                 foreach (var tenQuyen in _context.NhanVien_QuyenDanhSach(nv.MaNV))
                     HttpContext.Session.SetString("Permission:" + tenQuyen.ToUpperInvariant(), "1");
@@ -70,6 +72,8 @@ namespace QLBH.Controllers
                 HttpContext.Session.SetString("Username", kh.TenDN);
                 HttpContext.Session.SetString("DisplayName", $"{kh.HoKH} {kh.TenKH}");
                 HttpContext.Session.SetInt32("MaKH", kh.MaKH);
+                if (!string.IsNullOrWhiteSpace(kh.AnhKH))
+                    HttpContext.Session.SetString("AvatarPath", kh.AnhKH);
 
                 return RedirectAfterLogin(returnUrl);
             }

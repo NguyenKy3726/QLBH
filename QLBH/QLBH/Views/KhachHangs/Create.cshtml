@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -69,11 +69,31 @@
                 <span asp-validation-for="MatKhau" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label for="fileAnh">Ảnh đại diện</label>
+                <input type="file" id="fileAnh" name="fileAnh" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
+                <small class="form-text text-muted">JPG, PNG hoặc WEBP, tối đa 5 MB.</small>
+                <span class="text-danger">@Html.ValidationMessage("fileAnh")</span>
+                <img id="previewAnh" alt="Xem trước ảnh đại diện" style="display:none;max-width:180px;max-height:180px;margin-top:12px;border-radius:50%;object-fit:cover;" />
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    document.getElementById('fileAnh')?.addEventListener('change', function (event) {
+        const file = event.target.files?.[0];
+        const preview = document.getElementById('previewAnh');
+        if (!file || !preview) {
+            if (preview) { preview.removeAttribute('src'); preview.style.display = 'none'; }
+            return;
+        }
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+    });
+</script>
 
 <div>
     <a asp-action="Index">Back to List</a>

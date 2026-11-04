@@ -3,17 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using QLBH.Data;
 using QLBH.Models;
+using QLBH.Services;
 
 [QLBH.Filters.TablePermissionAuthorize("NhanVien")]
 public class NhanViensController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
-    public NhanViensController(AppDbContext context)
+    public NhanViensController(AppDbContext context, IWebHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     // GET: NHANVIENS
@@ -54,8 +59,27 @@ public class NhanViensController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("MaNV,HoNV,TenNV,DienThoai,Email,TenDN,MatKhau,AnhNV,MaPB")] NhanVien nhanvien)
+    [RequestSizeLimit(6 * 1024 * 1024)]
+    public async Task<IActionResult> Create(
+        [Bind("MaNV,HoNV,TenNV,DienThoai,Email,TenDN,MatKhau,MaPB")] NhanVien nhanvien,
+        IFormFile? fileAnh,
+        CancellationToken cancellationToken)
     {
+        if (fileAnh is { Length: > 0 })
+        {
+            var validationError = await ImageUploadService.ValidateAsync(fileAnh, cancellationToken);
+            if (validationError is not null)
+                ModelState.AddModelError("fileAnh", validationError);
+            else if (ModelState.IsValid)
+            {
+                var upload = await ImageUploadService.SaveAsync(fileAnh, _environment, "employees", cancellationToken);
+                if (upload.Error is not null)
+                    ModelState.AddModelError("fileAnh", upload.Error);
+                else
+                    nhanvien.AnhNV = upload.RelativePath;
+            }
+        }
+
         if (ModelState.IsValid)
         {
             _context.NhanVien_Them(nhanvien);
@@ -87,20 +111,44 @@ public class NhanViensController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(byte? manv, [Bind("MaNV,HoNV,TenNV,DienThoai,Email,TenDN,AnhNV,MaPB")] NhanVien nhanvien, string? matkhaumoi)
+    [RequestSizeLimit(6 * 1024 * 1024)]
+    public async Task<IActionResult> Edit(
+        byte? manv,
+        [Bind("MaNV,HoNV,TenNV,DienThoai,Email,TenDN,MaPB")] NhanVien nhanvien,
+        string? matkhaumoi,
+        IFormFile? fileAnh,
+        CancellationToken cancellationToken)
     {
         if (manv != nhanvien.MaNV)
         {
             return NotFound();
         }
-        // Mật khẩu mới được nhận qua tham số matkhaumoi
+
+        // Mật khẩu mới được nhận riêng qua matkhaumoi, nên không bắt buộc gửi mật khẩu hiện tại.
         ModelState.Remove(nameof(NhanVien.MatKhau));
         if (matkhaumoi != null && matkhaumoi.Length > 50)
         {
-            ModelState.AddModelError(
-                "MatKhauMoi",
-                "Mật khẩu không được vượt quá 50 ký tự."
-            );
+            ModelState.AddModelError("MatKhauMoi", "Mật khẩu không được vượt quá 50 ký tự.");
+        }
+
+        var currentEmployee = _context.NhanVien_CT(manv.Value);
+        if (currentEmployee is null)
+            return NotFound();
+
+        nhanvien.AnhNV = currentEmployee.AnhNV;
+        if (fileAnh is { Length: > 0 })
+        {
+            var validationError = await ImageUploadService.ValidateAsync(fileAnh, cancellationToken);
+            if (validationError is not null)
+                ModelState.AddModelError("fileAnh", validationError);
+            else if (ModelState.IsValid)
+            {
+                var upload = await ImageUploadService.SaveAsync(fileAnh, _environment, "employees", cancellationToken);
+                if (upload.Error is not null)
+                    ModelState.AddModelError("fileAnh", upload.Error);
+                else
+                    nhanvien.AnhNV = upload.RelativePath;
+            }
         }
         if (ModelState.IsValid)
         {

@@ -3,6 +3,7 @@
 @{
     var role = Context.Session.GetString("Role");
     var displayName = Context.Session.GetString("DisplayName") ?? Context.Session.GetString("Username") ?? "";
+    var avatarPath = Context.Session.GetString("AvatarPath");
     var isCustomer = role == "KhachHang";
     var isEmployee = role == "NhanVien";
     var hasAdmin = Context.Session.GetString("Permission:ADMIN") == "1";
@@ -115,7 +116,13 @@
                         }
                         else
                         {
-                            <span class="site-user">@displayName</span>
+                            <span class="site-user">
+                                @if (!string.IsNullOrWhiteSpace(avatarPath))
+                                {
+                                    <img class="site-user__avatar" src="@Url.Content(avatarPath)" alt="" />
+                                }
+                                @displayName
+                            </span>
                             <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
