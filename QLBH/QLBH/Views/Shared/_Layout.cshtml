@@ -7,8 +7,6 @@
     var isCustomer = role == "KhachHang";
     var isEmployee = role == "NhanVien";
     var hasAdmin = Context.Session.GetString("Permission:ADMIN") == "1";
-    var hasSales = Context.Session.GetString("Permission:SALES") == "1";
-    var hasWarehouse = Context.Session.GetString("Permission:WAREHOUSE") == "1";
     var employeeId = Context.Session.GetInt32("MaNV");
     var visibleTables = isEmployee && !hasAdmin && employeeId is >= 0 and <= 255
         ? AppDb.NhanVien_BangDuocXem((byte)employeeId.Value)
@@ -48,7 +46,7 @@
                             <li class="nav-item"><a class="nav-link @(controller == "GioHang" && action == "Index" ? "active" : "")" asp-controller="GioHang" asp-action="Index">Giỏ hàng</a></li>
                             <li class="nav-item"><a class="nav-link @(controller == "GioHang" && action == "DonCuaToi" ? "active" : "")" asp-controller="GioHang" asp-action="DonCuaToi">Đơn hàng của tôi</a></li>
                         }
-                        @if (isEmployee && (hasAdmin || ((hasSales || hasWarehouse) && visibleTables.Count > 0)))
+                        @if (isEmployee && (hasAdmin || visibleTables.Count > 0))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle @(controller != "Home" && controller != "SanPhams" ? "active" : "")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Quản lý</a>
@@ -139,7 +137,7 @@
                             }
                             else if (isEmployee)
                             {
-                                <span class="site-role">@(hasAdmin ? "Quản trị viên" : hasSales && hasWarehouse ? "Nhân viên" : hasSales ? "Sales" : hasWarehouse ? "Warehouse" : "Nhân viên")</span>
+                                <span class="site-role">@(hasAdmin ? "Quản trị viên" : "Nhân viên")</span>
                             }
                         }
                     </div>
