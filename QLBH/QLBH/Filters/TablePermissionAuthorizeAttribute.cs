@@ -8,7 +8,7 @@ namespace QLBH.Filters;
 /// Gắn quyền theo bảng vào controller. Các action CRUD chuẩn được ánh xạ
 /// tự động sang C/R/U/D; action chưa khai báo sẽ bị từ chối theo nguyên tắc fail-closed.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
 public sealed class TablePermissionAuthorizeAttribute : TypeFilterAttribute
 {
     public TablePermissionAuthorizeAttribute(string tenBang)
