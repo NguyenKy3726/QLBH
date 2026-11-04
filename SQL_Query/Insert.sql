@@ -290,7 +290,7 @@ DECLARE @MatKhauMau varbinary(MAX)
     -- lịch sử thao tác trước thời điểm tạo bộ dữ liệu này.
     INSERT INTO dbo.LichSuTrangThaiDonBH
         (MaDBH, TrangThaiCu, TrangThaiMoi, ThoiDiem, MaNV, GhiChu)
-    SELECT MaDBH, NULL, TrangThai, NgayDat, NULL,
+    SELECT MaDBH, NULL, TrangThai, SYSDATETIME(), NULL,
            N'Khởi tạo trạng thái trong dữ liệu mẫu.'
     FROM dbo.DonBH
     WHERE MaDBH IN
@@ -326,7 +326,7 @@ DECLARE @MatKhauMau varbinary(MAX)
 
     COMMIT TRANSACTION;
 
-    PRINT N'Đã thêm dữ liệu mẫu thành công vào đủ 16 bảng.';
+    PRINT N'Đã thêm dữ liệu mẫu và trạng thái khởi tạo cho đơn bán hàng thành công.';
 END TRY
 BEGIN CATCH
     IF XACT_STATE() <> 0
