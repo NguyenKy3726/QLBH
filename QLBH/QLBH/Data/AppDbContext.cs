@@ -609,14 +609,12 @@ namespace QLBH.Data
             cmd.Parameters.Add(new SqlParameter("@TenDN", TenDN));
             cmd.Parameters.Add(new SqlParameter("@MatKhau", MatKhau));
             Database.OpenConnection();
-            var reader = cmd.ExecuteReader();
-            byte maNV = 0;
-            if (reader.Read())//Nếu có dữ liệu để đọc
+            try
             {
-                maNV = reader.GetByte(reader.GetOrdinal("MaNV"));
+                using var reader = cmd.ExecuteReader();
+                return reader.Read() ? reader.GetByte(reader.GetOrdinal("MaNV")) : (byte)0;
             }
-            Database.CloseConnection();
-            return maNV;
+            finally { Database.CloseConnection(); }
         }
 
         public short KhachHang_DangNhap(string tenDN, string matKhau)
@@ -1237,6 +1235,10 @@ namespace QLBH.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<GioHangItemViewModel>().HasNoKey();
+
+            // Ánh xạ đúng tên bảng thật trong SQL Server (số ít)
+            modelBuilder.Entity<PhanQuyen>().ToTable("PhanQuyen");
+            modelBuilder.Entity<Quyen>().ToTable("Quyen");
 
             // PhanQuyen: khóa gồm MaQuyen và MaNV
             modelBuilder.Entity<PhanQuyen>()
