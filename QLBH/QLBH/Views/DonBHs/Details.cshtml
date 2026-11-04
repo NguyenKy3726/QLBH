@@ -1,73 +1,137 @@
 @model QLBH.Models.DonBH
 
-@{
-    ViewData["Title"] = "Details";
+@functions {
+    private static string TrangThaiLabel(string? status) => status switch
+    {
+        "CHO_XAC_NHAN" => "Chờ xác nhận",
+        "DA_XAC_NHAN" => "Đã xác nhận",
+        "DANG_CHUAN_BI" => "Đang chuẩn bị",
+        "DANG_GIAO" => "Đang giao",
+        "HOAN_TAT" => "Hoàn tất",
+        "DA_HUY" => "Đã hủy",
+        _ => "Không xác định"
+    };
 }
 
-<h1>Details</h1>
+@{
+    ViewData["Title"] = "Chi tiết đơn bán hàng";
+    var lichSu = ViewBag.LichSu as List<QLBH.Models.LichSuTrangThaiDonBH>
+        ?? new List<QLBH.Models.LichSuTrangThaiDonBH>();
+}
 
-<div>
-    <h4>DonBH</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            Mã đơn bán hàng
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MaDBH)
-        </dd>
+<h1>Chi tiết đơn bán hàng</h1>
+@if (TempData["ThongBaoDonBH"] is string thongBao)
+{
+    <div class="alert alert-success">@thongBao</div>
+}
+@if (TempData["LoiDonBH"] is string loi)
+{
+    <div class="alert alert-danger">@loi</div>
+}
 
-        <dt class = "col-sm-2">
-            Ngày đặt
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NgayDat)
-        </dd>
+<dl class="row">
+    <dt class="col-sm-3">Mã đơn</dt><dd class="col-sm-9">@Model.MaDBH</dd>
+    <dt class="col-sm-3">Ngày đặt</dt><dd class="col-sm-9">@Model.NgayDat.ToString("dd/MM/yyyy HH:mm")</dd>
+    <dt class="col-sm-3">Ngày giao</dt><dd class="col-sm-9">@(Model.NgayGiao?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa giao")</dd>
+    <dt class="col-sm-3">Địa chỉ giao hàng</dt><dd class="col-sm-9">@Model.DCGH</dd>
+    <dt class="col-sm-3">Xã/phường</dt><dd class="col-sm-9">@(ViewBag.TenXP[Model.MaXP])</dd>
+    <dt class="col-sm-3">Nhân viên phụ trách</dt>
+    <dd class="col-sm-9">
+        @if (Model.MaNV.HasValue)
+        {
+            @($"{Model.MaNV.Value} - {ViewBag.TenNV[Model.MaNV.Value]}")
+        }
+        else
+        {
+            @:Chưa tiếp nhận
+        }
+    </dd>
+    <dt class="col-sm-3">Khách hàng</dt><dd class="col-sm-9">@Model.MaKH - @(ViewBag.TenKH[Model.MaKH])</dd>
+    <dt class="col-sm-3">Trạng thái</dt>
+    <dd class="col-sm-9"><strong>@TrangThaiLabel(Model.TrangThai)</strong></dd>
+</dl>
 
-        <dt class = "col-sm-2">
-            Ngày giao
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NgayGiao)
-        </dd>
+@if (Model.TrangThai == "CHO_XAC_NHAN")
+{
+    <form asp-action="ChuyenTrangThai" method="post" class="d-inline-block me-2">
+        <input type="hidden" name="madbh" value="@Model.MaDBH" />
+        <input type="hidden" name="trangThaiMoi" value="DA_XAC_NHAN" />
+        <button type="submit" class="btn btn-primary">Xác nhận đơn</button>
+    </form>
+    <form asp-action="ChuyenTrangThai" method="post" class="d-inline-flex gap-2 align-items-center">
+        <input type="hidden" name="madbh" value="@Model.MaDBH" />
+        <input type="hidden" name="trangThaiMoi" value="DA_HUY" />
+        <input name="ghiChu" class="form-control" maxlength="500" required placeholder="Lý do hủy" />
+        <button type="submit" class="btn btn-outline-danger">Hủy đơn</button>
+    </form>
+}
+else if (Model.TrangThai == "DA_XAC_NHAN")
+{
+    <form asp-action="ChuyenTrangThai" method="post" class="d-inline-block me-2">
+        <input type="hidden" name="madbh" value="@Model.MaDBH" />
+        <input type="hidden" name="trangThaiMoi" value="DANG_CHUAN_BI" />
+        <button type="submit" class="btn btn-primary">Bắt đầu chuẩn bị</button>
+    </form>
+    <form asp-action="ChuyenTrangThai" method="post" class="d-inline-flex gap-2 align-items-center">
+        <input type="hidden" name="madbh" value="@Model.MaDBH" />
+        <input type="hidden" name="trangThaiMoi" value="DA_HUY" />
+        <input name="ghiChu" class="form-control" maxlength="500" required placeholder="Lý do hủy" />
+        <button type="submit" class="btn btn-outline-danger">Hủy đơn</button>
+    </form>
+}
+else if (Model.TrangThai == "DANG_CHUAN_BI")
+{
+    <form asp-action="ChuyenTrangThai" method="post" class="d-inline-block me-2">
+        <input type="hidden" name="madbh" value="@Model.MaDBH" />
+        <input type="hidden" name="trangThaiMoi" value="DANG_GIAO" />
+        <button type="submit" class="btn btn-primary">Bắt đầu giao</button>
+    </form>
+    <form asp-action="ChuyenTrangThai" method="post" class="d-inline-flex gap-2 align-items-center">
+        <input type="hidden" name="madbh" value="@Model.MaDBH" />
+        <input type="hidden" name="trangThaiMoi" value="DA_HUY" />
+        <input name="ghiChu" class="form-control" maxlength="500" required placeholder="Lý do hủy" />
+        <button type="submit" class="btn btn-outline-danger">Hủy đơn</button>
+    </form>
+}
+else if (Model.TrangThai == "DANG_GIAO")
+{
+    <form asp-action="ChuyenTrangThai" method="post" class="d-inline-block">
+        <input type="hidden" name="madbh" value="@Model.MaDBH" />
+        <input type="hidden" name="trangThaiMoi" value="HOAN_TAT" />
+        <button type="submit" class="btn btn-success">Xác nhận hoàn tất</button>
+    </form>
+}
 
-        <dt class = "col-sm-2">
-            Địa chỉ giao hàng
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DCGH)
-        </dd>
-
-        <dt class = "col-sm-2">
-            Xã/ Phường
-        </dt>
-        <dd class = "col-sm-10">
-            @(ViewBag.TenXP[Model.MaXP])
-        </dd>
-
-        <dt class = "col-sm-2">
-            Nhân viên
-        </dt>
-        <dd class = "col-sm-10">
-            @if (Model.MaNV.HasValue)
+<h2 class="h4 mt-4">Lịch sử trạng thái</h2>
+@if (lichSu.Count == 0)
+{
+    <p class="text-muted">Chưa có lịch sử trạng thái.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-sm">
+            <thead><tr><th>Thời điểm</th><th>Trạng thái trước</th><th>Trạng thái sau</th><th>Nhân viên</th><th>Ghi chú</th></tr></thead>
+            <tbody>
+            @foreach (var log in lichSu)
             {
-                @($"{Model.MaNV.Value} - {ViewBag.TenNV[Model.MaNV.Value]}")
+                <tr>
+                    <td>@log.ThoiDiem.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>@(log.TrangThaiCu == null ? "—" : TrangThaiLabel(log.TrangThaiCu))</td>
+                    <td>@TrangThaiLabel(log.TrangThaiMoi)</td>
+                    <td>@(log.MaNV.HasValue ? $"NV {log.MaNV.Value}" : "Khách hàng/hệ thống")</td>
+                    <td>@log.GhiChu</td>
+                </tr>
             }
-            else
-            {
-                @:Chưa tiếp nhận
-            }
-        </dd>
+            </tbody>
+        </table>
+    </div>
+}
 
-        <dt class = "col-sm-2">
-            Khách hàng
-        </dt>
-        <dd class = "col-sm-10">
-            @Model.MaKH - @(ViewBag.TenKH[Model.MaKH])
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.MaDBH">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="mt-3">
+    @if (Model.TrangThai == "CHO_XAC_NHAN")
+    {
+        <a asp-action="Edit" asp-route-madbh="@Model.MaDBH" class="btn btn-outline-secondary">Sửa thông tin đơn</a>
+    }
+    <a asp-action="Index" class="btn btn-link">Quay lại danh sách</a>
 </div>

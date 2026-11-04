@@ -118,9 +118,19 @@ GO
 -- 15. Đơn bán hàng
 CREATE OR ALTER PROC dbo.DonBH_DS
 AS
-    SELECT MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH
+    SELECT MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH, TrangThai
     FROM dbo.DonBH
-    ORDER BY MaDBH, NgayDat;
+    ORDER BY NgayDat DESC, MaDBH DESC;
+GO
+
+-- Danh sách đơn của đúng một khách hàng đang đăng nhập.
+CREATE OR ALTER PROC dbo.DonBH_KhachHang_DS
+    @MaKH smallint
+AS
+    SELECT MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH, TrangThai
+    FROM dbo.DonBH
+    WHERE MaKH = @MaKH
+    ORDER BY NgayDat DESC, MaDBH DESC;
 GO
 
 -- 16. Chi tiết bán hàng

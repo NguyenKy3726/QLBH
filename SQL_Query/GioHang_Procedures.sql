@@ -154,9 +154,15 @@ BEGIN
         END;
 
         INSERT INTO dbo.DonBH
-            (MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH)
+            (MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH, TrangThai)
         VALUES
-            (@MaDBH, @NgayDat, NULL, @DiaChi, @MaXP, NULL, @MaKH);
+            (@MaDBH, @NgayDat, NULL, @DiaChi, @MaXP, NULL, @MaKH, 'CHO_XAC_NHAN');
+
+        INSERT INTO dbo.LichSuTrangThaiDonBH
+            (MaDBH, TrangThaiCu, TrangThaiMoi, ThoiDiem, MaNV, GhiChu)
+        VALUES
+            (@MaDBH, NULL, 'CHO_XAC_NHAN', SYSDATETIME(), NULL,
+             N'Khách hàng đặt đơn từ giỏ hàng.');
 
         INSERT INTO dbo.CTBH (MaDBH, MaSP, SLB, DGB)
         SELECT @MaDBH, cgh.MaSP, CONVERT(tinyint, cgh.SoLuong), sp.DonGia

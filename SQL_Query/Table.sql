@@ -36,7 +36,9 @@ CREATE TABLE dbo.SanPham
     MaSP   char(9)       NOT NULL,
     TenSP  nvarchar(50)  NOT NULL,
     DonGia money         NOT NULL,
-    AnhSP  nvarchar(100) NULL,
+    AnhSP  nvarchar(255) NULL,
+    AnhSPData varbinary(MAX) NULL,
+    AnhSPContentType varchar(100) NULL,
     MoTaCT ntext         NULL,
     MaLSP  smallint      NOT NULL,
     MaDVT  tinyint       NOT NULL,
@@ -65,7 +67,7 @@ GO
 CREATE TABLE dbo.Tinh
 (
     MaTinh  char(2)      NOT NULL,
-    TenTinh nvarchar(15) NOT NULL,
+    TenTinh nvarchar(50) NOT NULL,
 
     CONSTRAINT PK_Tinh PRIMARY KEY (MaTinh)
 );
@@ -74,7 +76,7 @@ GO
 CREATE TABLE dbo.XaPhuong
 (
     MaXP   char(5)      NOT NULL,
-    TenXP  nvarchar(30) NOT NULL,
+    TenXP  nvarchar(50) NOT NULL,
     MaTinh char(2)      NOT NULL,
 
 CONSTRAINT PK_XaPhuong PRIMARY KEY (MaXP),
@@ -113,7 +115,9 @@ CREATE TABLE dbo.NhanVien
     Email     varchar(40)   NOT NULL,
     TenDN     nvarchar(50)  NOT NULL,
     MatKhau   varbinary(MAX) NOT NULL,
-    AnhNV     nvarchar(250) NULL,
+    AnhNV     nvarchar(255)  NULL,
+    AnhNVData varbinary(MAX) NULL,
+    AnhNVContentType varchar(100) NULL,
     MaPB      tinyint       NOT NULL,
 
 CONSTRAINT PK_NhanVien PRIMARY KEY (MaNV),
@@ -208,6 +212,9 @@ CREATE TABLE dbo.KhachHang
     MaXP      char(5)        NOT NULL,
     TenDN     nvarchar(50)   NOT NULL,
     MatKhau   varbinary(MAX) NOT NULL,
+    AnhKH     nvarchar(255) NULL,
+    AnhKHData varbinary(MAX) NULL,
+    AnhKHContentType varchar(100) NULL,
 
 CONSTRAINT PK_KhachHang PRIMARY KEY (MaKH),
 
@@ -226,8 +233,11 @@ CREATE TABLE dbo.DonBH
     MaXP     char(5)       NOT NULL,
     MaNV     tinyint       NULL,
     MaKH     smallint      NOT NULL,
+    TrangThai varchar(20)    NOT NULL CONSTRAINT DF_DonBH_TrangThai DEFAULT ('CHO_XAC_NHAN'),
 
 CONSTRAINT PK_DonBH PRIMARY KEY (MaDBH),
+    CONSTRAINT CK_DonBH_TrangThai CHECK (TrangThai IN
+        ('CHO_XAC_NHAN', 'DA_XAC_NHAN', 'DANG_CHUAN_BI', 'DANG_GIAO', 'HOAN_TAT', 'DA_HUY')),
 
     CONSTRAINT FK_DonBH_XaPhuong
         FOREIGN KEY (MaXP)
@@ -240,6 +250,31 @@ CONSTRAINT PK_DonBH PRIMARY KEY (MaDBH),
         REFERENCES dbo.KhachHang (MaKH)
 );
 GO
+-- 16. Lịch sử trạng thái đơn bán hàng
+CREATE TABLE dbo.LichSuTrangThaiDonBH
+(
+    MaLSTT       bigint IDENTITY(1,1) NOT NULL,
+    MaDBH        char(11)             NOT NULL,
+    TrangThaiCu  varchar(20)          NULL,
+    TrangThaiMoi varchar(20)          NOT NULL,
+    ThoiDiem     datetime2            NOT NULL CONSTRAINT DF_LichSuTrangThaiDonBH_ThoiDiem DEFAULT (SYSDATETIME()),
+    MaNV         tinyint              NULL,
+    GhiChu       nvarchar(500)        NULL,
+
+    CONSTRAINT PK_LichSuTrangThaiDonBH PRIMARY KEY (MaLSTT),
+    CONSTRAINT FK_LichSuTrangThaiDonBH_DonBH FOREIGN KEY (MaDBH)
+        REFERENCES dbo.DonBH (MaDBH),
+    CONSTRAINT FK_LichSuTrangThaiDonBH_NhanVien FOREIGN KEY (MaNV)
+        REFERENCES dbo.NhanVien (MaNV),
+    CONSTRAINT CK_LichSuTrangThaiDonBH_TrangThaiCu CHECK
+        (TrangThaiCu IS NULL OR TrangThaiCu IN
+            ('CHO_XAC_NHAN', 'DA_XAC_NHAN', 'DANG_CHUAN_BI', 'DANG_GIAO', 'HOAN_TAT', 'DA_HUY')),
+    CONSTRAINT CK_LichSuTrangThaiDonBH_TrangThaiMoi CHECK
+        (TrangThaiMoi IN
+            ('CHO_XAC_NHAN', 'DA_XAC_NHAN', 'DANG_CHUAN_BI', 'DANG_GIAO', 'HOAN_TAT', 'DA_HUY'))
+);
+GO
+
 -- 16. Chi tiết bán hàng
 CREATE TABLE dbo.CTBH
 (
@@ -285,5 +320,21 @@ CREATE TABLE dbo.CTGioHang
         REFERENCES dbo.GioHang (MaGH),
     CONSTRAINT FK_CTGioHang_SanPham FOREIGN KEY (MaSP)
         REFERENCES dbo.SanPham (MaSP)
+);
+GO
+
+-- 19. Quyền thao tác theo bảng (được dùng bởi Insert.sql)
+CREATE TABLE dbo.QuyenBang
+(
+    MaQuyen     tinyint      NOT NULL,
+    TenBang     nvarchar(50) NOT NULL,
+    ChoPhepThem bit          NOT NULL,
+    ChoPhepXem  bit          NOT NULL,
+    ChoPhepSua  bit          NOT NULL,
+    ChoPhepXoa  bit          NOT NULL,
+
+    CONSTRAINT PK_QuyenBang PRIMARY KEY (MaQuyen, TenBang),
+    CONSTRAINT FK_QuyenBang_Quyen FOREIGN KEY (MaQuyen)
+        REFERENCES dbo.Quyen (MaQuyen)
 );
 GO

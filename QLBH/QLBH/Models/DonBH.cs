@@ -14,5 +14,6 @@ namespace QLBH.Models
         public string MaXP { get; set; }
         public byte? MaNV { get; set; }
         public short MaKH { get; set; }
+        public string TrangThai { get; set; } = "CHO_XAC_NHAN";
     }
 }

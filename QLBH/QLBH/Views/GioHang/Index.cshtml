@@ -5,6 +5,7 @@
 }
 
 <h1>Giỏ hàng</h1>
+<p><a asp-action="DonCuaToi" class="btn btn-outline-secondary">Đơn hàng của tôi</a></p>
 @if (TempData["ThongBaoGioHang"] is string thongBao) { <div class="alert alert-success">@thongBao</div> }
 @if (TempData["LoiGioHang"] is string loi) { <div class="alert alert-danger">@loi</div> }
 

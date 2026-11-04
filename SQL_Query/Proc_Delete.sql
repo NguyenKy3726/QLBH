@@ -222,24 +222,12 @@ END
 GO
 
 -- 15. Xóa bảng Đơn bán hàng
+-- Giữ đơn hàng làm lịch sử; đơn cần dừng được chuyển sang trạng thái Đã hủy.
 CREATE OR ALTER PROC DonBH_Xoa
     @MaDBH char(11)
 AS
 BEGIN
-    IF EXISTS (SELECT 1 FROM dbo.DonBH WHERE MaDBH = @MaDBH AND MaNV IS NULL)
-    BEGIN
-        RAISERROR(N'Không thể xóa đơn hàng do khách hàng đặt; cần giữ lại làm lịch sử bán hàng.', 16, 1);
-        RETURN;
-    END;
-
-    IF EXISTS (SELECT 1 FROM CTBH WHERE MaDBH = @MaDBH)
-    BEGIN
-        RAISERROR(N'Không thể xóa đơn bán hàng này vì vẫn còn chi tiết bán hàng. Hãy xóa các dòng chi tiết trước.', 16, 1);
-        RETURN;
-    END
-
-    DELETE FROM DonBH
-    WHERE MaDBH = @MaDBH;
+    RAISERROR(N'Không xóa vật lý đơn bán hàng. Hãy dùng thao tác chuyển trạng thái sang Đã hủy.', 16, 1);
 END
 GO
 
@@ -249,9 +237,13 @@ CREATE OR ALTER PROC CTBH_Xoa
     @MaSP char(9)
 AS
 BEGIN
-    IF EXISTS (SELECT 1 FROM dbo.DonBH WHERE MaDBH = @MaDBH AND MaNV IS NULL)
+    IF NOT EXISTS
+    (
+        SELECT 1 FROM dbo.DonBH
+        WHERE MaDBH = @MaDBH AND TrangThai = 'CHO_XAC_NHAN'
+    )
     BEGIN
-        RAISERROR(N'Không thể xóa chi tiết của đơn do khách hàng đặt. Dòng giỏ hàng đã được chuyển thành lịch sử đơn bán.', 16, 1);
+        RAISERROR(N'Chỉ được xóa chi tiết khi đơn còn chờ xác nhận.', 16, 1);
         RETURN;
     END;
 

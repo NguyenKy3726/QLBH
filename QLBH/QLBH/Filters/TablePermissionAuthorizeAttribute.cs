@@ -65,7 +65,7 @@ public sealed class TablePermissionAuthorizeFilter : IAsyncActionFilter
         {
             "index" or "details" => "R",
             "create" => "C",
-            "edit" => "U",
+            "edit" or "chuyentrangthai" => "U",
             "delete" => "D",
             _ => null
         };

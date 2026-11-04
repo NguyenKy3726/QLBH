@@ -47,6 +47,7 @@ public class DonBHsController : Controller
             .ToDictionary(nv => nv.MaNV, nv => nv.TenNV);
         ViewBag.TenKH = _context.KhachHang_DS()
             .ToDictionary(kh => kh.MaKH, kh => kh.TenKH);
+        ViewBag.LichSu = _context.DonBH_LichSu(madbh);
         return View(donbh);
     }
 
@@ -142,6 +143,11 @@ public class DonBHsController : Controller
         {
             return NotFound();
         }
+        if (donbh.TrangThai != "CHO_XAC_NHAN")
+        {
+            TempData["LoiDonBH"] = "Chỉ được sửa thông tin khi đơn còn chờ xác nhận.";
+            return RedirectToAction(nameof(Details), new { madbh });
+        }
         ViewBag.MaXP = new SelectList(
             _context.XaPhuong_DS().Select(xp => new
             {
@@ -194,6 +200,11 @@ public class DonBHsController : Controller
                 _context.Update(donbh);
                 _context.DonBH_Sua(donbh);
             }
+            catch (SqlException ex)
+            {
+                TempData["LoiDonBH"] = ex.Message;
+                return RedirectToAction(nameof(Details), new { madbh });
+            }
             catch (DbUpdateConcurrencyException)
             {
                 if (!DonBHExists(donbh.MaDBH))
@@ -240,51 +251,50 @@ public class DonBHsController : Controller
         return View(donbh);
     }
 
-    // GET: DONBHS/Delete/5
-    public async Task<IActionResult> Delete(string? madbh)
+    // Hủy đơn bằng chuyển trạng thái để lưu lý do và lịch sử; không xóa vật lý.
+    public IActionResult Delete(string? madbh)
     {
-        if (madbh == null)
-        {
+        if (string.IsNullOrWhiteSpace(madbh))
             return NotFound();
-        }
 
-        var donbh = _context.DonBH_CT(madbh);
-        if (donbh == null)
-        {
-            return NotFound();
-        }
-
-        return View(donbh);
+        TempData["LoiDonBH"] = "Đơn bán hàng không được xóa. Hãy hủy đơn và nhập lý do.";
+        return RedirectToAction(nameof(Details), new { madbh });
     }
 
-    // POST: DONBHS/Delete?madbh=...
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(string? madbh)
+    public IActionResult DeleteConfirmed(string? madbh)
     {
-        if (madbh == null)
-        {
+        if (string.IsNullOrWhiteSpace(madbh))
             return NotFound();
-        }
 
-        var donbh = _context.DonBH_CT(madbh);
-        if (donbh == null)
-        {
-            return NotFound();
-        }
+        TempData["LoiDonBH"] = "Đơn bán hàng không được xóa. Hãy hủy đơn và nhập lý do.";
+        return RedirectToAction(nameof(Details), new { madbh });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult ChuyenTrangThai(string? madbh, string? trangThaiMoi, string? ghiChu)
+    {
+        if (string.IsNullOrWhiteSpace(madbh) || string.IsNullOrWhiteSpace(trangThaiMoi))
+            return BadRequest();
+
+        var maNV = HttpContext.Session.GetInt32("MaNV");
+        if (maNV is null || maNV < byte.MinValue || maNV > byte.MaxValue)
+            return Forbid();
 
         try
         {
-            _context.DonBH_Xoa(madbh);
-
-            return RedirectToAction(nameof(Index));
+            _context.DonBH_ChuyenTrangThai(
+                madbh, trangThaiMoi, (byte)maNV.Value, ghiChu);
+            TempData["ThongBaoDonBH"] = "Đã cập nhật trạng thái đơn hàng.";
         }
-        catch (SqlException ex) when (ex.Number == 50000)
+        catch (SqlException ex)
         {
-            ViewBag.LoiXoa = ex.Message;
-
-            return View("Delete", donbh);
+            TempData["LoiDonBH"] = ex.Message;
         }
+
+        return RedirectToAction(nameof(Details), new { madbh });
     }
 
     private bool DonBHExists(string? madbh)

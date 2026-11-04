@@ -338,8 +338,8 @@ GO
 
 
 -- 15. Đơn bán hàng
--- Mã BH0000001, BH0000002...
-CREATE OR ALTER PROC DonBH_Them
+-- Mã BH + ngày đặt + số thứ tự; đơn mới bắt đầu ở trạng thái chờ xác nhận.
+CREATE OR ALTER PROC dbo.DonBH_Them
     @NgayDat smalldatetime,
     @NgayGiao smalldatetime,
     @DCGH nvarchar(50),
@@ -349,46 +349,53 @@ CREATE OR ALTER PROC DonBH_Them
 AS
 BEGIN
     SET NOCOUNT ON;
+    SET XACT_ABORT ON;
 
     DECLARE @MaDBH char(11);
     DECLARE @MaSo int = 1;
     DECLARE @Ngay char(6);
     DECLARE @TienTo char(8);
 
-    SET @Ngay = CONVERT(char(6), @NgayDat, 12); -- yymmdd
+    SET @Ngay = CONVERT(char(6), @NgayDat, 12);
     SET @TienTo = 'BH' + @Ngay;
+    SET @MaDBH = @TienTo + RIGHT('000' + CAST(@MaSo AS varchar(3)), 3);
 
-    SET @MaDBH = @TienTo
-               + RIGHT('000' + CAST(@MaSo AS varchar(3)), 3);
-
-    WHILE EXISTS (
-        SELECT 1
-        FROM DonBH
-        WHERE MaDBH = @MaDBH
-    )
+    WHILE EXISTS (SELECT 1 FROM dbo.DonBH WHERE MaDBH = @MaDBH)
     BEGIN
-        SET @MaSo = @MaSo + 1;
-
+        SET @MaSo += 1;
         IF @MaSo > 999
-        BEGIN
             THROW 50001, N'Đã hết số thứ tự đơn bán hàng trong ngày.', 1;
-        END;
 
-        SET @MaDBH = @TienTo
-                   + RIGHT('000' + CAST(@MaSo AS varchar(3)), 3);
+        SET @MaDBH = @TienTo + RIGHT('000' + CAST(@MaSo AS varchar(3)), 3);
     END;
 
-    INSERT INTO DonBH
-        (MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH)
-    VALUES
-        (@MaDBH, @NgayDat, @NgayGiao, @DCGH, @MaXP, @MaNV, @MaKH);
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO dbo.DonBH
+            (MaDBH, NgayDat, NgayGiao, DCGH, MaXP, MaNV, MaKH, TrangThai)
+        VALUES
+            (@MaDBH, @NgayDat, @NgayGiao, @DCGH, @MaXP, @MaNV, @MaKH, 'CHO_XAC_NHAN');
+
+        INSERT INTO dbo.LichSuTrangThaiDonBH
+            (MaDBH, TrangThaiCu, TrangThaiMoi, ThoiDiem, MaNV, GhiChu)
+        VALUES
+            (@MaDBH, NULL, 'CHO_XAC_NHAN', SYSDATETIME(), NULL,
+             N'Tạo đơn bán hàng mới.');
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
 END
 GO
 
 
 -- 16. Chi tiết bán hàng
 -- Hai mã được chọn từ bảng DonBH và SanPham.
-CREATE OR ALTER PROC CTBH_Them
+CREATE OR ALTER PROC dbo.CTBH_Them
     @MaDBH char(11),
     @MaSP char(9),
     @SLB tinyint,
@@ -397,7 +404,14 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    INSERT INTO CTBH(MaDBH, MaSP, SLB, DGB)
-    VALUES(@MaDBH, @MaSP, @SLB, @DGB)
+    IF NOT EXISTS
+    (
+        SELECT 1 FROM dbo.DonBH
+        WHERE MaDBH = @MaDBH AND TrangThai = 'CHO_XAC_NHAN'
+    )
+        THROW 50031, N'Chỉ được thêm sản phẩm khi đơn còn chờ xác nhận.', 1;
+
+    INSERT INTO dbo.CTBH(MaDBH, MaSP, SLB, DGB)
+    VALUES(@MaDBH, @MaSP, @SLB, @DGB);
 END
 GO
