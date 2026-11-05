@@ -28,7 +28,12 @@ button, input, select, textarea { font: inherit; }
 .site-header { position: relative; z-index: 20; background: #dfc7ad; box-shadow: 0 3px 20px rgba(75,36,18,.07); }
 .site-header__inner { min-height: 86px; gap: 24px; }
 .site-brand { display: inline-flex; align-items: center; margin: 0 18px 0 0; padding: 0; }
-.site-brand img { display: block; width: min(210px, 24vw); max-height: 62px; object-fit: contain; }
+    .site-brand img {
+        display: block;
+        width: min(280px, 28vw);
+        max-height: 90px;
+        object-fit: contain;
+    }
 .site-nav { align-items: center; gap: 9px; }
 .site-nav .nav-link { position: relative; padding: 13px 15px !important; color: var(--text); font-size: .83rem; font-weight: 600; letter-spacing: .045em; }
 .site-nav .nav-link::after { position: absolute; right: 15px; bottom: 6px; left: 15px; height: 2px; content: ''; background: var(--brand); transform: scaleX(0); transform-origin: left; transition: transform .2s ease; }
@@ -339,4 +344,15 @@ button, input, select, textarea { font: inherit; }
 }
 @media (prefers-reduced-motion: reduce) {
   .site-main select, .site-main select::picker-icon { transition: none !important; }
+}
+.site-footer .site-footer__links a,
+.site-footer .site-footer__links a:visited {
+    color: #f8eee3;
+    text-decoration: none;
+}
+
+.site-footer .site-footer__links a:hover,
+.site-footer .site-footer__links a:focus-visible {
+    color: #ebc980;
+    text-decoration: underline;
 }
