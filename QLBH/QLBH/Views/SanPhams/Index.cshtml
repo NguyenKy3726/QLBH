@@ -124,11 +124,16 @@
 
 @if (totalPages > 1)
 {
-    <nav class="mt-4" aria-label="Phân trang sản phẩm">
-        <ul class="pagination justify-content-center flex-wrap gap-1">
+    <nav class="catalog-pagination" aria-label="Phân trang sản phẩm">
+        <p class="catalog-pagination__summary">Trang <strong>@currentPage</strong> / @totalPages</p>
+        <ul class="pagination">
             @if (currentPage > 1)
             {
-                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)" asp-route-category="@selectedCategory" asp-route-budget="@selectedBudget" asp-route-q="@selectedSearch" asp-route-sort="@selectedSort" aria-label="Trang trước">Trước</a></li>
+                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)" asp-route-category="@selectedCategory" asp-route-budget="@selectedBudget" asp-route-q="@selectedSearch" asp-route-sort="@selectedSort" aria-label="Trang trước"><span aria-hidden="true">←</span> Trước</a></li>
+            }
+            else
+            {
+                <li class="page-item disabled"><span class="page-link" aria-disabled="true"><span aria-hidden="true">←</span> Trước</span></li>
             }
             @for (var number = 1; number <= totalPages; number++)
             {
@@ -138,7 +143,11 @@
             }
             @if (currentPage < totalPages)
             {
-                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)" asp-route-category="@selectedCategory" asp-route-budget="@selectedBudget" asp-route-q="@selectedSearch" asp-route-sort="@selectedSort" aria-label="Trang sau">Sau</a></li>
+                <li class="page-item"><a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)" asp-route-category="@selectedCategory" asp-route-budget="@selectedBudget" asp-route-q="@selectedSearch" asp-route-sort="@selectedSort" aria-label="Trang sau">Sau <span aria-hidden="true">→</span></a></li>
+            }
+            else
+            {
+                <li class="page-item disabled"><span class="page-link" aria-disabled="true">Sau <span aria-hidden="true">→</span></span></li>
             }
         </ul>
     </nav>
