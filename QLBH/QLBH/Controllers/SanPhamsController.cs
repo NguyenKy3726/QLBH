@@ -102,7 +102,7 @@ public class SanPhamsController : Controller
             "name-asc" => products.OrderBy(item => item.TenSP).ThenBy(item => item.MaSP),
             _ => products.OrderBy(item => item.MaSP)
         };
-        const int pageSize = 10;
+        const int pageSize = 8;
         var totalProducts = products.Count;
         var totalPages = Math.Max(1, (int)Math.Ceiling(totalProducts / (double)pageSize));
         page = Math.Clamp(page, 1, totalPages);
