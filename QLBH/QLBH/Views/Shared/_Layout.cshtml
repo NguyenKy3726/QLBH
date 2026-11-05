@@ -11,7 +11,6 @@
     var visibleTables = isEmployee && !hasAdmin && employeeId is >= 0 and <= 255
         ? AppDb.NhanVien_BangDuocXem((byte)employeeId.Value)
         : new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-    bool CanRead(string tableName) => hasAdmin || visibleTables.Contains(tableName);
     var controller = ViewContext.RouteData.Values["controller"]?.ToString();
     var action = ViewContext.RouteData.Values["action"]?.ToString();
 }
@@ -48,66 +47,8 @@
                         }
                         @if (isEmployee && (hasAdmin || visibleTables.Count > 0))
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle @(controller != "Home" && controller != "SanPhams" ? "active" : "")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Quản lý</a>
-                                <ul class="dropdown-menu site-menu">
-                                    @if (hasAdmin)
-                                    {
-                                        <li><a class="dropdown-item" asp-controller="QuanLy" asp-action="Index">Tổng quan quản lý</a></li>
-                                        <li><hr class="dropdown-divider" /></li>
-                                        <li><h2 class="dropdown-header">Danh mục & hệ thống</h2></li>
-                                        <li><a class="dropdown-item" asp-controller="DonViTinhs" asp-action="Index">Đơn vị tính</a></li>
-                                        <li><a class="dropdown-item" asp-controller="NhomSPs" asp-action="Index">Nhóm sản phẩm</a></li>
-                                        <li><a class="dropdown-item" asp-controller="LoaiSPs" asp-action="Index">Loại sản phẩm</a></li>
-                                        <li><a class="dropdown-item" asp-controller="SanPhams" asp-action="Index">Sản phẩm</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Tinhs" asp-action="Index">Tỉnh</a></li>
-                                        <li><a class="dropdown-item" asp-controller="XaPhuongs" asp-action="Index">Xã/phường</a></li>
-                                        <li><a class="dropdown-item" asp-controller="PhongBans" asp-action="Index">Phòng ban</a></li>
-                                        <li><a class="dropdown-item" asp-controller="NhanViens" asp-action="Index">Nhân viên</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Quyens" asp-action="Index">Quyền</a></li>
-                                        <li><a class="dropdown-item" asp-controller="PhanQuyens" asp-action="Index">Phân quyền</a></li>
-                                        <li><hr class="dropdown-divider" /></li>
-                                        <li><h2 class="dropdown-header">Nghiệp vụ bán hàng</h2></li>
-                                        <li><a class="dropdown-item" asp-controller="NhaCCs" asp-action="Index">Nhà cung cấp</a></li>
-                                        <li><a class="dropdown-item" asp-controller="DonMHs" asp-action="Index">Đơn mua hàng</a></li>
-                                        <li><a class="dropdown-item" asp-controller="CTMHs" asp-action="Index">Chi tiết mua hàng</a></li>
-                                        <li><a class="dropdown-item" asp-controller="KhachHangs" asp-action="Index">Khách hàng</a></li>
-                                        <li><a class="dropdown-item" asp-controller="DonBHs" asp-action="Index">Đơn bán hàng</a></li>
-                                        <li><a class="dropdown-item" asp-controller="CTBHs" asp-action="Index">Chi tiết bán hàng</a></li>
-                                    }
-                                    else
-                                    {
-                                        @if (visibleTables.Count > 0)
-                                        {
-                                            <li><a class="dropdown-item" asp-controller="QuanLy" asp-action="Index">Tổng quan quản lý</a></li>
-                                            <li><hr class="dropdown-divider" /></li>
-                                            @if (CanRead("DonViTinh") || CanRead("NhomSP") || CanRead("LoaiSP") || CanRead("SanPham") || CanRead("Tinh") || CanRead("XaPhuong"))
-                                            { <li><h2 class="dropdown-header">Danh mục</h2></li> }
-                                            @if (CanRead("DonViTinh")) { <li><a class="dropdown-item" asp-controller="DonViTinhs" asp-action="Index">Đơn vị tính</a></li> }
-                                            @if (CanRead("NhomSP")) { <li><a class="dropdown-item" asp-controller="NhomSPs" asp-action="Index">Nhóm sản phẩm</a></li> }
-                                            @if (CanRead("LoaiSP")) { <li><a class="dropdown-item" asp-controller="LoaiSPs" asp-action="Index">Loại sản phẩm</a></li> }
-                                            @if (CanRead("SanPham")) { <li><a class="dropdown-item" asp-controller="SanPhams" asp-action="Index">Sản phẩm</a></li> }
-                                            @if (CanRead("Tinh")) { <li><a class="dropdown-item" asp-controller="Tinhs" asp-action="Index">Tỉnh</a></li> }
-                                            @if (CanRead("XaPhuong")) { <li><a class="dropdown-item" asp-controller="XaPhuongs" asp-action="Index">Xã/phường</a></li> }
-                                            @if (CanRead("KhachHang") || CanRead("DonBH") || CanRead("CTBH"))
-                                            { <li><h2 class="dropdown-header">Bán hàng</h2></li> }
-                                            @if (CanRead("KhachHang")) { <li><a class="dropdown-item" asp-controller="KhachHangs" asp-action="Index">Khách hàng</a></li> }
-                                            @if (CanRead("DonBH")) { <li><a class="dropdown-item" asp-controller="DonBHs" asp-action="Index">Đơn bán hàng</a></li> }
-                                            @if (CanRead("CTBH")) { <li><a class="dropdown-item" asp-controller="CTBHs" asp-action="Index">Chi tiết bán hàng</a></li> }
-                                            @if (CanRead("NhaCC") || CanRead("DonMH") || CanRead("CTMH"))
-                                            { <li><h2 class="dropdown-header">Mua hàng</h2></li> }
-                                            @if (CanRead("NhaCC")) { <li><a class="dropdown-item" asp-controller="NhaCCs" asp-action="Index">Nhà cung cấp</a></li> }
-                                            @if (CanRead("DonMH")) { <li><a class="dropdown-item" asp-controller="DonMHs" asp-action="Index">Đơn mua hàng</a></li> }
-                                            @if (CanRead("CTMH")) { <li><a class="dropdown-item" asp-controller="CTMHs" asp-action="Index">Chi tiết mua hàng</a></li> }
-                                            @if (CanRead("PhongBan") || CanRead("NhanVien") || CanRead("Quyen") || CanRead("PhanQuyen"))
-                                            { <li><h2 class="dropdown-header">Tài khoản & hệ thống</h2></li> }
-                                            @if (CanRead("PhongBan")) { <li><a class="dropdown-item" asp-controller="PhongBans" asp-action="Index">Phòng ban</a></li> }
-                                            @if (CanRead("NhanVien")) { <li><a class="dropdown-item" asp-controller="NhanViens" asp-action="Index">Nhân viên</a></li> }
-                                            @if (CanRead("Quyen")) { <li><a class="dropdown-item" asp-controller="Quyens" asp-action="Index">Quyền</a></li> }
-                                            @if (CanRead("PhanQuyen")) { <li><a class="dropdown-item" asp-controller="PhanQuyens" asp-action="Index">Phân quyền</a></li> }
-                                        }
-                                    }
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link @(controller == "QuanLy" ? "active" : "")" asp-controller="QuanLy" asp-action="Index">Quản lý</a>
                             </li>
                         }
                     </ul>
@@ -119,13 +60,14 @@
                         }
                         else
                         {
-                            <span class="site-user">
+                            <a class="site-user site-link" asp-controller="Account" asp-action="ThongTin" title="Thông tin tài khoản"
+                               aria-current="@(controller == "Account" && action == "ThongTin" ? "page" : null)">
                                 @if (!string.IsNullOrWhiteSpace(avatarPath))
                                 {
                                     <img class="site-user__avatar" src="@Url.Content(avatarPath)" alt="" />
                                 }
                                 @displayName
-                            </span>
+                            </a>
                             <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
                                 @Html.AntiForgeryToken()
                                 <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
