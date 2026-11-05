@@ -46,10 +46,18 @@ public class SanPhamsController : Controller
     }
 
     // GET: SANPHAMS
-    public IActionResult Index(string? category, string? budget, string? q)
+    public IActionResult Index(string? category, string? budget, string? q, string? sort, int page = 1)
     {
         if (EmployeeCatalogAccessDenied())
             return RedirectToAction("AccessDenied", "Account");
+
+        var isEmployee = HttpContext.Session.GetString("Role") == "NhanVien";
+        var employeeId = HttpContext.Session.GetInt32("MaNV");
+        bool CanManage(string operation) => isEmployee && employeeId is >= byte.MinValue and <= byte.MaxValue
+            && _context.NhanVien_CoQuyenBang((byte)employeeId.Value, "SanPham", operation);
+        ViewBag.CanCreate = CanManage("C");
+        ViewBag.CanEdit = CanManage("U");
+        ViewBag.CanDelete = CanManage("D");
 
         var productTypes = _context.LoaiSP_DS();
         ViewBag.TenLSP = productTypes
@@ -86,7 +94,24 @@ public class SanPhamsController : Controller
                 || (item.MoTaCT?.Contains(q, StringComparison.CurrentCultureIgnoreCase) ?? false)).ToList();
         }
 
-        return View(products);
+        // Lọc và sắp xếp toàn bộ kết quả trước khi lấy 10 sản phẩm của trang.
+        var orderedProducts = sort switch
+        {
+            "price-asc" => products.OrderBy(item => item.DonGia).ThenBy(item => item.MaSP),
+            "price-desc" => products.OrderByDescending(item => item.DonGia).ThenBy(item => item.MaSP),
+            "name-asc" => products.OrderBy(item => item.TenSP).ThenBy(item => item.MaSP),
+            _ => products.OrderBy(item => item.MaSP)
+        };
+        const int pageSize = 10;
+        var totalProducts = products.Count;
+        var totalPages = Math.Max(1, (int)Math.Ceiling(totalProducts / (double)pageSize));
+        page = Math.Clamp(page, 1, totalPages);
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = totalPages;
+        ViewBag.TotalProducts = totalProducts;
+        ViewBag.PageSize = pageSize;
+
+        return View(orderedProducts.Skip((page - 1) * pageSize).Take(pageSize).ToList());
     }
 
     // GET: SANPHAMS/Details/5
