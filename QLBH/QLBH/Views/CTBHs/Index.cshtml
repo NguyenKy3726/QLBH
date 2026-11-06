@@ -7,7 +7,7 @@
 <h1>Chi tiết bán hàng</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">+ Thêm mới</a>
+    <a asp-action="Create" class="btn btn-primary">create</a>
 </p>
 <div class="table-responsive crud-table-frame">
 <table class="table">
@@ -44,9 +44,9 @@
                 @Html.DisplayFor(model => item.DGB)
             </td>
             <td class="crud-actions">
-                <a asp-action="Edit" asp-route-madbh="@item.MaDBH" asp-route-masp="@item.MaSP" class="crud-action crud-action--edit" title="Sửa" aria-label="Sửa"><span class="crud-action__shape" aria-hidden="true"></span></a>
-                <a asp-action="Details" asp-route-madbh="@item.MaDBH" asp-route-masp="@item.MaSP" class="crud-action crud-action--details" title="Chi tiết" aria-label="Chi tiết"><span class="crud-action__shape" aria-hidden="true"></span></a>
-                <a asp-action="Delete" asp-route-madbh="@item.MaDBH" asp-route-masp="@item.MaSP" class="crud-action crud-action--delete" title="Xóa" aria-label="Xóa"><span class="crud-action__shape" aria-hidden="true"></span></a>
+                <a asp-action="Edit" asp-route-madbh="@item.MaDBH" asp-route-masp="@item.MaSP" class="crud-action crud-action--edit" title="Edit" aria-label="Edit">Edit</a>
+                <a asp-action="Details" asp-route-madbh="@item.MaDBH" asp-route-masp="@item.MaSP" class="crud-action crud-action--details" title="Details" aria-label="Details">Details</a>
+                <a asp-action="Delete" asp-route-madbh="@item.MaDBH" asp-route-masp="@item.MaSP" class="crud-action crud-action--delete" title="Delete" aria-label="Delete">Delete</a>
             </td>
         </tr>
 }
