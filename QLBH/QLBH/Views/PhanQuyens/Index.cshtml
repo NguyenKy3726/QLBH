@@ -1,21 +1,22 @@
 @model IEnumerable<QLBH.Models.PhanQuyen>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Phân quyền";
 }
 
-<h1>Index</h1>
+<h1>Phân quyền</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">+ Thêm mới</a>
 </p>
 
+<div class="table-responsive crud-table-frame">
 <table class="table">
     <thead>
         <tr>
             <th>Tên quyền</th>
             <th>Nhân viên</th>
-            <th></th>
+            <th scope="col">Thao tác</th>
         </tr>
     </thead>
     <tbody>
@@ -25,12 +26,13 @@
             <tr>
                 <td>@(ViewBag.TenQuyen[item.MaQuyen])</td>
                 <td>@item.MaNV - @ViewBag.TenNV[item.MaNV]</td>
-                <td>
+                <td class="crud-actions">
                     <a asp-action="Delete"
                        asp-route-maquyen="@item.MaQuyen"
-                       asp-route-manv="@item.MaNV">Delete</a>
+                       asp-route-manv="@item.MaNV" class="crud-action crud-action--delete" title="Xóa" aria-label="Xóa"><span class="crud-action__shape" aria-hidden="true"></span></a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+</div>

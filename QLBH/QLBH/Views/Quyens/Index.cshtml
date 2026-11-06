@@ -1,14 +1,15 @@
 @model IEnumerable<QLBH.Models.Quyen>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Quyền";
 }
 
-<h1>Index</h1>
+<h1>Quyền</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">+ Thêm mới</a>
 </p>
+<div class="table-responsive crud-table-frame">
 <table class="table">
     <thead>
         <tr>
@@ -21,7 +22,7 @@
             <th>
                 Mô tả
             </th>
-            <th></th>
+            <th scope="col">Thao tác</th>
         </tr>
     </thead>
     <tbody>
@@ -36,12 +37,13 @@
             <td>
                 @Html.DisplayFor(model => item.MoTa)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaQuyen">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaQuyen">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaQuyen">Delete</a>
+            <td class="crud-actions">
+                <a asp-action="Edit" asp-route-id="@item.MaQuyen" class="crud-action crud-action--edit" title="Sửa" aria-label="Sửa"><span class="crud-action__shape" aria-hidden="true"></span></a>
+                <a asp-action="Details" asp-route-id="@item.MaQuyen" class="crud-action crud-action--details" title="Chi tiết" aria-label="Chi tiết"><span class="crud-action__shape" aria-hidden="true"></span></a>
+                <a asp-action="Delete" asp-route-id="@item.MaQuyen" class="crud-action crud-action--delete" title="Xóa" aria-label="Xóa"><span class="crud-action__shape" aria-hidden="true"></span></a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+</div>

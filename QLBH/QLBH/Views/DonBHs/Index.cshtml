@@ -39,7 +39,7 @@
 }
 <p><a asp-action="Create" class="btn btn-primary">Tạo đơn</a></p>
 
-<div class="table-responsive">
+<div class="table-responsive crud-table-frame">
 <table class="table align-middle">
     <thead>
         <tr>
@@ -51,7 +51,7 @@
             <th>Nhân viên</th>
             <th>Khách hàng</th>
             <th>Trạng thái</th>
-            <th></th>
+            <th scope="col">Thao tác</th>
         </tr>
     </thead>
     <tbody>
@@ -75,12 +75,12 @@
             </td>
             <td>@item.MaKH - @(ViewBag.TenKH[item.MaKH])</td>
             <td><span class="badge @TrangThaiCss(item.TrangThai)">@TrangThaiLabel(item.TrangThai)</span></td>
-            <td class="text-nowrap">
-                <a asp-action="Details" asp-route-madbh="@item.MaDBH">Chi tiết</a>
+            <td class="text-nowrap crud-actions">
+                <a asp-action="Details" asp-route-madbh="@item.MaDBH" class="crud-action crud-action--details" title="Chi tiết" aria-label="Chi tiết"><span class="crud-action__shape" aria-hidden="true"></span></a>
                 @if (item.TrangThai == "CHO_XAC_NHAN")
                 {
-                    <span> | </span>
-                    <a asp-action="Edit" asp-route-madbh="@item.MaDBH">Sửa</a>
+                    
+                    <a asp-action="Edit" asp-route-madbh="@item.MaDBH" class="crud-action crud-action--edit" title="Sửa" aria-label="Sửa"><span class="crud-action__shape" aria-hidden="true"></span></a>
                 }
             </td>
         </tr>
