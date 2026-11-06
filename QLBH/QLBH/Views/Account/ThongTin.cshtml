@@ -26,8 +26,24 @@
         </aside>
         <section class="profile-card" aria-labelledby="profile-edit-title">
             <p class="profile-eyebrow">THÔNG TIN CÁ NHÂN</p><h2 id="profile-edit-title">Chỉnh sửa hồ sơ</h2>
-            <form asp-action="ThongTin" method="post" class="profile-form">
+            <form asp-action="ThongTin" method="post" enctype="multipart/form-data" class="profile-form">
                 <div asp-validation-summary="All" class="profile-errors" role="alert"></div>
+                <div class="profile-upload" data-current-avatar="@(string.IsNullOrWhiteSpace(Model.AnhDaiDien) ? "" : Url.Content(Model.AnhDaiDien))">
+                    <div class="profile-upload__preview">
+                        <img id="profile-avatar-preview" src="@(string.IsNullOrWhiteSpace(Model.AnhDaiDien) ? null : Url.Content(Model.AnhDaiDien))"
+                             alt="Xem trước ảnh đại diện" hidden="@string.IsNullOrWhiteSpace(Model.AnhDaiDien)" />
+                        <span id="profile-avatar-placeholder" aria-hidden="true" hidden="@(!string.IsNullOrWhiteSpace(Model.AnhDaiDien))">@(string.IsNullOrWhiteSpace(Model.TenHienThi) ? "W" : Model.TenHienThi.Trim()[0].ToString().ToUpperInvariant())</span>
+                    </div>
+                    <div class="profile-upload__controls">
+                        <label for="profile-avatar-file">Chọn ảnh đại diện</label>
+                        <input id="profile-avatar-file" name="fileAnh" type="file"
+                               accept=".jpg,.jpeg,.png,.webp" aria-describedby="profile-avatar-help profile-avatar-error" />
+                        <p id="profile-avatar-help">Ảnh JPG, PNG hoặc WEBP, tối đa 5 MB. Nhấn “Lưu thay đổi” để cập nhật.</p>
+                        <p id="profile-avatar-error" class="field-validation-error" role="status" aria-live="polite"></p>
+                        @Html.ValidationMessage("fileAnh", null, new { @class = "field-validation-error" })
+                        <button id="profile-avatar-reset" type="button" hidden>Bỏ ảnh vừa chọn</button>
+                    </div>
+                </div>
                 <div class="profile-fields">
                     <label><span>Họ và tên đệm *</span><input asp-for="Ho" autocomplete="family-name" maxlength="30" required /><span asp-validation-for="Ho"></span></label>
                     <label><span>Tên *</span><input asp-for="Ten" autocomplete="given-name" maxlength="20" required /><span asp-validation-for="Ten"></span></label>
@@ -42,3 +58,7 @@
         </section>
     </div>
 </section>
+
+@section Scripts {
+    <script src="~/js/profile.js" asp-append-version="true"></script>
+}

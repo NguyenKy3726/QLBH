@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using QLBH.Data;
 using QLBH.Models;
+using QLBH.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace QLBH.Controllers
 {
@@ -8,11 +11,13 @@ namespace QLBH.Controllers
     {
         private readonly AppDbContext _context;
         private readonly ILogger<AccountController> _logger;
+        private readonly IWebHostEnvironment _environment;
 
-        public AccountController(AppDbContext context, ILogger<AccountController> logger)
+        public AccountController(AppDbContext context, ILogger<AccountController> logger, IWebHostEnvironment environment)
         {
             _context = context;
             _logger = logger;
+            _environment = environment;
         }
 
         [HttpGet]
@@ -146,7 +151,9 @@ namespace QLBH.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ThongTin(TaiKhoanViewModel model)
+        [RequestSizeLimit(6 * 1024 * 1024)]
+        public async Task<IActionResult> ThongTin(
+            TaiKhoanViewModel model, IFormFile? fileAnh, CancellationToken cancellationToken)
         {
             // Danh tính và vai trò luôn lấy từ phiên đăng nhập, không nhận mã tài khoản từ form.
             var currentResult = ThongTin();
@@ -171,9 +178,28 @@ namespace QLBH.Controllers
             }
             if (current.VaiTro == "Khách hàng" && string.IsNullOrWhiteSpace(model.DiaChi))
                 ModelState.AddModelError(nameof(model.DiaChi), "Vui lòng nhập địa chỉ.");
+            if (fileAnh is { Length: > 0 })
+            {
+                var error = await ImageUploadService.ValidateAsync(fileAnh, cancellationToken);
+                if (error is not null) ModelState.AddModelError("fileAnh", error);
+            }
             if (!ModelState.IsValid) return View(model);
+
+            string? uploadedAvatar = null;
             try
             {
+                if (fileAnh is { Length: > 0 })
+                {
+                    var folder = current.VaiTro == "Khách hàng" ? "customers" : "employees";
+                    var upload = await ImageUploadService.SaveAsync(fileAnh, _environment, folder, cancellationToken);
+                    if (upload.Error is not null)
+                    {
+                        ModelState.AddModelError("fileAnh", upload.Error);
+                        return View(model);
+                    }
+                    uploadedAvatar = upload.RelativePath;
+                }
+
                 if (current.VaiTro == "Khách hàng")
                 {
                     var id = HttpContext.Session.GetInt32("MaKH");
@@ -183,6 +209,7 @@ namespace QLBH.Controllers
                     kh.HoKH = model.Ho; kh.TenKH = model.Ten;
                     kh.DienThoai = model.DienThoai; kh.Email = model.Email;
                     kh.DiaChi = model.DiaChi!;
+                    kh.AnhKH = uploadedAvatar ?? kh.AnhKH;
                     _context.KhachHang_Sua(kh, null);
                 }
                 else
@@ -193,9 +220,12 @@ namespace QLBH.Controllers
                     if (nv == null) return NotFound();
                     nv.HoNV = model.Ho; nv.TenNV = model.Ten;
                     nv.DienThoai = model.DienThoai!; nv.Email = model.Email!;
+                    nv.AnhNV = uploadedAvatar ?? nv.AnhNV;
                     _context.NhanVien_Sua(nv, null);
                 }
                 HttpContext.Session.SetString("DisplayName", $"{model.Ho} {model.Ten}");
+                if (uploadedAvatar is not null)
+                    HttpContext.Session.SetString("AvatarPath", uploadedAvatar);
                 TempData["ThongBaoHoSo"] = "Đã lưu thông tin tài khoản.";
                 return RedirectToAction(nameof(ThongTin));
             }
