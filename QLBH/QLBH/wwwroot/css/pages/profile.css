@@ -48,3 +48,6 @@
 .profile-upload__controls .field-validation-error { color:#a14f40; }
 .profile-upload__controls button { margin-top:10px; padding:6px 0; border:0; color:#6f3517; background:transparent; font:inherit; font-size:.8rem; text-decoration:underline; cursor:pointer; }
 @media(max-width:480px) { .profile-upload { grid-template-columns:1fr; padding:16px; } }
+
+/* Stack avatar controls inside the narrow customer/employee edit forms. */
+.profile-upload--compact { grid-template-columns:1fr; margin-top:18px; }

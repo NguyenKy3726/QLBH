@@ -4,6 +4,10 @@
     ViewData["Title"] = "Edit";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/profile.css" asp-append-version="true" />
+}
+
 <h1>Edit</h1>
 
 <h4>NhanVien</h4>
@@ -60,16 +64,21 @@
 
                 @Html.ValidationMessage("MatKhauMoi", "", new { @class = "text-danger" })
             </div>
-            <div class="form-group">
-                <label>Ảnh đại diện</label>
-                <input type="file" id="fileAnh" name="fileAnh" class="form-control" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" />
-                <small class="form-text text-muted">Chọn ảnh mới để thay ảnh hiện tại; bỏ trống để giữ ảnh. JPG, PNG hoặc WEBP, tối đa 5 MB.</small>
-                <span class="text-danger">@Html.ValidationMessage("fileAnh")</span>
-                @if (!string.IsNullOrWhiteSpace(Model.AnhNV))
-                {
-                    <div class="mt-2"><div>Ảnh hiện tại:</div><img src="@Url.Content(Model.AnhNV)" alt="Ảnh đại diện của @Model.HoNV @Model.TenNV" style="max-width:180px;max-height:180px;border-radius:50%;object-fit:cover;" /></div>
-                }
-                <img id="previewAnh" alt="Xem trước ảnh mới" style="display:none;max-width:180px;max-height:180px;margin-top:12px;border-radius:50%;object-fit:cover;" />
+            <div class="profile-upload profile-upload--compact" data-current-avatar="@(string.IsNullOrWhiteSpace(Model.AnhNV) ? "" : Url.Content(Model.AnhNV))">
+                <div class="profile-upload__preview">
+                    <img id="profile-avatar-preview" src="@(string.IsNullOrWhiteSpace(Model.AnhNV) ? null : Url.Content(Model.AnhNV))"
+                         alt="Xem trước ảnh đại diện nhân viên" hidden="@string.IsNullOrWhiteSpace(Model.AnhNV)" />
+                    <span id="profile-avatar-placeholder" aria-hidden="true" hidden="@(!string.IsNullOrWhiteSpace(Model.AnhNV))">W</span>
+                </div>
+                <div class="profile-upload__controls">
+                    <label for="profile-avatar-file">Chọn ảnh đại diện</label>
+                    <input id="profile-avatar-file" name="fileAnh" type="file"
+                           accept=".jpg,.jpeg,.png,.webp" aria-describedby="profile-avatar-help profile-avatar-error" />
+                    <p id="profile-avatar-help">Ảnh JPG, PNG hoặc WEBP, tối đa 5 MB. Bỏ trống để giữ ảnh hiện tại; nhấn Save để lưu ảnh mới.</p>
+                    <p id="profile-avatar-error" class="field-validation-error" role="status" aria-live="polite"></p>
+                    @Html.ValidationMessage("fileAnh", null, new { @class = "field-validation-error" })
+                    <button id="profile-avatar-reset" type="button" hidden>Bỏ ảnh vừa chọn</button>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="MaPB" class="control-label">
@@ -91,23 +100,11 @@
     </div>
 </div>
 
-<script>
-    document.getElementById('fileAnh')?.addEventListener('change', function (event) {
-        const file = event.target.files?.[0];
-        const preview = document.getElementById('previewAnh');
-        if (!file || !preview) {
-            if (preview) { preview.removeAttribute('src'); preview.style.display = 'none'; }
-            return;
-        }
-        preview.src = URL.createObjectURL(file);
-        preview.style.display = 'block';
-    });
-</script>
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
+    <script src="~/js/profile.js" asp-append-version="true"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
